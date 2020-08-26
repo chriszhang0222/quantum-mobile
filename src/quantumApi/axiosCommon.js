@@ -132,3 +132,30 @@ export const apiAsyncAuth = (method, url, params, callback, auth) => {
     }
 }
 
+export const apiSyncAuth = (method, url, params, auth) =>{
+    if(method == 'get') {
+        return axios({
+            headers: {
+                'Authorization': 'Bearer ' + auth,
+            },
+            timeout: 8000,
+            method: method,
+            baseURL: baseUrl,
+            url: url,
+            params: params,
+            traditional: true
+        });
+    }else if(method == 'post'){
+        return axios({
+            headers: {
+                'Authorization': 'Bearer ' + auth,
+            },
+            timeout: 8000,
+            method: method,
+            baseURL: baseUrl,
+            url: url,
+            data: params,
+            traditional: true
+        });
+    }
+}

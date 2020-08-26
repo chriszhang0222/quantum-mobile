@@ -40,6 +40,7 @@
     import {getAPIToken, loginAPI} from "@/quantumApi/login/login";
     import {SessionStorage} from "@/utils/SessionStorage";
     import {AUTH_TOKEN, SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
+    import {homePageHistoram} from "@/quantumApi/chart/chartQuantumApi";
 
     export default {
         name: "Login",
@@ -83,16 +84,15 @@
             apiTokenCallback(res){
                 console.log(res);
             },
-            loginCallBack(res){
+            async loginCallBack(res){
                 this.logging = false;
                 let resp = res.data;
                 if(resp.success){
                     SessionStorage.setJSON(SESSION_KEY_LOGIN_USER, resp.user);
                     SessionStorage.set(AUTH_TOKEN, resp.access);
                     this.$message.success('Login Successfully!!');
-                    setTimeout(() => {
-                        this.$router.push('/dashboard');
-                    }, 1000)
+                    homePageHistoram(resp.access);
+                    this.$router.push('/dashboard');
                 }else{
                     let message = resp.message;
                     this.$message.error(message);

@@ -40,6 +40,9 @@
                 this.$router.push('/');
             }
         },
+        mounted(){
+
+        },
         beforeDestroy() {
             this.$bus.off("collapse-content", (msg) => {
                 this.collapse = msg;
