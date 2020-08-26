@@ -15,10 +15,8 @@
         name: "Dashboard",
         created(){
             this.auth = SessionStorage.get(AUTH_TOKEN);
-            console.log(this.auth);
         },
         mounted(){
-            testAPI(this.auth);
         },
         data(){
             return{
