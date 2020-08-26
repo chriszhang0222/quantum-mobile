@@ -54,6 +54,10 @@
         },
         methods:{
             submit(){
+                this.$message.success('Login Successfully');
+                setTimeout(() => {
+                    this.$router.push("/home");
+                }, 1500);
 
             }
         }

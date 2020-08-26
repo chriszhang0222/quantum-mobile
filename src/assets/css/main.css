@@ -23,9 +23,9 @@ a {
 
 .content-box {
     position: absolute;
-    left: 150px;
+    left: 120px;
     right: 0;
-    top: 70px;
+    top: 50px;
     bottom: 0;
     /*padding-bottom: 30px;*/
     -webkit-transition: left .3s ease-in-out;
@@ -42,7 +42,7 @@ a {
 }
 
 .content-collapse {
-    left: 65px;
+    left: 0px;
 }
 
 .container {
