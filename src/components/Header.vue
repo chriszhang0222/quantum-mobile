@@ -46,6 +46,9 @@
 </template>
 
 <script>
+    import {SessionStorage} from "@/utils/SessionStorage";
+    import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN} from "@/utils/Constants";
+
     export default {
         name: "Header",
         mounted() {
@@ -55,9 +58,8 @@
         },
         computed: {
             username(){
-                // let name = sessionStorage.getItem("name");
-                // return name === null ? "User" : name
-                return 'Justin Trisdle';
+                let name = SessionStorage.getJson(SESSION_KEY_LOGIN_USER).username;
+                return name == null ? '' : name;
             }
         },
         data: function(){
@@ -75,13 +77,21 @@
         methods: {
             handleCommand(command){
                 if(command === 'logout'){
-                    console.log('logout');
+                    this.logout();
                 }
             },
             collapseChange(){
                 this.collapse = !this.collapse;
                 this.$bus.emit("collapse", this.collapse);
-            }
+            },
+            logout(){
+                SessionStorage.pop(AUTH_TOKEN);
+                SessionStorage.pop(SESSION_KEY_LOGIN_USER);
+                this.$message.success('Logout Successfully!');
+                setTimeout(() => {
+                    this.$router.push('/');
+                }, 1000)
+            },
         }
 
     }

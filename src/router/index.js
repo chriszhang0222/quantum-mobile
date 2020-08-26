@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from "@/View/Login";
 import Home from "@/View/Home";
 import Dashboard from "@/View/Dashboard";
+import {SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
 Vue.use(VueRouter);
 
 const routes = [
@@ -18,6 +19,7 @@ const routes = [
                 path: '/dashboard',
                 name: 'Dashboard',
                 component: Dashboard,
+                meta: {requiredAuth: true}
             },
         ]
     }
@@ -26,5 +28,17 @@ const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes
+});
+
+router.beforeEach((to, from, next) => {
+    if(to.meta.requiredAuth){
+        if(sessionStorage.getItem(SESSION_KEY_LOGIN_USER)){
+            next();
+        }else{
+            next({path: '/'});
+        }
+    }else{
+        next();
+    }
 })
 export default router;

@@ -17,18 +17,28 @@
 <script>
     import vHeader from "../components/Header.vue";
     import vSidebar from "../components/Sidebar.vue";
+    import {SessionStorage} from "@/utils/SessionStorage";
+    import {SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
+    import {Tools} from "@/utils/Tools";
     export default {
         name: "Home",
         components:{vHeader, vSidebar},
         data: function(){
             return {
-                collapse: false
+                collapse: false,
+                user: {
+
+                }
             }
         },
         created() {
             this.$bus.on("collapse-content", (msg) => {
                 this.collapse = msg;
-            })
+            });
+            this.user = SessionStorage.getJson(SESSION_KEY_LOGIN_USER);
+            if(this.user === null || this.user === undefined || Tools.isEmpty(this.user)){
+                this.$router.push('/');
+            }
         },
         beforeDestroy() {
             this.$bus.off("collapse-content", (msg) => {

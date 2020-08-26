@@ -2,7 +2,7 @@
     <div class="login-wrap">
         <el-row>
             <el-col :xs="{span:24,offset:0}" :sm="{span:16,offset:4}" :md="{span:12,offset:6}">
-                <el-form class="login-container margin-top100">
+        <el-form class="login-container margin-top100" :model="ruleForm" :rules="rules" ref="ruleForm">
             <el-row>
                 <el-col :span="2">
                     <div class="quntLogo-white">
@@ -51,25 +51,40 @@
                     username: '',
                     password: '',
                 },
-                logging: false,
                 imgUrl: {
                     src: require('../assets/img/quantumLogo_small.png'),
                     logo: require('../assets/img/quantumLogo_whiteMark.png')
-                }
+                },
+                rules: {
+                    username: [{required: true, message: 'Please input username', trigger: 'blur'}],
+                    password: [{required: true, message: 'Please input password', trigger: 'blur'}],
+                },
+                logging: false,
             }
         },
         methods:{
             submit(){
-                let params = {
-                    username: this.ruleForm.username,
-                    password: this.ruleForm.password
-                }
-                loginAPI(params, this.loginCallBack);
+                this.$refs.ruleForm.validate(
+                    valid => {
+                        if(valid){
+                            this.logging = true;
+                            let params = {
+                                username: this.ruleForm.username,
+                                password: this.ruleForm.password
+                            }
+                            loginAPI(params, this.loginCallBack);
+                        }else{
+                            this.$message.error('Username/Password is required');
+                        }
+                    }
+                );
+
             },
             apiTokenCallback(res){
                 console.log(res);
             },
             loginCallBack(res){
+                this.logging = false;
                 let resp = res.data;
                 if(resp.success){
                     console.log(resp);

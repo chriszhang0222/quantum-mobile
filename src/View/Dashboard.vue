@@ -11,6 +11,8 @@
     import {testAPI} from "@/quantumApi/login/login";
     import {SessionStorage} from "@/utils/SessionStorage";
     import {AUTH_TOKEN, SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
+    import {Tools} from "@/utils/Tools";
+
     export default {
         name: "Dashboard",
         created(){
@@ -20,7 +22,10 @@
         },
         data(){
             return{
-                auth: ''
+                auth: '',
+                user:{
+
+                }
             }
         },
         methods: {
