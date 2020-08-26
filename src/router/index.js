@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from "@/View/Login";
 import Home from "@/View/Home";
+import Dashboard from "@/View/Dashboard";
 Vue.use(VueRouter);
 
 const routes = [
@@ -12,6 +13,13 @@ const routes = [
         path: '/home',
         name: 'Home',
         component: Home,
+        children: [
+            {
+                path: '/dashboard',
+                name: 'Dashboard',
+                component: Dashboard,
+            },
+        ]
     }
 ]
 const router = new VueRouter({

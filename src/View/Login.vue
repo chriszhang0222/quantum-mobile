@@ -56,7 +56,7 @@
             submit(){
                 this.$message.success('Login Successfully');
                 setTimeout(() => {
-                    this.$router.push("/home");
+                    this.$router.push("/dashboard");
                 }, 1500);
 
             }

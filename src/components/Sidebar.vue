@@ -43,11 +43,6 @@
                 collapse: false,
                 items: [
                     {
-                        icon: 'el-icon-document',
-                        index: 'database',
-                        title: 'Databases'
-                    },
-                    {
                         icon: 'el-icon-pie-chart',
                         index: 'dashboard',
                         title: 'Dashboard'
