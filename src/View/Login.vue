@@ -87,7 +87,6 @@
                 this.logging = false;
                 let resp = res.data;
                 if(resp.success){
-                    console.log(resp);
                     SessionStorage.setJSON(SESSION_KEY_LOGIN_USER, resp.user);
                     SessionStorage.set(AUTH_TOKEN, resp.access);
                     this.$message.success('Login Successfully!!');
