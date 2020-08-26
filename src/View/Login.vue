@@ -12,7 +12,7 @@
                 <el-col :span="22" :xs="{offset:4,span:18}"><h2 class="title">Quantum Login</h2></el-col>
             </el-row>
             <el-form-item prop="name">
-                <el-input type="text" v-model="ruleForm.name" placeholder="username">
+                <el-input type="text" v-model="ruleForm.username" placeholder="username">
                     <template slot="prepend"><font-awesome-icon icon="user" size="xs"/></template>
                 </el-input>
             </el-form-item>
@@ -37,12 +37,18 @@
 </template>
 
 <script>
+    import {getAPIToken, loginAPI} from "@/quantumApi/login/login";
+    import {SessionStorage} from "@/utils/SessionStorage";
+    import {AUTH_TOKEN, SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
+
     export default {
         name: "Login",
+        created(){
+        },
         data(){
             return {
                 ruleForm: {
-                    name: '',
+                    username: '',
                     password: '',
                 },
                 logging: false,
@@ -54,10 +60,29 @@
         },
         methods:{
             submit(){
-                this.$message.success('Login Successfully');
-                setTimeout(() => {
-                    this.$router.push("/dashboard");
-                }, 1500);
+                let params = {
+                    username: this.ruleForm.username,
+                    password: this.ruleForm.password
+                }
+                loginAPI(params, this.loginCallBack);
+            },
+            apiTokenCallback(res){
+                console.log(res);
+            },
+            loginCallBack(res){
+                let resp = res.data;
+                if(resp.success){
+                    console.log(resp);
+                    SessionStorage.setJSON(SESSION_KEY_LOGIN_USER, resp.user);
+                    SessionStorage.set(AUTH_TOKEN, resp.access);
+                    this.$message.success('Login Successfully!!');
+                    setTimeout(() => {
+                        this.$router.push('/dashboard');
+                    }, 1000)
+                }else{
+                    let message = resp.message;
+                    this.$message.error(message);
+                }
 
             }
         }

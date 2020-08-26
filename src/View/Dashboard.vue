@@ -8,11 +8,21 @@
 </template>
 
 <script>
+    import {testAPI} from "@/quantumApi/login/login";
+    import {SessionStorage} from "@/utils/SessionStorage";
+    import {AUTH_TOKEN, SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
     export default {
         name: "Dashboard",
+        created(){
+            this.auth = SessionStorage.get(AUTH_TOKEN);
+            console.log(this.auth);
+        },
+        mounted(){
+            testAPI(this.auth);
+        },
         data(){
             return{
-
+                auth: ''
             }
         },
         methods: {
