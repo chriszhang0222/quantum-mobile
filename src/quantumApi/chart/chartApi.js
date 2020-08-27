@@ -45,3 +45,32 @@ export const drawColumn = (container, data, text, configs) => {
         // }
     }).render()
 }
+
+export const drawPie = (container, data, text, configs) => {
+    new Pie(container, {
+        width: 290,
+        height: 250,
+        forceFit: true,
+        title: {
+            visible: false,
+            style:{
+                fontSize: 12,
+                fill: 'black',
+            }
+        },
+        radius: 1,
+        data,
+        angleField: configs.yField,
+        colorField: configs.xField,
+        label: {
+            visible: false,
+            type: 'inner',
+        },
+        legend:{
+            visible: true,
+            position: 'bottom-center',
+            formatter: (data) => {if(configs.format){ return data.split('-')[0];}else{return data}}
+        },
+        color: COLORS
+    }).render();
+}
