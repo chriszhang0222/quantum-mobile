@@ -57,7 +57,6 @@
             },
         },
         mounted(){
-            console.log(this.home_historgam_data);
         },
         data(){
             return{

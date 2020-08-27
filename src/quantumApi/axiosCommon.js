@@ -100,7 +100,6 @@ export const apiSync = (method, url, params) => {
 }
 
 export const apiAsyncAuth = (method, url, params, callback, auth) => {
-    console.log(auth);
     if(method == 'get') {
         return axios({
             headers: {

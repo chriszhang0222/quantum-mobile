@@ -47,6 +47,11 @@
                         index: 'dashboard',
                         title: 'Dashboard'
                     },
+                    {
+                        icon: 'el-icon-s-data',
+                        index: 'report',
+                        title: 'Report'
+                    }
                 ]
             };
         },
