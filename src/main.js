@@ -6,6 +6,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import ElementUI from 'element-ui'
 import router from './router';
 import store from './store/index';
+import filters from "@/filters/filters";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
@@ -23,6 +24,9 @@ Vue.use(VueBus);
 Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
 
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+});
 
 new Vue({
   router,
