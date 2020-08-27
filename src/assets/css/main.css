@@ -220,3 +220,10 @@ a {
 .bg-purple-dark {
     background: #99a9bf;
 }
+
+.margin-top10{
+    margin-top: 10px;
+}
+.margin-top20{
+    margin-top: 20px;
+}

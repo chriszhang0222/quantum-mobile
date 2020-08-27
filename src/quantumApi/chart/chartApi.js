@@ -1,9 +1,11 @@
-import { Line, Rose, Column, Pie } from '@antv/g2plot'
+import { Line, Rose, Column, Pie,TinyColumn } from '@antv/g2plot'
 import { Chart } from '@antv/g2';
 import {COLORS} from "@/utils/Constants";
 
 export const drawColumn = (container, data, text, configs) => {
-    new Column(container, {
+    new Column (container, {
+        width: 100,
+        height: 250,
         title: {
             visible: true,
             text: text
@@ -20,7 +22,7 @@ export const drawColumn = (container, data, text, configs) => {
             }
         },
         label: {
-            visible: true,
+            visible: false,
             style: {
                 fill: '#0D0E68',
                 fontSize: 12,
