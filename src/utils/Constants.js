@@ -6,3 +6,18 @@ export const COLORS = ['#2a57f5', '#00C292', '#FEC108', '#e2026a',
     '#f9b978', 'rgba(241,35,68,0.84)', 'rgba(3,206,175,0.87)', 'rgba(158,234,148,0.92)']
 
 export const SUPPLIER_TOTAL = "SUPPLIER_TOTAL";
+
+export const reportType = [
+    {
+        'label': 'Spend by All Suppliers',
+        'value': 'supplier'
+    },
+    {
+        'label': 'Spend by Supplier with Country Code',
+        'value': 'supplier_with_country'
+    },
+    {
+        'label': 'Supplier with Missing/Expired Certificates',
+        'value': 'supplier_expired_cert'
+    }
+]
