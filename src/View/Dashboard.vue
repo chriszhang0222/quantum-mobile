@@ -1,27 +1,55 @@
 <template>
     <div>
-        <el-row :gutter="10">
+            <el-row :gutter="20">
+                <el-col :span="12" :xs="{span:24}">
+                    <el-card>
+                        <el-row class="margin-top20">
+                            <div class="section-content bg-purple-light">
+                                <font-awesome-icon icon="users" size="lg"/> Total Supplier Count: <span>{{ quantum_total.total|formatNumber}}</span>
+                            </div>
+                        </el-row>
+                        <el-row class="margin-top10">
+                            <div class="section-content bg-purple-light">
+                                <font-awesome-icon icon="certificate" size="lg"/> Number of Diverse Suppliers: <span>{{quantum_total.diverse|formatNumber}}</span>
+                            </div>
+                        </el-row>
+                        <el-row class="margin-top10">
+                            <div class="section-content bg-purple-light">
+                                <font-awesome-icon icon="certificate" size="lg"/> Active Diverse Suppliers: <span>{{quantum_total.active|formatNumber}}</span>
+                            </div>
+                        </el-row>
+                    </el-card>
+                </el-col>
+
+                <el-col :span="12" :xs="{span:24}">
+                    <el-card>
+                        <el-row>
+                            <div id="home_historgam" v-loading="historgam_loading"></div>
+                        </el-row>
+                    </el-card>
+                </el-col>
+            </el-row>
+        <el-row :gutter="10" class="margin-top10">
             <el-col :span="12" :xs="{span:24}">
-                <el-row class="margin-top20">
-                    <div class="section-content bg-purple-light">
-                        <font-awesome-icon icon="users" size="lg"/> Total Supplier Count: <span>{{ quantum_total.total|formatNumber}}</span>
+                <el-card>
+                    <div slot="header" class="clearfix">
+                        <span>Supplier Certificate Metrics</span>
                     </div>
-                </el-row>
-                <el-row class="margin-top10">
-                    <div class="section-content bg-purple-light">
-                        <font-awesome-icon icon="certificate" size="lg"/> Number of Diverse Suppliers: <span>{{quantum_total.diverse|formatNumber}}</span>
-                    </div>
-                </el-row>
-                <el-row class="margin-top10">
-                    <div class="section-content bg-purple-light">
-                        <font-awesome-icon icon="certificate" size="lg"/> Active Diverse Suppliers: <span>{{quantum_total.active|formatNumber}}</span>
-                    </div>
-                </el-row>
-            </el-col>
-            <el-col :span="12" :xs="{span:24}">
-                <el-row>
-                    <div id="home_historgam" v-loading="historgam_loading"></div>
-                </el-row>
+                    <el-table
+                            border
+                            :data="tableData"
+                            style="width: 100%"
+                            height="100">
+                        <el-table-column
+                                prop="description"
+                                label="Description">
+                        </el-table-column>
+                        <el-table-column
+                                prop="count"
+                                label="Count">
+                        </el-table-column>
+                    </el-table>
+                </el-card>
             </el-col>
         </el-row>
     </div>
@@ -86,7 +114,8 @@
                     'total': 0,
                     'diverse': 0,
                     'active': 0
-                }
+                },
+                tableData: [{"description": "Suppliers registered in the past 30 days", "count": 80}]
             }
         },
         methods: {
