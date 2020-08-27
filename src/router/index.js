@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from "@/View/Login";
 import Home from "@/View/Home";
 import Dashboard from "@/View/Dashboard";
+import Chat from "@/View/Chat";
 import {SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
 Vue.use(VueRouter);
 
@@ -21,6 +22,12 @@ const routes = [
                 component: Dashboard,
                 meta: {requiredAuth: true}
             },
+            {
+                path: '/chat',
+                name: 'Chat',
+                component: Chat,
+                meta: {requiredAuth: true}
+            }
         ]
     }
 ]
