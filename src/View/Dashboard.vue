@@ -29,10 +29,10 @@
                     </el-card>
                 </el-col>
             </el-row>
-        <el-row :gutter="10" class="margin-top10">
+            <el-row :gutter="10" class="margin-top10">
             <el-col :span="8" :xs="{span:24}">
                 <el-card>
-                    <div slot="header" class="clearfix">
+                    <div class="clearfix">
                         <span>Supplier Certificate Metrics</span>
                     </div>
                     <el-table
@@ -53,7 +53,7 @@
             </el-col>
             <el-col :span="8" :xs="{span:24}">
                 <el-card>
-                    <div slot="header" class="clearfix">
+                    <div class="clearfix">
                         <span>Diversity Counts Metrics</span>
                     </div>
                     <el-table
@@ -86,7 +86,7 @@
             </el-col>
             <el-col :span="8" :xs="{span: 24}">
                 <el-card>
-                    <div slot="header" class="clearfix">
+                    <div class="clearfix">
                         <span>Supplier Count By Ethnicity</span>
                     </div>
                     <el-table
@@ -106,6 +106,40 @@
                 </el-card>
             </el-col>
         </el-row>
+            <el-row :gutter="10" class="margin-top10">
+                <el-col :span="6" :xs="{span:12}">
+                    <el-card v-loading="pie_eth">
+                        <div class="clearfix" style="margin-bottom: -10px">
+                            <span>Supplier By Ethnicity</span>
+                        </div>
+                        <el-row><div id="supplier_ethnicity"></div></el-row>
+                    </el-card>
+                </el-col>
+                <el-col :span="6" :xs="{span:12}">
+                    <el-card v-loading="pie_naics">
+                        <div class="clearfix" style="margin-bottom: -10px">
+                            <span>Supplier By NAICS</span>
+                        </div>
+                        <el-row><div id="supplier_naics"></div></el-row>
+                    </el-card>
+                </el-col>
+                <el-col :span="6" :xs="{span:12}">
+                    <el-card v-loading="pie_location">
+                        <div class="clearfix" style="margin-bottom: -10px">
+                            <span>Supplier By Location</span>
+                        </div>
+                        <el-row><div id="supplier_location"></div></el-row>
+                    </el-card>
+                </el-col>
+                <el-col :span="6" :xs="{span:12}">
+                    <el-card v-loading="pie_status">
+                        <div class="" style="margin-bottom: -10px">
+                            <span>Supplier By Satus</span>
+                        </div>
+                        <el-row><div id="supplier_status"></div></el-row>
+                    </el-card>
+                </el-col>
+            </el-row>
     </div>
 </template>
 
@@ -113,8 +147,8 @@
     import {SessionStorage} from "@/utils/SessionStorage";
     import {AUTH_TOKEN, SESSION_KEY_LOGIN_USER, SUPPLIER_TOTAL} from "@/utils/Constants";
     import {Tools} from "@/utils/Tools";
-    import {drawColumn} from "@/quantumApi/chart/chartApi";
-    import {homePageHistoram} from "@/quantumApi/chart/chartQuantumApi";
+    import {drawColumn, drawPie} from "@/quantumApi/chart/chartApi";
+    import {homePageHistoram, supplierEthnicity, supplierNaics, supplierLocation, supplierStatus} from "@/quantumApi/chart/chartQuantumApi";
     import {quantumTotal, certificateMatrix } from "@/quantumApi/dashboard/dashboardApi";
 
     export default {
@@ -141,12 +175,17 @@
             homePageHistoram(this.auth);
         },
         mounted(){
+            let vm = this;
             certificateMatrix((res) => {
                 let resp = res.data;
                 if(resp.success){
                     this.tableData = resp.data;
                 }
-            }, this.auth)
+            }, this.auth);
+            this.supplierEthnicityDraw();
+            this.supplierNaicsDraw();
+            this.supplierStatusDraw();
+            this.supplierLocationDraw();
         },
         computed: {
             industryhistorgamData(){
@@ -174,6 +213,10 @@
                     'diverse': 0,
                     'active': 0
                 },
+                pie_eth: true,
+                pie_naics:true,
+                pie_location:true,
+                pie_status: true,
                 tableData: [{"description": "Suppliers registered in the past 30 days", "count": 80}],
                 diversityData: [
                     {"desc": "8A",
@@ -189,11 +232,84 @@
                         "desc": "African American",
                         "count": 1794
                     }
-                ]
+                ],
+                supplierPieEthnicity: [],
+                supplierPieNaics: [],
+                supplierPieLocation: [],
+                supplierPieStatus: []
             }
         },
         methods: {
-
+            supplierEthnicityDraw(){
+                let vm = this;
+                supplierEthnicity((res) => {
+                    let resp = res.data.data;
+                    for(let i = 0; i < resp.length; i += 1){
+                        let line = resp[i];
+                        vm.supplierPieEthnicity.push({
+                            'ethnicity': line[0],
+                            'count': line[1]
+                        });
+                    }
+                    drawPie("supplier_ethnicity", vm.supplierPieEthnicity, '', {
+                        xField: 'ethnicity',
+                        yField: 'count'
+                    });
+                    vm.pie_eth = false;
+                }, this.auth)
+            },
+            supplierNaicsDraw(){
+                let vm = this;
+                supplierNaics((res) => {
+                    let resp = res.data.data;
+                    for(let line of resp){
+                        vm.supplierPieNaics.push({
+                            'naics': line[0],
+                            'count': line[1]
+                        })
+                    }
+                    drawPie("supplier_naics", vm.supplierPieNaics, '', {
+                        xField: 'naics',
+                        yField: 'count',
+                        format: true
+                    })
+                    vm.pie_naics = false;
+                }, vm.auth)
+            },
+            supplierStatusDraw(){
+              let vm = this;
+              supplierStatus((res) => {
+                  let resp = res.data.data;
+                  for(let line of resp){
+                      vm.supplierPieStatus.push({
+                          'status': line[0],
+                          'count': line[1],
+                      })
+                  }
+                  drawPie('supplier_status', vm.supplierPieStatus, '', {
+                      xField: 'status',
+                      yField: 'count'
+                  });
+                  vm.pie_status = false;
+              }, this.auth)
+            },
+            supplierLocationDraw(){
+                let vm = this;
+              supplierLocation((res) => {
+                  let resp = res.data.data;
+                  for(let line of resp){
+                      vm.supplierPieLocation.push({
+                          'location': line[0],
+                          'count': line[1]
+                      });
+                  }
+                  drawPie('supplier_location', vm.supplierPieLocation, '', {
+                      xField: 'location',
+                      yField: 'count'
+                  });
+              }, vm.auth)
+              this.pie_location = false;
+            },
         }
     }
 </script>
