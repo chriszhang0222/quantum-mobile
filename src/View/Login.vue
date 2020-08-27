@@ -91,7 +91,6 @@
                     SessionStorage.setJSON(SESSION_KEY_LOGIN_USER, resp.user);
                     SessionStorage.set(AUTH_TOKEN, resp.access);
                     this.$message.success('Login Successfully!!');
-                    homePageHistoram(resp.access);
                     this.$router.push('/dashboard');
                 }else{
                     let message = resp.message;
