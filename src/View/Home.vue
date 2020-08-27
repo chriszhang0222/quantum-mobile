@@ -5,7 +5,7 @@
             <vSidebar></vSidebar>
             <div class="content-box" :class="{'content-collapse':collapse}">
                 <div class="content">
-                    <transition name="move" mode="out-in">
+                    <transition name="move">
                         <router-view></router-view>
                     </transition>
                 </div>
@@ -52,5 +52,17 @@
 </script>
 
 <style scoped>
+    .moveL-enter-active,
+    .moveL-leave-active {
+        transition: all 0.3s linear;
+        transform: translateX(0%);
+    }
+    .moveL-enter,
+    .moveL-leave {
+        transform: translateX(-100%);
+    }
+    .moveL-leave-to {
+        transform: translateX(-100%);
+    }
 
 </style>
