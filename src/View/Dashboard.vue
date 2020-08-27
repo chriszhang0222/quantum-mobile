@@ -30,7 +30,7 @@
                 </el-col>
             </el-row>
         <el-row :gutter="10" class="margin-top10">
-            <el-col :span="12" :xs="{span:24}">
+            <el-col :span="8" :xs="{span:24}">
                 <el-card>
                     <div slot="header" class="clearfix">
                         <span>Supplier Certificate Metrics</span>
@@ -51,18 +51,71 @@
                     </el-table>
                 </el-card>
             </el-col>
+            <el-col :span="8" :xs="{span:24}">
+                <el-card>
+                    <div slot="header" class="clearfix">
+                        <span>Diversity Counts Metrics</span>
+                    </div>
+                    <el-table
+                            border
+                            :data="diversityData"
+                            style="width: 100%"
+                            height="100">
+                        <el-table-column
+                                prop="desc"
+                                label="">
+                        </el-table-column>
+                        <el-table-column
+                                prop="active"
+                                label="Active">
+                        </el-table-column>
+                        <el-table-column
+                                prop="approved"
+                                label="Approved">
+                        </el-table-column>
+                        <el-table-column
+                                prop="rejected"
+                                label="Rejected">
+                        </el-table-column>
+                        <el-table-column
+                                prop="count"
+                                label="Count">
+                        </el-table-column>
+                    </el-table>
+                </el-card>
+            </el-col>
+            <el-col :span="8" :xs="{span: 24}">
+                <el-card>
+                    <div slot="header" class="clearfix">
+                        <span>Supplier Count By Ethnicity</span>
+                    </div>
+                    <el-table
+                            border
+                            :data="ethnicityData"
+                            style="width: 100%"
+                            height="100">
+                        <el-table-column
+                                prop="desc"
+                                label="Description">
+                        </el-table-column>
+                        <el-table-column
+                                prop="count"
+                                label="Count">
+                        </el-table-column>
+                    </el-table>
+                </el-card>
+            </el-col>
         </el-row>
     </div>
 </template>
 
 <script>
-    import {testAPI} from "@/quantumApi/login/login";
     import {SessionStorage} from "@/utils/SessionStorage";
     import {AUTH_TOKEN, SESSION_KEY_LOGIN_USER, SUPPLIER_TOTAL} from "@/utils/Constants";
     import {Tools} from "@/utils/Tools";
     import {drawColumn} from "@/quantumApi/chart/chartApi";
     import {homePageHistoram} from "@/quantumApi/chart/chartQuantumApi";
-    import {quantumTotal} from "@/quantumApi/dashboard/dashboardApi";
+    import {quantumTotal, certificateMatrix } from "@/quantumApi/dashboard/dashboardApi";
 
     export default {
         name: "Dashboard",
@@ -87,6 +140,14 @@
             }
             homePageHistoram(this.auth);
         },
+        mounted(){
+            certificateMatrix((res) => {
+                let resp = res.data;
+                if(resp.success){
+                    this.tableData = resp.data;
+                }
+            }, this.auth)
+        },
         computed: {
             industryhistorgamData(){
                 return this.$store.state.home_historgam;
@@ -102,8 +163,6 @@
                 this.historgam_loading = false;
             },
         },
-        mounted(){
-        },
         data(){
             return{
                 auth: '',
@@ -115,7 +174,22 @@
                     'diverse': 0,
                     'active': 0
                 },
-                tableData: [{"description": "Suppliers registered in the past 30 days", "count": 80}]
+                tableData: [{"description": "Suppliers registered in the past 30 days", "count": 80}],
+                diversityData: [
+                    {"desc": "8A",
+                        "active": 10,
+                        "approved": 20,
+                        "rejected": 0,
+                        "registered":30,
+                        "count": 128
+                    }
+                ],
+                ethnicityData: [
+                    {
+                        "desc": "African American",
+                        "count": 1794
+                    }
+                ]
             }
         },
         methods: {
@@ -134,4 +208,7 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.40), inset 0 0 25px -6px rgba(0, 0, 0, 0.06);
     border-radius: 10px;
 }
+    span{
+        font-weight: bold;
+    }
 </style>

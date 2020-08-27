@@ -8,7 +8,11 @@ export const drawColumn = (container, data, text, configs) => {
         height: 250,
         title: {
             visible: true,
-            text: text
+            text: text,
+            style:{
+                fontSize: 12,
+                fill: 'black',
+            }
         },
         forceFit: true,
         data,
