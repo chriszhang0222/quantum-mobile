@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div v-loading="main_loading"
+         element-loading-text="Loading...">
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
@@ -193,6 +194,9 @@
             this.supplierNaicsDraw();
             this.supplierStatusDraw();
             this.supplierLocationDraw();
+            setTimeout(() => {
+                this.main_loading = false
+            }, 1000);
         },
         computed: {
             industryhistorgamData(){
@@ -243,7 +247,8 @@
                 supplierPieEthnicity: [],
                 supplierPieNaics: [],
                 supplierPieLocation: [],
-                supplierPieStatus: []
+                supplierPieStatus: [],
+                main_loading: true
             }
         },
         methods: {
