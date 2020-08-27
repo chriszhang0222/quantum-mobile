@@ -4,17 +4,17 @@
             <el-col :span="12" :xs="{span:24}">
                 <el-row class="margin-top20">
                     <div class="section-content bg-purple-light">
-                        <font-awesome-icon icon="users" size="lg"/> Total Supplier Count: <span>8888</span>
+                        <font-awesome-icon icon="users" size="lg"/> Total Supplier Count: <span>{{ quantum_total.total|formatNumber}}</span>
                     </div>
                 </el-row>
                 <el-row class="margin-top10">
                     <div class="section-content bg-purple-light">
-                        <font-awesome-icon icon="certificate" size="lg"/> Number of Diverse Suppliers: <span>2890</span>
+                        <font-awesome-icon icon="certificate" size="lg"/> Number of Diverse Suppliers: <span>{{quantum_total.diverse|formatNumber}}</span>
                     </div>
                 </el-row>
                 <el-row class="margin-top10">
                     <div class="section-content bg-purple-light">
-                        <font-awesome-icon icon="certificate" size="lg"/> Active Diverse Suppliers: <span>2890</span>
+                        <font-awesome-icon icon="certificate" size="lg"/> Active Diverse Suppliers: <span>{{quantum_total.active|formatNumber}}</span>
                     </div>
                 </el-row>
             </el-col>
@@ -30,15 +30,33 @@
 <script>
     import {testAPI} from "@/quantumApi/login/login";
     import {SessionStorage} from "@/utils/SessionStorage";
-    import {AUTH_TOKEN, SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
+    import {AUTH_TOKEN, SESSION_KEY_LOGIN_USER, SUPPLIER_TOTAL} from "@/utils/Constants";
     import {Tools} from "@/utils/Tools";
     import {drawColumn} from "@/quantumApi/chart/chartApi";
     import {homePageHistoram} from "@/quantumApi/chart/chartQuantumApi";
+    import {quantumTotal} from "@/quantumApi/dashboard/dashboardApi";
 
     export default {
         name: "Dashboard",
         created(){
             this.auth = SessionStorage.get(AUTH_TOKEN);
+            let supplier_total = SessionStorage.getJson(SUPPLIER_TOTAL);
+            if(Tools.isNotEmpty(supplier_total)){
+                this.quantum_total.total = supplier_total.total;
+                this.quantum_total.diverse = supplier_total.diverse;
+                this.quantum_total.active = supplier_total.active;
+            }else{
+                quantumTotal((res) => {
+                    let resp = res.data;
+                    if(resp.success){
+                        let supplier = resp.supplier_data;
+                        this.quantum_total.total = supplier.total;
+                        this.quantum_total.active = supplier.active;
+                        this.quantum_total.diverse = supplier.diverse;
+                        SessionStorage.setJSON(SUPPLIER_TOTAL, supplier);
+                    }
+                }, this.auth)
+            }
             homePageHistoram(this.auth);
         },
         computed: {
@@ -63,7 +81,12 @@
                 auth: '',
                 user:{},
                 home_historgam_data: [],
-                historgam_loading: true
+                historgam_loading: true,
+                quantum_total: {
+                    'total': 0,
+                    'diverse': 0,
+                    'active': 0
+                }
             }
         },
         methods: {
