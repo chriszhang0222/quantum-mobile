@@ -11,18 +11,21 @@
             <div class="discussion-filter">
                 <el-row class="margin-top10">
                     <el-col>
-                <tags-input
+                <AutoCompleteInput
                             class="team-task-discussion private-chat-user-input"
                             placeholder="Search for users"
-                            v-bind:existing-tags="existing_tags"
+                            :existing-tags="existing_tags"
+                            :typeahead-url="typeahead_url"
+                            :user-id="userId"
                             typeahead-style="dropdown"
                             :typeahead-hide-discard="true"
                             :typeahead-max-results=5
                             :limit="5"
                             :hide-input-on-limit="true"
+                            @tag-added="onTagAdded"
                             v-bind:wrapper-class="'tags-input-wrapper-custom'"
                             :typeahead="true">
-                </tags-input>
+                </AutoCompleteInput>
                 <img class="add-discussion-recipient-input"
                      style="margin-right: 5px"
                      :src="imgUrl.src"
@@ -44,11 +47,17 @@
 
 <script>
     import Roomblock from "../components/Roomblock";
+    import AutoCompleteInput from "../components/AutoCompleteInput";
+    import {SessionStorage} from "@/utils/SessionStorage";
+    import {SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
+
     export default {
         name: "Chat",
-        components: {Roomblock},
+        components: {Roomblock, AutoCompleteInput},
         data(){
             return{
+                user_Id: '',
+                typeahead_url: process.env.VUE_APP_SERVER + 'chat/get_users_in_company/?name=:search&user_id=:userID',
                 testRooms:[{
                     room_id: 10,
                     name: 'TestRoom',
@@ -60,9 +69,7 @@
                     messages:{},
                     unreadCount: 0
                 }],
-                existing_tags: [ { key: 'web-development', value: 'Web Development' },
-                    { key: 'php', value: 'PHP' },
-                    { key: 'javascript', value: 'JavaScript' },],
+                existing_tags: [{full_name: ''}],
                 imgUrl: {
                     src: require('../assets/img/create.png'),
                 },
@@ -122,11 +129,13 @@
                 }
             }
         },
-        mounted(){
-
+        created(){
+            this.userId = SessionStorage.getJson(SESSION_KEY_LOGIN_USER).user_id;
         },
         methods: {
+            onTagAdded(){
 
+            },
         }
     }
 </script>

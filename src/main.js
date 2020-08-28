@@ -12,9 +12,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
-import VoerroTagsInput from '@voerro/vue-tagsinput';
 
-Vue.component('tags-input', VoerroTagsInput);
 
 library.add(fas, far, fab)
 
