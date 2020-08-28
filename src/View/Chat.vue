@@ -49,14 +49,17 @@
     import Roomblock from "../components/Roomblock";
     import AutoCompleteInput from "../components/AutoCompleteInput";
     import {SessionStorage} from "@/utils/SessionStorage";
-    import {SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
+    import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN} from "@/utils/Constants";
+    import {getAllRooms} from "@/quantumApi/chat/chat";
 
     export default {
         name: "Chat",
         components: {Roomblock, AutoCompleteInput},
         data(){
             return{
-                user_Id: '',
+                auth: null,
+                userId: null,
+                companyId: null,
                 typeahead_url: process.env.VUE_APP_SERVER + 'chat/get_users_in_company/?name=:search&user_id=:userID',
                 testRooms:[{
                     room_id: 10,
@@ -75,7 +78,6 @@
                 },
                 pendingMessages: {},
                 unSentMessages: [],
-                userId: '',
                 searchText: '',
                 room_loaded: false,
                 message: 'Init',
@@ -130,11 +132,57 @@
             }
         },
         created(){
-            this.userId = SessionStorage.getJson(SESSION_KEY_LOGIN_USER).user_id;
+            this.initParams();
+            this.getRooms();
         },
         methods: {
             onTagAdded(){
 
+            },
+            async getRooms(loadMore, callBack){
+                let vm = this;
+                if(vm.roomParameters.loading){
+                    return;
+                }
+                if(!loadMore){
+                    vm.roomParameters.hasMoreRooms = true;
+                    vm.chatRoomMap = {};
+                }else if(!vm.roomParameters.hasMoreRooms){
+                    return;
+                }
+                vm.roomParameters.loading = true;
+                let filters = [];
+                let chatRooms = vm.$store.state.chatRooms;
+                let postData = {
+                    user_id: this.userId,
+                    company_id: this.companyId,
+                    discussion_filters: JSON.stringify(filters),
+                    room_type: vm.currentTab,
+                    rows: vm.ROOMS_PER_PAGE,
+                    term: vm.roomParameters.roomSearchString,
+                    exclude_room_ids: JSON.stringify(loadMore ? this.getAttrs(chatRooms, 'room_id') : [])
+                };
+                if(!loadMore){
+                    //Todo: chat change
+                    // vm.chatRooms = [];
+                    vm.$store.commit('setEmptyRoom');
+                }
+                let response = await getAllRooms(postData, this.auth);
+                let resp = response.data;
+            },
+
+            initParams(){
+                let user = SessionStorage.getJson(SESSION_KEY_LOGIN_USER);
+                this.userId = user.user_id;
+                this.companyId = user.company_id;
+                this.auth = SessionStorage.get(AUTH_TOKEN);
+            },
+            getAttrs: function(array, field){
+                let newArray = [];
+                for(let i=0; i<array.length;i++){
+                    newArray.push(array[i][field]);
+                }
+                return newArray;
             },
         }
     }
