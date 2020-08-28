@@ -7,11 +7,13 @@
                 </div>
             </el-col>
             <el-col :span="8" class="quantum-title" :xs="{offset: 2}">
-                   <span> Quantum</span>
+                   <span @click="backHome"> Quantum</span>
             </el-col>
             <el-col :span="2" :xs="{offset:5}" :md="{offset:10}" :sm="{offset:8}" :lg="{offset:11}">
                 <div class="message-container">
-                    <font-awesome-icon icon="comments"/>
+                    <el-badge :value="2">
+                    <font-awesome-icon icon="comments" @click="toChat"/>
+                    </el-badge>
                 </div>
             </el-col>
             <el-col :span="2">
@@ -75,6 +77,9 @@
             }
         },
         methods: {
+            backHome(){
+              this.$router.push('/dashboard');
+            },
             handleCommand(command){
                 if(command === 'logout'){
                     this.logout();
@@ -92,6 +97,9 @@
                     this.$router.push('/');
                 }, 1000)
             },
+            toChat(){
+                this.$router.push('/chat')
+            }
         }
 
     }
