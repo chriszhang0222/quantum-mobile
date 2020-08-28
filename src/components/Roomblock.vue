@@ -15,7 +15,7 @@
                         </el-col>
                         <el-col :span="18" :lg="{span:22}">
                             <el-row>
-                                <span class="pull-left"> {{testRoom.message.from}} </span>
+                                <span class="pull-left"> From: {{testRoom.message.from}} </span>
                                 <span class="discussion-prettytime pull-right" v-html="setPrettyTime(testRoom.message.timestamp)"></span>
                             </el-row>
                             <el-row>
