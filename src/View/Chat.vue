@@ -10,7 +10,7 @@
         <div class="chatroom-container">
             <div class="discussion-filter">
                 <el-row class="margin-top10">
-                    <el-col :xs="{span: 20}">
+                    <el-col>
                 <tags-input
                             class="team-task-discussion private-chat-user-input"
                             placeholder="Search for users"
@@ -23,28 +23,103 @@
                             v-bind:wrapper-class="'tags-input-wrapper-custom'"
                             :typeahead="true">
                 </tags-input>
-<!--                <img class="add-discussion-recipient-input"-->
-<!--                     style="margin-right: 5px"-->
-<!--                     src="/static/Images/Discussion/create.png"-->
-<!--                   >-->
+                <img class="add-discussion-recipient-input"
+                     style="margin-right: 5px"
+                     :src="imgUrl.src"
+                   >
                     </el-col>
                     </el-row>
             </div>
             <div class="chat-room-panel overflow-y-auto">
+                <el-row v-for="(chatRoom,index) in testRooms" :key="index">
+                    <Roomblock
+                            :index="index"
+                            :testRoom="chatRoom"
+                    ></Roomblock>
+                </el-row>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import Roomblock from "../components/Roomblock";
     export default {
         name: "Chat",
-        components: {},
+        components: {Roomblock},
         data(){
             return{
+                testRooms:[{
+                    room_id: 10,
+                    name: 'TestRoom',
+                    message: {
+                        from: 'Justin Trisdale',
+                        timestamp: '1598584947000',
+                        body: 'hello'
+                    },
+                    messages:{},
+                    unreadCount: 0
+                }],
                 existing_tags: [ { key: 'web-development', value: 'Web Development' },
                     { key: 'php', value: 'PHP' },
-                    { key: 'javascript', value: 'JavaScript' },]
+                    { key: 'javascript', value: 'JavaScript' },],
+                imgUrl: {
+                    src: require('../assets/img/create.png'),
+                },
+                pendingMessages: {},
+                unSentMessages: [],
+                userId: '',
+                searchText: '',
+                room_loaded: false,
+                message: 'Init',
+                chatRoomWindow: {
+                    mainWindowShown: false,
+                    minimized: false,
+                    activeWindow: null
+                },
+                serverUrl: "",
+                discussionTabs: [{
+                    title: 'Chat',
+                    type: 'users',
+                    unreadCount: 0,
+                },
+                ],
+                currentTab: 'users',
+                DISCUSSION_CONTAINER: '.discussion-scroll-div',
+                ROOMS_PER_PAGE: 20,
+                openedRooms: [],
+                roomParameters: {
+                    userSearchString: [],
+                    roomSearchString: [],
+                    at: false,
+                    imp: false,
+                    hasMoreRooms: true,
+                    loading: false,
+                    membersForNewGroup: []
+                },
+                workroomChatRoom: {
+                    room_id: null,
+                    unreadCount: 0,
+                    messages: [],
+                    disabled: false
+                },
+                MESSAGE_PAGINATE_ROWS: 20,
+                selected_room: null,
+            }
+        },
+        computed: {
+            chatRooms(){
+                return this.$store.state.chatRooms
+            },
+            displayedRooms(){
+                return this.$store.state.displayedRooms
+            }
+
+        },
+        watch: {
+            chatRooms:{
+                handler(oldValue, newValue){
+                }
             }
         },
         mounted(){
@@ -77,6 +152,7 @@
     .discussion-filter{
         padding: 2px 0;
         min-height: 60px;
+        border-bottom: 1px solid #dddddd;
     }
     .private-chat-user-input {
         font-size: 14px;
@@ -87,9 +163,15 @@
         box-shadow: none;
         cursor: text;
         min-height: 30px;
-        width: 100%;
+        width: 80%;
     }
     .tags-input{
         padding: 10px 10px;
+    }
+    .add-discussion-recipient-input {
+        height: 18px;
+        cursor: pointer;
+        margin-top: 10px;
+        float: right;
     }
 </style>

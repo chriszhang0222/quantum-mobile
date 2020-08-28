@@ -366,3 +366,29 @@ a {
     color: #fff;
     background-color: #007bff;
 }
+
+.pull-right {
+    float: right;
+}
+.pull-left {
+    float: left;
+}
+
+.margin-left10{
+    margin-left: 10px;
+}
+
+.user_picture {
+    width: 35px;
+    height: 35px;
+}
+
+.img-rounded {
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+}
+
+.margin-bottom10{
+    margin-bottom: 10px;
+}

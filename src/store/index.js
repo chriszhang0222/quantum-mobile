@@ -6,10 +6,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         home_historgam: [],
-        chat_rooms: [],
-        chat_alert:{
-
-        }
+        chatRooms: [],
+        displayedRooms: [],
+        chatRoomMap: {},
+        chatNotification: {
+            messages: [],
+            oldMessageCount: undefined,
+            unreadCount: 0
+        },
     },
     mutations: {
         sethomehistoram(state, data){
