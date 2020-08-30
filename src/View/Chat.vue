@@ -34,12 +34,14 @@
                     </el-row>
             </div>
             <div class="chat-room-panel overflow-y-auto">
-                <el-row v-for="(chatRoom,index) in testRooms" :key="index">
-                    <Roomblock
-                            :index="index"
-                            :testRoom="chatRoom"
-                    ></Roomblock>
-                </el-row>
+                <template v-if="room_loaded">
+                    <el-row
+                            v-for="(chatRoom,index) in chatRooms" :key="index">
+                        <Roomblock
+                                :index="index"
+                        ></Roomblock>
+                    </el-row>
+                </template>
             </div>
         </div>
     </div>
@@ -165,7 +167,8 @@
                 if(!loadMore){
                     vm.$store.commit('setEmptyRoom');
                 }
-                let data = await getAllRooms(postData, this.auth);
+                let resp = await getAllRooms(postData, this.auth);
+                let data = resp.data;
                 vm.roomParameters.loading = false;
                 vm.room_loaded = true;
                 let newRooms = data.rooms;
@@ -210,14 +213,14 @@
                 }
             },
             initChatRoom(chatRoom){
-                this.set(chatRoom, 'loadMessages', false);
-                this.set(chatRoom, 'newMembers', []);
-                this.set(chatRoom, 'messages', []);
-                this.set(chatRoom, 'oldMessageCount', undefined);
-                this.set(chatRoom, 'newMessageReceived', false);
-                this.set(chatRoom, 'minimized', false);
-                this.set(chatRoom, 'searchText', '')
-                this.set(chatRoom, 'searchResult', {
+                this.$set(chatRoom, 'loadMessages', false);
+                this.$set(chatRoom, 'newMembers', []);
+                this.$set(chatRoom, 'messages', []);
+                this.$set(chatRoom, 'oldMessageCount', undefined);
+                this.$set(chatRoom, 'newMessageReceived', false);
+                this.$set(chatRoom, 'minimized', false);
+                this.$set(chatRoom, 'searchText', '')
+                this.$set(chatRoom, 'searchResult', {
                     ROWS: 20,
                     ROWS_PER_TIME: 5,
                     remainCounts: 0,

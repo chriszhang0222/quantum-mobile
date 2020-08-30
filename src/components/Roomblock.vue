@@ -1,35 +1,35 @@
 <template>
     <div>
         <div class="discussion-message-block"
-             v-bind:class="{'discussion-unread' : testRoom.unreadCount > 0}">
+             v-bind:class="{'discussion-unread' : chatRoom.unreadCount > 0}">
             <div class="discussion-message-taskname">
-                <span class="pull-left discussion-room-name">{{ testRoom.name }}</span>
+                <span class="pull-left discussion-room-name">{{ chatRoom.name }}</span>
                 <span class="pull-right margin-left10"><font-awesome-icon icon="edit" /></span>
-                <span class="discussion-prettytime pull-right" v-show="testRoom.unreadCount > 0">{{ testRoom.unreadCount }} new</span>
+                <span class="discussion-prettytime pull-right" v-show="chatRoom.unreadCount > 0">{{ chatRoom.unreadCount }} new</span>
             </div>
             <div>
-                <div v-show="testRoom.message.body">
+                <div v-show="chatRoom.message.body">
                     <el-row class="margin-top10">
                         <el-col :span="6" :lg="{span:2}">
                             <img :src="imgSrc.src" class="user_picture img-rounded pull-left">
                         </el-col>
                         <el-col :span="18" :lg="{span:22}">
                             <el-row>
-                                <span class="pull-left"> From: {{testRoom.message.from}} </span>
-                                <span class="discussion-prettytime pull-right" v-html="setPrettyTime(testRoom.message.timestamp)"></span>
+                                <span class="pull-left"> From: {{chatRoom.message.from}} </span>
+                                <span class="discussion-prettytime pull-right" v-html="setPrettyTime(chatRoom.message.timestamp)"></span>
                             </el-row>
                             <el-row>
                             </el-row>
                         </el-col>
                     </el-row>
-                    <el-row v-show="testRoom.message.body">
+                    <el-row v-show="chatRoom.message.body">
                         <el-col :offset="6" :lg="{offset:2, span:22}" :span="18">
-                            <span class="pull-left discussion-short-chat-message">{{ testRoom.message.body }}</span>
+                            <span class="pull-left discussion-short-chat-message">{{ chatRoom.message.body }}</span>
                         </el-col>
                     </el-row>
                 </div>
-                <div v-show="testRoom.message.body === null || testRoom.message.body === undefined">
-                    <el-row v-show="testRoom.message.body === null || testRoom.message.body === undefined">
+                <div v-show="chatRoom.message.body === null || chatRoom.message.body === undefined">
+                    <el-row v-show="chatRoom.message.body === null || chatRoom.message.body === undefined">
                         <el-col :offset="6" :lg="{offset:2, span:22}" :span="18">
                             <span class="pull-left discussion-short-chat-message">There are no messages.</span>
                         </el-col>
@@ -47,9 +47,6 @@
         props: {
             index:{
                 type: Number
-            },
-            testRoom: {
-                type: Object
             },
         },
         computed:{
