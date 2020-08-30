@@ -3,6 +3,15 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+function findRoomsInArray(rooms, target){
+    for(let index = 0;index < rooms.length; index++){
+        if(rooms[index].room_id === target.room_id){
+            return index;
+        }
+    }
+    return -1;
+}
+
 export default new Vuex.Store({
     state: {
         home_historgam: [],
@@ -18,10 +27,6 @@ export default new Vuex.Store({
     mutations: {
         sethomehistoram(state, data){
             state.home_historgam = data;
-        },
-        updateAdminAlertCount(state, count){
-            let count_ = state.adminAlertNotification.unreadCount;
-            Vue.set(state.adminAlertNotification, 'unreadCount', Math.max(count+count_,0));
         },
         updateNotification(state, count){
             let count_ = state.chatNotification.unreadCount;
