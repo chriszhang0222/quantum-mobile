@@ -163,14 +163,69 @@
                     exclude_room_ids: JSON.stringify(loadMore ? this.getAttrs(chatRooms, 'room_id') : [])
                 };
                 if(!loadMore){
-                    //Todo: chat change
-                    // vm.chatRooms = [];
                     vm.$store.commit('setEmptyRoom');
                 }
-                let response = await getAllRooms(postData, this.auth);
-                let resp = response.data;
+                let data = await getAllRooms(postData, this.auth);
+                vm.roomParameters.loading = false;
+                vm.room_loaded = true;
+                let newRooms = data.rooms;
+                for(let i=0;i<newRooms.length;i++){
+                    let room = newRooms[i];
+                    vm.initChatRoom(room);
+                }
+                vm.roomParameters.hasMoreRooms = data.has_more_rooms;
+                vm.$store.commit('concatRoom', newRooms);
+                vm.updateRoomMap(data.rooms);
+                if(callBack){
+                    callBack();
+                }
             },
-
+            updateRoomMap: function(rooms){
+                let room;
+                let vm = this;
+                for(let i=0;i<rooms.length;i++){
+                    room = rooms[i];
+                    room.unreadCount = room.unread_count;
+                    vm.chatRoomMap[room.room_id] = room;
+                    this.updateWorkroomChatRoomCount(room.room_id, room.unreadCount);
+                }
+            },
+            isRoomActive: function(room_id){
+                let vm = this;
+                return vm.chatRoomWindow.activeWindow &&
+                    room_id == vm.chatRoomWindow.activeWindow.room_id &&
+                    ! vm.chatRoomWindow.activeWindow.minimized;
+            },
+            updateWorkroomChatRoomCount: function(room_id, unreadCount, countDiff){
+                let vm = this;
+                if(!vm.isRoomActive(room_id)){
+                    return;
+                }
+                if(vm.workroomChatRoom.room_id == room_id){
+                    if(unreadCount !== null){
+                        vm.workroomChatRoom.unreadCount = unreadCount;
+                    }else{
+                        vm.workroomChatRoom.unreadCount += countDiff;
+                    }
+                }
+            },
+            initChatRoom(chatRoom){
+                this.set(chatRoom, 'loadMessages', false);
+                this.set(chatRoom, 'newMembers', []);
+                this.set(chatRoom, 'messages', []);
+                this.set(chatRoom, 'oldMessageCount', undefined);
+                this.set(chatRoom, 'newMessageReceived', false);
+                this.set(chatRoom, 'minimized', false);
+                this.set(chatRoom, 'searchText', '')
+                this.set(chatRoom, 'searchResult', {
+                    ROWS: 20,
+                    ROWS_PER_TIME: 5,
+                    remainCounts: 0,
+                    totalCounts: 0,
+                    shownMessages: null,
+                    unShownMessages: null
+                })
+            },
             initParams(){
                 let user = SessionStorage.getJson(SESSION_KEY_LOGIN_USER);
                 this.userId = user.user_id;
