@@ -108,7 +108,7 @@
                         nonEmptyWords.push(words[i]);
                     }
                 }
-                return message.replace(new RegExp('('+ nonEmptyWords.join('|') +'(?![^<>]*>))', 'gi'), '<span class="highlight_search_string">$1</span>');
+                return message.replace(new RegExp('('+ nonEmptyWords.join('|') +'(?![^<>]*>))', 'gi'), '<span class="highlight_search_string" style="background-color: #FFD441">$1</span>');
             },
             download: function(File){
                 let params = {
@@ -167,6 +167,9 @@
     }
     .owner-message .message-content {
         background-color: #2ECC71;
+    }
+    .highlight_search_string {
+        background-color: #FFD441;
     }
 
 </style>

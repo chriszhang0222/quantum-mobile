@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div class="chat-room-panel">
-                <div class="discussion-message-view">
+                <div class="discussion-message-view" v-show="!chatRoom.searchResult.shownMessages">
                     <div class="discussion-scroll-div"
                          v-on:scroll="whenScroll(chatRoom)" id="scroll-container">
                         <div v-if="chatRoom.messageLoaded">
@@ -50,6 +50,34 @@
                                     v-bind:userid="user.user_id"
                                     v-bind:key="index"
                                     />
+                        </div>
+                    </div>
+                </div>
+                <div class="discussion-message-view" v-show="chatRoom.searchResult.shownMessages">
+                    <div align="center" v-if="chatRoom.searchResult.shownMessages && chatRoom.searchResult.shownMessages.length === 0" class="discussion-task-content-holder">-->
+                        <div class="discussion-task-content">
+                            <div class="paddingtop-10">
+                                <p>No Matching Result.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="chatRoom.searchResult.shownMessages && chatRoom.searchResult.shownMessages.length > 0" >
+                        <Messages
+                                v-for="(message, index) in chatRoom.searchResult.shownMessages"
+                                v-bind:message="message"
+                                v-bind:messages="chatRoom.searchResult.shownMessages"
+                                v-bind:chatroom="chatRoom"
+                                v-bind:index="index"
+                                v-bind:searchtext="chatRoom.searchText"
+                                v-bind:userid="user.user_id"
+                                v-bind:key="index"
+                        >
+                        </Messages>
+                        <div class="paddingleftright-12 margin-bottom30">
+                            <span class="discussion-chat-message no-discussion-messages">{{ chatRoom.searchResult.totalCounts }} results in total</span>
+                            <span class="discussion-chat-message no-discussion-messages pull-right pointer-cursor" ng-if="chatRoom.searchResult.remainCounts">
+                                        <a v-on:click="searchInputChange(chatRoom, false)">show {{ chatRoom.searchResult.remainCounts }} more results</a>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -248,14 +276,13 @@
                         start: initial ? 0 : unShownLength + searchResult.shownMessages.length
                     }
                     searchMessage(postData, this.auth)
-                    .then((res) => {
-                        console.log(res);
-                        let data = res.data;
+                    .then((resp) => {
+                        let res = resp.data;
+                        searchResult.unShownMessages = searchResult.unShownMessages.concat(res.messages);
+                        searchResult.totalCounts = res.total_discussion_count;
+                        this.loadMoreSearchResult(searchResult, rows_per_time, chatRoom);
                     })
 
-                    // searchResult.unShownMessages = searchResult.unShownMessages.concat(res.messages);
-                    // searchResult.totalCounts = res.total_discussion_count;
-                    // this.loadMoreSearchResult(searchResult, rows_per_time, chatRoom);
                 }
             },
             loadMoreSearchResult(searchResult, rows, chatRoom){
@@ -263,6 +290,7 @@
                 searchResult.shownMessages = searchResult.shownMessages.concat(messages);
                 searchResult.remainCounts = Math.max(0, searchResult.totalCounts - searchResult.shownMessages.length);
                 this.$set(chatRoom, 'searchResult', searchResult);
+                console.log(chatRoom.searchResult.shownMessages)
             },
             toShowMemberPage(chatRoom){
                 this.$set(chatRoom, 'showMembers', true);
