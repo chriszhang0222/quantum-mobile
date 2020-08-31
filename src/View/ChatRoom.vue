@@ -12,7 +12,7 @@
         <div class="chatroom-header" v-bind:class="{'new-message-received': chatRoom.newMessageReceived}">
             <span class="header-name"> {{ chatRoom.name }}</span>
         </div>
-        <div class="chatroom-container" v-show="!chatRoom.showMembers">
+        <div class="message-container" v-show="!chatRoom.showMembers">
             <div class="discussion-tool-bar clearfix">
                 <div class="search-discussion">
                     <img class="discussion-input-field-icon search-icon" :src="img.search">
@@ -34,6 +34,43 @@
                     <div class="room-member-count">{{ chatRoom.members.length }}</div>
                 </div>
             </div>
+            <div class="chat-room-panel">
+                <div class="discussion-message-view">
+                    <div class="discussion-scroll-div"
+                         v-on:scroll="whenScroll(chatRoom)">
+                        <div v-if="chatRoom.messageLoaded">
+                            <div class="chat-load-more onhighlight" v-if="chatRoom.oldMessageCount > 0">Loading more ...</div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="discussion-chatbox">
+                    <div class="quantum-chatbox">
+                        <form>
+                            <div class="position-relative">
+                                <div id="input-box"
+                                        contenteditable="true"
+                                     ref="userInput"
+                                     tabindex="0"
+                                     @keydown="handleKey($event, chatRoom)"
+                                     class="editor form-control chatboxinput padding-2"
+                                     v-bind:class="{'cursor-text': !chatRoom.disabled}"
+                                     placeholder="Enter message..."
+                                    >
+                                </div>
+                                <button id="discussion-send-chat-button" class="message-send"
+                                        v-on:click="prepareAndSendNewMessage(chatRoom)">
+                                    Send
+                                </button>
+                                <div class="discussion-add-file" v-on:click="openFileModal(chatRoom)">
+                                    <font-awesome-icon icon="file-word"></font-awesome-icon>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </template>
@@ -48,6 +85,11 @@
           this.chatRoom = SessionStorage.getJson(CHATROOM);
         },
         mounted(){
+            let box = document.getElementById('input-box');
+
+            setTimeout(() => {
+                box.focus()
+            }, 0)
         },
         data(){
             return {
@@ -60,6 +102,15 @@
             }
         },
         methods:{
+            handleKey(){
+
+            },
+            prepareAndSendNewMessage(chatRoom){
+
+            },
+            openFileModal(chatRoom){
+
+            },
             clearSearchText(chatRoom){
                 this.$set(chatRoom, 'searchText' , '');
                 this.$set(chatRoom, 'searchResult', {
@@ -80,7 +131,11 @@
             },
             toShowMemberPage(chatRoom){
                 this.$set(chatRoom, 'showMembers', true);
-            }
+            },
+            whenScroll(chatRoom){
+
+            },
+
         }
     }
 </script>
@@ -156,6 +211,81 @@
         left: 5px;
         top: -10px;
         font-size: 10px;
+    }
+
+    .discussion-message-view {
+        position: relative;
+        width: 100%;
+        height: -webkit-calc(100% - 50px);
+        height: -moz-calc(100% - 50px);
+        height: calc(100% - 50px);
+    }
+    .discussion-scroll-div {
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .discussion-add-file {
+        position: absolute;
+        cursor: pointer;
+        height: 50px;
+        width: 50px;
+        top: 18px;
+        right: 35px;
+        border: none;
+        color: #4A90E2;
+        background-color: transparent;
+    }
+    .chat-load-more {
+        background-color: rgba(255, 255, 255, 0.4);
+        color: black;
+        text-align: center;
+        cursor: pointer;
+    }
+    .discussion-chatbox {
+        background-color: #ffffff;
+    }
+
+    .quantum-chatbox .chatboxinput {
+        height: 30px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 16px 50px 16px 10px;
+        border-radius: 10px;
+        border-color: #DDDDDD;
+        line-height: normal;
+        width: 85%;
+    }
+
+    .message-container{
+        display: block;
+        flex: 1;
+        flex-basis: auto;
+        overflow: auto;
+        box-sizing: border-box;
+        background-color: #ffffff;
+        height: auto;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .message-send{
+        position: absolute;
+        top: 20px;
+        right: 10px;
+        border: none;
+        color: #4A90E2;
+        background-color: transparent;
+    }
+    [contenteditable=true]:empty:before {
+        content: attr(placeholder);
+        display: block;
+        color: #999999;
+        padding: 5px 15px;
+        float: left;
+
+    }
+    .position-relative{
+        position: relative;
     }
 
 </style>
