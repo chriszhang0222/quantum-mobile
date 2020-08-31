@@ -392,3 +392,11 @@ a {
 .margin-bottom10{
     margin-bottom: 10px;
 }
+
+.position-relative {
+    position: relative;
+}
+.colfit {
+    height: 100%;
+    padding: 1px;
+}

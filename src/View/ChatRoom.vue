@@ -37,10 +37,19 @@
             <div class="chat-room-panel">
                 <div class="discussion-message-view">
                     <div class="discussion-scroll-div"
-                         v-on:scroll="whenScroll(chatRoom)">
+                         v-on:scroll="whenScroll(chatRoom)" id="scroll-container">
                         <div v-if="chatRoom.messageLoaded">
-                            <div class="chat-load-more onhighlight" v-if="chatRoom.oldMessageCount > 0">Loading more ...</div>
-
+                            <div class="chat-load-more onhighlight margin-bottom10" v-if="chatRoom.oldMessageCount > 0">Loading more ...</div>
+                            <Messages
+                                    v-for="(message, index) in chatRoom.messages"
+                                    v-bind:message="message"
+                                    v-bind:messages="chatRoom.messages"
+                                    v-bind:chatroom="chatRoom"
+                                    v-bind:index="index"
+                                    v-bind:searchtext="chatRoom.searchText"
+                                    v-bind:userid="user.user_id"
+                                    v-bind:key="index"
+                                    />
                         </div>
                     </div>
                 </div>
@@ -79,19 +88,26 @@
     import {SessionStorage} from "@/utils/SessionStorage";
     import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN, CHATROOM} from "@/utils/Constants";
     import {loadChatMessage} from "@/quantumApi/chat/chat";
-
+    import Messages from "@/components/Messages";
     export default {
         name: "ChatRoom",
+        components: {Messages},
         created(){
          this.initData();
         },
         mounted(){
-            console.log(this.chatRoom);
             let box = document.getElementById('input-box');
             setTimeout(() => {
                 box.focus()
             }, 0);
-
+            let content = document.getElementsByClassName('content')[0];
+            let height = content.scrollHeight + 50;
+            content.scrollTo({
+                'top': height
+            });
+            this.loadMessages(this.scroll_options, null, (messages) =>{
+                this.scrollElement(this.scroll_options);
+            })
         },
         data(){
             return {
@@ -103,9 +119,9 @@
                 img: {search: require('../assets/img/search.png'),
                     clear: require('../assets/img/clear.png')
                 },
-                options: {
+                scroll_options: {
                     position: 'bottom',
-                    container: this.DISCUSSION_CONTAINER
+                    container: 'scroll-container'
                 }
             }
         },
@@ -157,11 +173,11 @@
                         scrollOptions.toElement = '.m' + messageID;
                         scrollOptions.hightlight = '.m' + messageID;
                     }
-                    this.scrollElement(scrollOptions);
+                   this.scrollElement(scrollOptions);
                 }
 
             },
-            scrollElement(scrollOptions){
+            scrollElement(options){
                 const BUFFER_HEIGHT = 20; //px
                 const EXTRA_HEIGHT = 50; //px
                 const container = options.container;
@@ -169,6 +185,12 @@
                 let height, toElement;
                 setTimeout(() => {
                     let element = document.getElementById(container);
+                    if(position === 'element'){
+                        toElement = document.getElementById(options.toElement);
+                    }else if(position === 'bottom'){
+                        height = element.scrollHeight + EXTRA_HEIGHT;
+                    }
+                    element.scrollTo({'top': height});
                 }, 100)
             },
             handleKey(){
@@ -285,14 +307,13 @@
     .discussion-message-view {
         position: relative;
         width: 100%;
-        height: -webkit-calc(100% - 50px);
-        height: -moz-calc(100% - 50px);
-        height: calc(100% - 50px);
+        height: 600px;
     }
     .discussion-scroll-div {
         height: 100%;
         overflow-y: auto;
         overflow-x: hidden;
+        width: 100%;
     }
     .discussion-add-file {
         position: absolute;
@@ -310,6 +331,7 @@
         color: black;
         text-align: center;
         cursor: pointer;
+        font-size: 10px;
     }
     .discussion-chatbox {
         background-color: #ffffff;
@@ -331,7 +353,6 @@
         display: block;
         flex: 1;
         flex-basis: auto;
-        overflow: auto;
         box-sizing: border-box;
         background-color: #ffffff;
         height: auto;
