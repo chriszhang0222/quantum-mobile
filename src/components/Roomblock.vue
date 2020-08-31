@@ -7,7 +7,7 @@
                 <span class="pull-right margin-left10"><font-awesome-icon icon="edit" /></span>
                 <span class="discussion-prettytime pull-right" v-show="chatRoom.unreadCount > 0">{{ chatRoom.unreadCount }} new</span>
             </div>
-            <div>
+            <div v-on:click="$emit('openroom', chatRoom)">
                 <div v-show="chatRoom.message.body">
                     <el-row class="margin-top10">
                         <el-col :span="6" :lg="{span:2}">

@@ -21,3 +21,5 @@ export const reportType = [
         'value': 'supplier_expired_cert'
     }
 ]
+
+export const CHATROOM = "CHAT_ROOM";

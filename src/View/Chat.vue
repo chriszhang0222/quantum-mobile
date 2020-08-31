@@ -39,6 +39,7 @@
                             v-for="(chatRoom,index) in chatRooms" :key="index">
                         <Roomblock
                                 :index="index"
+                                v-on:openroom="openRoom"
                         ></Roomblock>
                     </el-row>
                 </template>
@@ -51,7 +52,7 @@
     import Roomblock from "../components/Roomblock";
     import AutoCompleteInput from "../components/AutoCompleteInput";
     import {SessionStorage} from "@/utils/SessionStorage";
-    import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN} from "@/utils/Constants";
+    import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN, CHATROOM} from "@/utils/Constants";
     import {getAllRooms} from "@/quantumApi/chat/chat";
 
     export default {
@@ -242,11 +243,16 @@
                 }
                 return newArray;
             },
+            openRoom(chatRoom){
+                console.log('open room' + chatRoom.room_id);
+                SessionStorage.setJSON(CHATROOM, chatRoom);
+                this.$router.push('/chatroom');
+            },
         }
     }
 </script>
 
-<style scoped>
+<style>
     .overflow-y-auto {
         overflow-y: auto;
     }

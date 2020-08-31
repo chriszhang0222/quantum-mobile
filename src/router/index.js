@@ -6,6 +6,7 @@ import Dashboard from "@/View/Dashboard";
 import Chat from "@/View/Chat";
 import Report from "@/View/Report";
 import {SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
+import ChatRoom from "@/View/ChatRoom";
 Vue.use(VueRouter);
 
 const routes = [
@@ -27,6 +28,12 @@ const routes = [
                 path: '/chat',
                 name: 'Chat',
                 component: Chat,
+                meta: {requiredAuth: true}
+            },
+            {
+                path: '/chatroom',
+                name: 'ChatRoom',
+                component: ChatRoom,
                 meta: {requiredAuth: true}
             },
             {
