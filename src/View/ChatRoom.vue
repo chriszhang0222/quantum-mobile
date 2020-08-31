@@ -78,30 +78,99 @@
 <script>
     import {SessionStorage} from "@/utils/SessionStorage";
     import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN, CHATROOM} from "@/utils/Constants";
+    import {loadChatMessage} from "@/quantumApi/chat/chat";
+
     export default {
         name: "ChatRoom",
         created(){
-          this.auth = SessionStorage.get(AUTH_TOKEN);
-          this.chatRoom = SessionStorage.getJson(CHATROOM);
+         this.initData();
         },
         mounted(){
+            console.log(this.chatRoom);
             let box = document.getElementById('input-box');
-
             setTimeout(() => {
                 box.focus()
-            }, 0)
+            }, 0);
+
         },
         data(){
             return {
+                user: {},
                 auth:'',
+                DISCUSSION_CONTAINER: '.discussion-scroll-div',
                 chatRoom: {
                 },
                 img: {search: require('../assets/img/search.png'),
                     clear: require('../assets/img/clear.png')
+                },
+                options: {
+                    position: 'bottom',
+                    container: this.DISCUSSION_CONTAINER
                 }
             }
         },
         methods:{
+            initData(){
+                this.auth = SessionStorage.get(AUTH_TOKEN);
+                this.chatRoom = SessionStorage.getJson(CHATROOM);
+                this.user = SessionStorage.getJson(SESSION_KEY_LOGIN_USER);
+            },
+            async loadMessages(scrollOpt, messageID,  callback){
+                let callBack = callback || function(){};
+                let scrollOptions = scrollOpt || {};
+                let timestamp = null;
+                if(this.chatRoom.oldMessageCount <= 0){
+                    return;
+                }else if(this.chatRoom.messages.length === 0){
+                    timestamp = null;
+                }else{
+                    timestamp = this.chatRoom.messages[0].timestamp;
+                }
+                let paramData = {
+                    room_id: this.chatRoom.room_id,
+                    user_id: this.user.user_id,
+                    rows: 20,
+                    timestamp: timestamp
+                }
+                let res = await loadChatMessage(paramData, this.auth);
+                let data = res.data;
+                let messages = data.messages;
+                if(messages.length > 0){
+                    let latestMessageID = null;
+                    messages.forEach((message, index) => {
+                       if(this.chatRoom.messages.length == 0 || message.timestamp < this.chatRoom.messages[0].timestamp){
+                           this.chatRoom.messages.unshift(message);
+                           if(!latestMessageID){
+                               latestMessageID = message.id;
+                           }
+                       }
+                    });
+                    this.$set(this.chatRoom, 'messageLoaded', true);
+                    this.$set(this.chatRoom, 'oldMessageCount', data.old_message_count);
+                    this.$store.commit('updatechatRooms', this.chatRoom);
+                    callback(messages);
+                    if(scrollOptions.position === 'element'){
+                        scrollOptions.toElement = 'message' + latestMessageID;
+                    }
+                    if(messageID){
+                        scrollOptions.position = 'element';
+                        scrollOptions.toElement = '.m' + messageID;
+                        scrollOptions.hightlight = '.m' + messageID;
+                    }
+                    this.scrollElement(scrollOptions);
+                }
+
+            },
+            scrollElement(scrollOptions){
+                const BUFFER_HEIGHT = 20; //px
+                const EXTRA_HEIGHT = 50; //px
+                const container = options.container;
+                const position = options.position;
+                let height, toElement;
+                setTimeout(() => {
+                    let element = document.getElementById(container);
+                }, 100)
+            },
             handleKey(){
 
             },
