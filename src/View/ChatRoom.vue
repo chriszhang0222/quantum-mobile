@@ -87,8 +87,9 @@
 <script>
     import {SessionStorage} from "@/utils/SessionStorage";
     import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN, CHATROOM} from "@/utils/Constants";
-    import {loadChatMessage} from "@/quantumApi/chat/chat";
+    import {loadChatMessage, searchMessage} from "@/quantumApi/chat/chat";
     import Messages from "@/components/Messages";
+    import {debounce} from 'throttle-debounce'
     export default {
         name: "ChatRoom",
         components: {Messages},
@@ -106,14 +107,14 @@
                 'top': height
             });
             this.loadMessages(this.scroll_options, null, (messages) =>{
-                this.scrollElement(this.scroll_options);
+
             })
         },
         data(){
             return {
                 user: {},
                 auth:'',
-                DISCUSSION_CONTAINER: '.discussion-scroll-div',
+                DISCUSSION_CONTAINER: 'scroll-container',
                 chatRoom: {
                 },
                 img: {search: require('../assets/img/search.png'),
@@ -164,7 +165,7 @@
                     this.$set(this.chatRoom, 'messageLoaded', true);
                     this.$set(this.chatRoom, 'oldMessageCount', data.old_message_count);
                     this.$store.commit('updatechatRooms', this.chatRoom);
-                    callback(messages);
+                    callBack(messages);
                     if(scrollOptions.position === 'element'){
                         scrollOptions.toElement = 'message' + latestMessageID;
                     }
@@ -187,6 +188,7 @@
                     let element = document.getElementById(container);
                     if(position === 'element'){
                         toElement = document.getElementById(options.toElement);
+                        height = toElement.scrollHeight + EXTRA_HEIGHT;
                     }else if(position === 'bottom'){
                         height = element.scrollHeight + EXTRA_HEIGHT;
                     }
@@ -217,8 +219,50 @@
                 SessionStorage.pop(CHATROOM);
               this.$router.back();
             },
-            searchInputChange(){
+            searchInputChange(chatRoom, initial){
+                  if(chatRoom.searchText.trim() === ""){
+                      chatRoom.searchResult.shownMessages = null;
+                  }else{
+                      let searchText = chatRoom.searchText.trim();
+                      this.loadSearchResults(searchText, initial, chatRoom);
+                  }
+            },
 
+            loadSearchResults(searchText, initial, chatRoom){
+                let searchResult = chatRoom.searchResult;
+                let rows = searchResult.ROWS || 20;
+                let rows_per_time = searchResult.ROWS_PER_TIME || 5;
+                if (initial) {
+                    searchResult.shownMessages = [];
+                    searchResult.unShownMessages = [];
+                }
+                let unShownLength = searchResult.unShownMessages.length;
+                if(unShownLength >= rows_per_time){
+                    this.loadMoreSearchResult(searchResult, rows_per_time, chatRoom);
+                }else{
+                    let postData = {
+                        user_id: this.user.user_id,
+                        room_id: chatRoom.room_id,
+                        term: searchText,
+                        rows: rows,
+                        start: initial ? 0 : unShownLength + searchResult.shownMessages.length
+                    }
+                    searchMessage(postData, this.auth)
+                    .then((res) => {
+                        console.log(res);
+                        let data = res.data;
+                    })
+
+                    // searchResult.unShownMessages = searchResult.unShownMessages.concat(res.messages);
+                    // searchResult.totalCounts = res.total_discussion_count;
+                    // this.loadMoreSearchResult(searchResult, rows_per_time, chatRoom);
+                }
+            },
+            loadMoreSearchResult(searchResult, rows, chatRoom){
+                let messages = searchResult.unShownMessages.splice(0, rows);
+                searchResult.shownMessages = searchResult.shownMessages.concat(messages);
+                searchResult.remainCounts = Math.max(0, searchResult.totalCounts - searchResult.shownMessages.length);
+                this.$set(chatRoom, 'searchResult', searchResult);
             },
             toShowMemberPage(chatRoom){
                 this.$set(chatRoom, 'showMembers', true);
@@ -227,9 +271,30 @@
                 if(!chatRoom || chatRoom.messages.length === 0){
                     return;
                 }
-                let vm = this;
-                let id = chatRoom.room_id;
+                let selector = this.DISCUSSION_CONTAINER
+                let container = document.getElementById(selector);
+                if(container.scrollTop === 0){
+                    setTimeout(() => {
+                        this.loadMessages({
+                            container: this.DISCUSSION_CONTAINER,
+                            position: 'element'
+                        }, null, (messages) => {
+
+                        })
+                    }, 500)
+                }
             },
+            debounce_(fn, wait){
+                let timer;
+                return function () {
+                    let self = this,
+                        args = arguments;
+                    clearTimeout(timer);
+                    timer = setTimeout(() => {
+                        fn.apply(self, args)   // 把参数传进去
+                    }, wait);
+                }
+            }
 
         }
     }

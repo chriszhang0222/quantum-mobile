@@ -28,6 +28,7 @@
     "sass": "^1.26.10",
     "sass-loader": "^9.0.3",
     "sweetalert": "^2.1.2",
+    "throttle-debounce": "^2.3.0",
     "vue": "^2.6.11",
     "vue-axios-cors": "^1.0.1",
     "vue-bus": "^1.2.1",
