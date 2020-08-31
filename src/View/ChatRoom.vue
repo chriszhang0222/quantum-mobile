@@ -224,7 +224,11 @@
                 this.$set(chatRoom, 'showMembers', true);
             },
             whenScroll(chatRoom){
-
+                if(!chatRoom || chatRoom.messages.length === 0){
+                    return;
+                }
+                let vm = this;
+                let id = chatRoom.room_id;
             },
 
         }
@@ -288,9 +292,9 @@
     .discussion-search-input {
         padding: 0 30px;
         border-radius: 100px;
-        border: none;
+        border: 1px solid #b8b8b8;
         color: #222E4C;
-        background-color: #dedede;
+        background-color: #ffffff;
         font-size: 12px;
         height: 35px;
         line-height: normal;

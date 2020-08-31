@@ -8,7 +8,7 @@
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-            <el-row :gutter="20">
+            <el-row :gutter="20" class="padding10">
                 <el-col :span="12" :xs="{span:24}">
                     <el-card>
                         <el-row class="margin-top20">
@@ -37,7 +37,7 @@
                     </el-card>
                 </el-col>
             </el-row>
-            <el-row :gutter="10" class="margin-top10">
+            <el-row :gutter="10" class="padding10 margin-top10">
             <el-col :span="8" :xs="{span:24}">
                 <el-card>
                     <div class="clearfix">
@@ -114,11 +114,11 @@
                 </el-card>
             </el-col>
         </el-row>
-            <el-row :gutter="10" class="margin-top10">
+            <el-row :gutter="5" class="padding10 margin-top10">
                 <el-col :span="6" :xs="{span:12}">
                     <el-card v-loading="pie_eth">
                         <div class="clearfix" style="margin-bottom: -10px">
-                            <span>Supplier By Ethnicity</span>
+                            <span>Supplier Count By Ethnicity</span>
                         </div>
                         <el-row><div id="supplier_ethnicity"></div></el-row>
                     </el-card>
@@ -126,7 +126,7 @@
                 <el-col :span="6" :xs="{span:12}">
                     <el-card v-loading="pie_naics">
                         <div class="clearfix" style="margin-bottom: -10px">
-                            <span>Supplier By NAICS</span>
+                            <span>Supplier Count By NAICS</span>
                         </div>
                         <el-row><div id="supplier_naics"></div></el-row>
                     </el-card>
@@ -134,7 +134,7 @@
                 <el-col :span="6" :xs="{span:12}">
                     <el-card v-loading="pie_location">
                         <div class="clearfix" style="margin-bottom: -10px">
-                            <span>Supplier By Location</span>
+                            <span>Supplier Count By Location</span>
                         </div>
                         <el-row><div id="supplier_location"></div></el-row>
                     </el-card>
@@ -142,7 +142,7 @@
                 <el-col :span="6" :xs="{span:12}">
                     <el-card v-loading="pie_status">
                         <div class="" style="margin-bottom: -10px">
-                            <span>Supplier By Satus</span>
+                            <span>Supplier Count By Status</span>
                         </div>
                         <el-row><div id="supplier_status"></div></el-row>
                     </el-card>
