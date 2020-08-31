@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="divider discussion-prettytime marginbottom-10"
+        <div class="divider discussion-prettytime marginbottom10"
              v-if="index == 0 || message.discussion_date != messages[index-1].discussion_date">
             <div class="discussion-date-div">
                 <span class="discussion-date-line">{{ message.discussion_time }}  {{ message.discussion_date }}</span>
@@ -9,16 +9,14 @@
         <div v-if="!message.from_user_id">
             <div class="divider discussion-prettytime marginbottom-10" v-html="message.body"></div>
         </div>
-        <div class="row rowfit paddingleftright-12 message"
+        <div class="paddingleftright-12 message"
+             v-bind:style="{'text-align': message.from_user_id === userid ? 'right': 'left'}"
              v-bind:class="{'owner-message': message.from_user_id == userid, 'bottom-message': showMessageBottom(messages, index, message)}"
              v-bind:id="'message'+message.id"
              v-if="message.from_user_id">
             <user-detail v-if="message.from_user_id != userid" v-bind:message="message">
             </user-detail>
             <div class="message-content" v-bind:title="message.discussion_time+','+message.discussion_date">
-                <div class="deleted-message" v-if="message.deleted">
-                    This message is deleted.
-                </div>
                 <div class="position-relative" v-if="!message.deleted">
                     <div class="colfit" v-if="!message.file">
                         <span v-html="highlight(message.body, chatroom.searchText)" class="discussion-chat-message display_block"></span>
@@ -28,7 +26,7 @@
                              src="message.file.file_url">
                         </div>
                         <div class="file-image file-type-icons" v-bind:class="message.file.file_type + '-icon'">
-                            <div class="marginleft-5 file-extension spancls textalign-center"></div>
+                            <i class="el-icon-folder"></i>
                         </div>
                         <span class="discussion-chat-message">{{ message.file.file_name }}</span>
                         <div class="text-right discussion-chat-message" v-if="message.discussion_time">
@@ -45,7 +43,7 @@
                      class="discussion-message-status-detail">
                     <div v-if="message.failed"><i class="fa fa-exclamation-triangle color-r"></i></div>
                     <div v-show="!message.failed && !message.discussion_time">
-                        <img v-if="!message.uploadProgress" class="discussion-loading" src="/static/Images/Discussion/loading.gif"/>
+                        <img v-if="!message.uploadProgress" class="discussion-loading" :src="img"/>
                         <div v-if="message.uploadProgress" class="discussion-progress-bar">
                             <progressbar class="progress-striped active" value="message.uploadProgress" type="info">{{ message.uploadProgress }}%</progressbar>
                         </div>
@@ -58,8 +56,35 @@
 </template>
 
 <script>
+    import UserDetail from "@/components/UserDetail";
     export default {
-        name: "Message",
+        name: "Messages",
+        components: {UserDetail},
+        props: {
+            message: {
+                type: Object
+            },
+            index: {
+                type: Number
+            },
+            searchtext: {
+                type: String
+            },
+            chatroom: {
+                type: Object
+            },
+            userid: {
+
+            },
+            messages: {
+                type: Array
+            }
+        },
+        data(){
+            return {
+                img:require('../assets/img/loading.gif')
+            }
+        },
         methods: {
             showMessageBottom: function(allmessage, index, message){
                 if(index === allmessage.length-1 || message.from_user_id != allmessage[index + 1].from_user_id){
@@ -96,5 +121,52 @@
 </script>
 
 <style scoped>
+    .discussion-prettytime {
+        color: #606D8C;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    .divider {
+        width: 100%;
+        text-align: center;
+    }
+    .bottom-message {
+        margin-bottom: 20px;
+    }
+    .message {
+        position: relative;
+        padding: 0 5px;
+        color: black;
+        word-wrap: break-word;
+    }
+
+    .img-rounded {
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+    }
+    .message-content {
+        position: relative;
+        background-color: #F1F1F1;
+        max-width: 77%;
+        padding: 10px 20px;
+        display: inline-block;
+        margin: 0 20px 3px 50px;
+        border-radius: 10px;
+    }
+    .message-content .file-image {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .discussion-message-status-detail {
+        font-size: 10px;
+        margin-bottom: 5px;
+    }
+    .discussion-loading {
+        width: 10px;
+    }
+    .owner-message .message-content {
+        background-color: #2ECC71;
+    }
 
 </style>
