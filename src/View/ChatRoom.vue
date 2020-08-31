@@ -74,7 +74,7 @@
                         >
                         </Messages>
                         <div class="paddingleftright-12 margin-bottom30">
-                            <span class="discussion-chat-message no-discussion-messages">{{ chatRoom.searchResult.totalCounts }} results in total</span>
+                            <span class="discussion-chat-message no-discussion-messages" style="float: left">{{ chatRoom.searchResult.totalCounts }} results in total</span>
                             <span class="discussion-chat-message no-discussion-messages pull-right pointer-cursor" ng-if="chatRoom.searchResult.remainCounts">
                                         <a v-on:click="searchInputChange(chatRoom, false)">show {{ chatRoom.searchResult.remainCounts }} more results</a>
                             </span>
@@ -477,6 +477,16 @@
     }
     .padding-2 {
         padding: 2px;
+    }
+    .no-discussion-messages {
+        color: #666666;
+    }
+    .discussion-chat-message {
+        font-size: 14px;
+        color: #34495E;
+        word-wrap: break-word;
+        margin: 7px;
+        line-height: 18px;
     }
 
 </style>

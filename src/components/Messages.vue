@@ -171,5 +171,18 @@
     .highlight_search_string {
         background-color: #FFD441;
     }
+    .discussion-date-div{
+        width: 100%;
+        text-align: center;
+        line-height: 0.1em;
+        margin: 20px 0;
+    }
+    .discussion-date-line {
+        padding: 3px 10px;
+        background: #FFF;
+        color: #34495E;
+        font-size: 12px;
+        opacity: 0.7;
+    }
 
 </style>
