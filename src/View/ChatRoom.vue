@@ -255,6 +255,7 @@
         border-color: #DDDDDD;
         line-height: normal;
         width: 85%;
+        text-align: left;
     }
 
     .message-container{
@@ -286,6 +287,9 @@
     }
     .position-relative{
         position: relative;
+    }
+    .padding-2 {
+        padding: 2px;
     }
 
 </style>
