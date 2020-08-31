@@ -1,12 +1,5 @@
 <template>
     <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>
-                    <i class="el-icon-s-comment"></i> Chat
-                </el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
         <div class="chatroom-container">
             <div class="discussion-filter">
                 <el-row class="margin-top10">

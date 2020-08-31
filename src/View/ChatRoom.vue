@@ -1,14 +1,5 @@
 <template>
     <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>
-                    <div @click="backtochat">
-                        <font-awesome-icon icon="undo-alt" size="xs"/> Back
-                    </div>
-                </el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
         <div class="chatroom-header" v-bind:class="{'new-message-received': chatRoom.newMessageReceived}">
             <span class="header-name"> {{ chatRoom.name }}</span>
         </div>
@@ -35,7 +26,7 @@
                 </div>
             </div>
             <div class="chat-room-panel">
-                <div class="discussion-message-view" v-show="!chatRoom.searchResult.shownMessages">
+                <div class="discussion-message-view" :style="{height: this.windowHeight - 187 + 'px'}" v-show="!chatRoom.searchResult.shownMessages">
                     <div class="discussion-scroll-div"
                          v-on:scroll="whenScroll(chatRoom)" id="scroll-container">
                         <div v-if="chatRoom.messageLoaded">
@@ -53,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="discussion-message-view" v-show="chatRoom.searchResult.shownMessages">
+                <div class="discussion-message-view"  v-show="chatRoom.searchResult.shownMessages">
                     <div align="center" v-if="chatRoom.searchResult.shownMessages && chatRoom.searchResult.shownMessages.length === 0" class="discussion-task-content-holder">-->
                         <div class="discussion-task-content">
                             <div class="paddingtop-10">
@@ -86,14 +77,14 @@
                         <form>
                             <div class="position-relative">
                                 <div id="input-box"
-                                        contenteditable="true"
+                                     contenteditable="true"
                                      ref="userInput"
                                      tabindex="0"
                                      @keydown="handleKey($event, chatRoom)"
                                      class="editor form-control chatboxinput padding-2"
                                      v-bind:class="{'cursor-text': !chatRoom.disabled}"
                                      placeholder="Enter message..."
-                                    >
+                                >
                                 </div>
                                 <button id="discussion-send-chat-button" class="message-send"
                                         v-on:click="prepareAndSendNewMessage(chatRoom)">
@@ -106,7 +97,6 @@
                         </form>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -137,9 +127,12 @@
             this.loadMessages(this.scroll_options, null, (messages) =>{
 
             })
+            this.windowHeight = window.innerHeight;
+            console.log(this.windowHeight);
         },
         data(){
             return {
+                windowHeight: 0,
                 user: {},
                 auth:'',
                 DISCUSSION_CONTAINER: 'scroll-container',
@@ -338,8 +331,6 @@
         font-weight: normal;
         border-bottom: 1px solid #7ebbe7;
         background: #7ebbe7;
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
         height: 40px;
         display: block;
     }
@@ -452,7 +443,6 @@
         flex-basis: auto;
         box-sizing: border-box;
         background-color: #ffffff;
-        height: auto;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
 
