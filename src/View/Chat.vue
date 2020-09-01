@@ -26,7 +26,7 @@
                     </el-col>
                     </el-row>
             </div>
-            <div class="chat-room-panel overflow-y-auto">
+            <div class="chat-room-panel overflow-y-auto" :style="{height: this.windowHeight - 110 + 'px'}">
                 <template v-if="room_loaded">
                     <el-row
                             v-for="(chatRoom,index) in chatRooms" :key="index">
@@ -110,6 +110,7 @@
                 },
                 MESSAGE_PAGINATE_ROWS: 20,
                 selected_room: null,
+                windowHeight: window.innerHeight
             }
         },
         computed: {
