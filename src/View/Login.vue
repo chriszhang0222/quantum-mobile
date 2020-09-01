@@ -11,7 +11,7 @@
                 </el-col>
                 <el-col :span="22" :xs="{offset:4,span:18}"><h2 class="title">Quantum Login</h2></el-col>
             </el-row>
-            <el-form-item prop="name">
+            <el-form-item prop="username">
                 <el-input type="text" v-model="ruleForm.username" placeholder="username">
                     <template slot="prepend"><font-awesome-icon icon="user" size="xs"/></template>
                 </el-input>
