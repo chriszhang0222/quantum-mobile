@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="chat-room-panel">
-                <div class="discussion-message-view" :style="{height: this.windowHeight - 187 + 'px'}" v-show="!chatRoom.searchResult.shownMessages">
+                <div class="discussion-message-view" :style="{height: this.windowHeight - 195 + 'px'}" v-show="!chatRoom.searchResult.shownMessages">
                     <div class="discussion-scroll-div"
                          v-on:scroll="whenScroll(chatRoom)" id="scroll-container">
                         <div v-if="chatRoom.messageLoaded">
