@@ -12,7 +12,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
-
+import {chatSocket} from "@/utils/globalVaribles";
 
 library.add(fas, far, fab)
 
@@ -24,7 +24,7 @@ Vue.component('font-awesome-layers-text', FontAwesomeLayersText)
 Vue.use(VueBus);
 Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
-
+Vue.prototype.WEBSOCKET = chatSocket;
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 });
