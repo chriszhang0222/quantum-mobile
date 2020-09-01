@@ -99,6 +99,41 @@
                 </div>
             </div>
         </div>
+        <div class="message-container"  v-show="chatRoom.showMembers">
+            <div class="discussion-tool-bar clearfix" style="height: 45px">
+                <AutoCompleteInput
+                        class="team-task-discussion private-chat-user-input pull-left margin-top5"
+                        placeholder="Add User"
+                        typeahead-style="dropdown"
+                        :typeahead-hide-discard="true"
+                        :existing-tags="existing_tags"
+                        :user-id="user.user_id"
+                        typeahead-url="/chat/get_users_in_company/?name=:search"
+                        :typeahead-max-results=5
+                        :limit=5
+                        :hide-input-on-limit=true
+                        @tag-added="onTagAddRoom"
+                        v-bind:wrapper-class="'tags-input-wrapper-chat'"
+                        :typeahead="true">
+                </AutoCompleteInput>
+                <img class="add-user-in-room"
+                     style="margin-right: 5px"
+                     :src="img.add"
+                >
+                <font-awesome-icon class="pull-right" style="margin-top: 15px" icon="comments" size="xs"
+                @click="backtochatroom"></font-awesome-icon>
+            </div>
+            <div class="discussion-message-view" :style="{height: this.windowHeight - 90  + 'px'}">
+                <el-row v-for="member in chatRoom.members" :key="member.user_id"
+                class="room-member clearfix">
+                    <img class="media-object discussion-user-thumb"
+                         :src="img.user"
+                         data-toggle='tooltip'
+                         data-placement='bottom'>
+                    <div class="room-member-name">{{ member.full_name }}</div>
+                </el-row>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -108,9 +143,10 @@
     import {loadChatMessage, searchMessage} from "@/quantumApi/chat/chat";
     import Messages from "@/components/Messages";
     import {debounce} from 'throttle-debounce'
+    import AutoCompleteInput from "@/components/AutoCompleteInput";
     export default {
         name: "ChatRoom",
-        components: {Messages},
+        components: {Messages, AutoCompleteInput},
         created(){
          this.initData();
         },
@@ -132,6 +168,7 @@
         },
         data(){
             return {
+                existing_tags: [{full_name: ''}],
                 windowHeight: 0,
                 user: {},
                 auth:'',
@@ -139,7 +176,9 @@
                 chatRoom: {
                 },
                 img: {search: require('../assets/img/search.png'),
-                    clear: require('../assets/img/clear.png')
+                    clear: require('../assets/img/clear.png'),
+                    add: require('../assets/img/create.png'),
+                    user: require('../assets/img/user.png')
                 },
                 scroll_options: {
                     position: 'bottom',
@@ -148,6 +187,9 @@
             }
         },
         methods:{
+            onTagAddRoom(slug){
+
+            },
             initData(){
                 this.auth = SessionStorage.get(AUTH_TOKEN);
                 this.chatRoom = SessionStorage.getJson(CHATROOM);
@@ -315,6 +357,10 @@
                         fn.apply(self, args)   // 把参数传进去
                     }, wait);
                 }
+            },
+            backtochatroom(){
+                this.$set(this.chatRoom, 'showMembers', false);
+                this.$set(this.chatRoom, 'searchText', '');
             }
 
         }
@@ -477,6 +523,27 @@
         word-wrap: break-word;
         margin: 7px;
         line-height: 18px;
+    }
+    .margin-top5{
+        margin-top: 5px;
+    }
+    .add-user-in-room {
+        height: 18px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    .room-member {
+        padding: 10px;
+        border-bottom: 1px solid #cccccc;
+        display: flex;
+        align-items: center;
+    }
+    .discussion-user-thumb {
+        height: 40px;
+        width: 40px;
+        border-radius: 6px;
+        margin-right: 10px;
+        float: left;
     }
 
 </style>
