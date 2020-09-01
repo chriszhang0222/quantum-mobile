@@ -37,14 +37,16 @@
 </template>
 
 <script>
-    import {getAPIToken, loginAPI} from "@/quantumApi/login/login";
+    import {getAPIToken, loginAPI, test} from "@/quantumApi/login/login";
     import {SessionStorage} from "@/utils/SessionStorage";
     import {AUTH_TOKEN, SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
     import {homePageHistoram} from "@/quantumApi/chart/chartQuantumApi";
-
+    import axios from 'axios';
     export default {
         name: "Login",
         created(){
+        },
+        mounted(){
         },
         data(){
             return {

@@ -2,6 +2,7 @@ import QS from 'qs';
 import axios from 'axios';
 import {SessionStorage} from "@/utils/SessionStorage";
 import {AUTH_TOKEN} from "@/utils/Constants";
+import {Toast} from "@/utils/Toast";
 
 const baseUrl = process.env.VUE_APP_SERVER;
 const auth = SessionStorage.get(AUTH_TOKEN)
@@ -47,9 +48,17 @@ axios.interceptors.request.use(
         return config;
     },
     error =>{
+        Toast.error(error);
         return Promise.reject(error);
     }
 );
+axios.interceptors.response.use(response => {
+    return response
+}, error => {
+    console.log('error', error)
+    Toast.error(error.message  || 'Error!')
+    return Promise.reject(error)
+})
 
 export const apiAsync = (method, url, params, callback) => {
     if(method == 'get') {

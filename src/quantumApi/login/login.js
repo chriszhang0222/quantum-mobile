@@ -1,8 +1,8 @@
 import {apiAsync, apiAsyncAuth, apiSync} from "@/quantumApi/axiosCommon";
 import store from '@/store/index'
 
-export const getAPIToken = (callBack) => {
-    return apiAsync("post", "api/token/", {}, callBack);
+export const getAPIToken = () => {
+    return apiSync("post", "api/token/", {});
 }
 
 export const loginAPI = (params, callback) => {
