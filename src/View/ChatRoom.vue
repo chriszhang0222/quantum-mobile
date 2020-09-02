@@ -139,7 +139,7 @@
 
 <script>
     import {SessionStorage} from "@/utils/SessionStorage";
-    import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN, CHATROOM} from "@/utils/Constants";
+    import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN, CHATROOM, NEW_CHAT_MESSAGE} from "@/utils/Constants";
     import {loadChatMessage, searchMessage, updateMessageStatusApi} from "@/quantumApi/chat/chat";
     import Messages from "@/components/Messages";
     import {debounce} from 'throttle-debounce'
@@ -165,6 +165,15 @@
                 vm.readMessages(messages);
             })
             this.windowHeight = window.innerHeight;
+            this.$bus.on(NEW_CHAT_MESSAGE, (msg) => {
+                vm.newMessageReceive(msg);
+            })
+        },
+        beforeDestroy(){
+            let vm = this;
+            this.$bus.off(NEW_CHAT_MESSAGE, (msg) => {
+                vm.newMessageReceive(msg);
+            })
         },
         data(){
             return {
@@ -183,10 +192,73 @@
                 scroll_options: {
                     position: 'bottom',
                     container: 'scroll-container'
-                }
+                },
+                pendingMessages: {},
             }
         },
         methods:{
+            newMessageReceive(msg){
+                let message, index;
+                let vm = this;
+                for(index = 0; index < msg.length;index++){
+                    message = message[index];
+                    this.$set(this.chatRoom, 'messageLoaded', true);
+                    this.pushNewMessgaes(message, this.DISCUSSION_CONTAINER, (message) => {
+                        if(message.read === undefined || message.read === true){
+                            return;
+                        }else{
+                            vm.readMessages([message]);
+                        }
+                    });
+                    this.updateLatestMessage(message);
+                }
+
+            },
+            updateLatestMessage(message){
+                this.$set(this.chatRoom, 'message', message);
+                this.$store.commit('unshiftchatRoom', this.chatRoom);
+                this.$store.commit('updatechatRooms', this.chatRoom);
+                this.$set(this.chatRoom, 'newMessageReceived', true);
+                setTimeout(() => {
+                    this.$set(this.chatRoom, 'newMessageReceived', false);
+                }, 2000)
+
+            },
+            updatePendingMessage(message, deleteMessage){
+                let identifier = message['identifier'];
+                let pendingMessage = this.pendingMessages[identifier];
+                if(pendingMessage){
+                    pendingMessage['id'] = message['id'];
+                    pendingMessage['timestamp'] = message['timestamp'];
+                    pendingMessage['body'] = message['body'];
+                    pendingMessage['discussion_date'] = message['discussion_date'];
+                    pendingMessage['discussion_time'] = message['discussion_time'];
+                    if(deleteMessage){
+                        delete pendingMessage['identifier'];
+                    }
+                }
+            },
+            pushNewMessgaes(message, container, callBack){
+                if(!message.from_local && this.pendingMessages[message['identifier']]){
+                    this.updatePendingMessage(message, true);
+                    return;
+                }
+                callBack(message);
+                let currentMessages = this.chatRoom.messages;
+                let message_length = currentMessages.length;
+                if(message.timestamp != null && message_length > 0 && currentMessages[message_length-1].timestamp >= message.timestamp){
+                    return;
+                }
+                currentMessages.push(message);
+                this.$set(this.chatRoom, 'messages', currentMessages);
+                if(container){
+                    this.scrollElement({
+                        animation: true,
+                        container: container,
+                        position: 'bottom'
+                    })
+                }
+            },
             readMessages(messages){
                 let unreadMessageIds = [];
                 for(let i=0;i<messages.length;i++){
@@ -224,6 +296,7 @@
             initData(){
                 this.auth = SessionStorage.get(AUTH_TOKEN);
                 this.chatRoom = SessionStorage.getJson(CHATROOM);
+                SessionStorage.remove(CHATROOM);
                 this.user = SessionStorage.getJson(SESSION_KEY_LOGIN_USER);
             },
             async loadMessages(scrollOpt, messageID,  callback){

@@ -164,7 +164,7 @@
                 this.$set(chatRoom, 'unreadCount', newcount);
                 this.$store.commit('updatedisplayedRooms', chatRoom);
                 this.$store.commit('updatechatRooms', chatRoom);
-                this.$store.commit('updateNotification', newCount)
+                this.$store.commit('updateNotification', newcount)
             },
             findInArray: function(array, target, field, returnIndex){
                 field = field || 'id';
