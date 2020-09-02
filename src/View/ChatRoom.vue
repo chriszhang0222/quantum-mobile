@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="chatroom-header" v-bind:class="{'new-message-received': chatRoom.newMessageReceived}">
+            <el-button type="primary" icon="el-icon-refresh-left" class="pull-left" @click="backtochat">Back</el-button>
             <span class="header-name"> {{ chatRoom.name }}</span>
         </div>
         <div class="message-container" v-show="!chatRoom.showMembers">
@@ -144,6 +145,7 @@
     import Messages from "@/components/Messages";
     import {debounce} from 'throttle-debounce'
     import AutoCompleteInput from "@/components/AutoCompleteInput";
+    import {Toast} from "@/utils/Toast";
     export default {
         name: "ChatRoom",
         components: {Messages, AutoCompleteInput},
@@ -362,11 +364,72 @@
                     element.scrollTo({'top': height});
                 }, 100)
             },
-            handleKey(){
-
+            handleKey(event, chatRoom){
+                if(event.keyCode === 13 && !event.shiftKey){
+                    this.prepareAndSendNewMessage(chatRoom)
+                    event.preventDefault();
+                }else if(event.keyCode === 27){
+                    let checkbox = this.$refs['userInput'];
+                    checkbox.innerText = '';
+                    event.preventDefault();
+                }
             },
             prepareAndSendNewMessage(chatRoom){
-
+                let checkbox = this.$refs['userInput'];
+                const content = checkbox.innerText;
+                if(content && content.trim().length > 0){
+                    this.$set(chatRoom, 'newMessage', content);
+                    this.sendNewMessage(chatRoom);
+                }
+                checkbox.innerText = '';
+            },
+            sendNewMessage(chatRoom){
+                let timestamp = new Date().getTime();
+                let messageToSend = {
+                    type: 'chat',
+                    room_id: chatRoom.room_id,
+                    body: chatRoom.newMessage,
+                    user_id: this.user.user_id,
+                    company_id: this.user.company_id,
+                    identifier: timestamp,
+                    sub_domain: this.user.sub_domain,
+                    domain_uri: process.env.VUE_APP_SERVER
+                }
+                let messageToDisplay = this.assembleDisplayMessage(chatRoom);
+                messageToDisplay['body'] = chatRoom.displayMessage;
+                messageToDisplay['messageToSend'] = messageToSend;
+                this.sendMessageToWebSocket(messageToDisplay);
+                this.newMessageReceive([messageToDisplay]);
+                this.pendingMessages[timestamp] = messageToDisplay;
+            },
+            assembleDisplayMessage(chatRoom){
+                return {
+                    room_id: chatRoom.room_id,
+                    from_user_id: this.user.user_id,
+                    read: true,
+                    timestamp: null,
+                    from: 'NAME',
+                    picture: null,
+                    email: null,
+                    phone: null,
+                    discussion_date: 'Today',
+                    discussion_time: null,
+                    from_local: true
+                }
+            },
+            sendMessageToWebSocket(message){
+              if(this.WEBSOCKET !== null && this.WEBSOCKET.readyState === 1){
+                  this.WEBSOCKET.send(JSON.stringify(message.messageToSend));
+                  return true;
+              }else{
+                  if(!message.attempts){
+                      message.attempts = 1;
+                      this.unSentMessages.push(message);
+                  }else{
+                      message.attempts = message.attempts + 1;
+                  }
+                  return false;
+              }
             },
             openFileModal(chatRoom){
 
@@ -479,8 +542,8 @@
         font-weight: bold;
         color: #ffffff;
         font-weight: normal;
-        border-bottom: 1px solid #7ebbe7;
-        background: #7ebbe7;
+        border-bottom: 1px solid #409EFF;
+        background: #409EFF;;
         height: 40px;
         display: block;
     }
@@ -488,6 +551,7 @@
         font-weight: bold !important;
         top: 5px;
         position: relative;
+        left: -40px;
     }
     .chatroom-header.new-message-received{
         background-color: #5dc282 !important;
