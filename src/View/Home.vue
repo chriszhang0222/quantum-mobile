@@ -18,9 +18,10 @@
     import vHeader from "../components/Header.vue";
     import vSidebar from "../components/Sidebar.vue";
     import {SessionStorage} from "@/utils/SessionStorage";
-    import {SESSION_KEY_LOGIN_USER, NEW_CHAT_MESSAGE} from "@/utils/Constants";
+    import {SESSION_KEY_LOGIN_USER, NEW_CHAT_MESSAGE, AUTH_TOKEN} from "@/utils/Constants";
     import {Tools} from "@/utils/Tools";
     import {Toast} from "@/utils/Toast";
+    import {getunreadCount} from "@/quantumApi/chat/chat";
 
     export default {
         name: "Home",
@@ -28,6 +29,7 @@
         data: function(){
             return {
                 collapse: false,
+                auth: '',
                 user: {
 
                 }
@@ -38,6 +40,7 @@
                 this.collapse = msg;
             });
             this.user = SessionStorage.getJson(SESSION_KEY_LOGIN_USER);
+            this.auth = SessionStorage.get(AUTH_TOKEN);
             if(this.user === null || this.user === undefined || Tools.isEmpty(this.user)){
                 this.$router.push('/');
             }else{
@@ -54,6 +57,7 @@
                 }else{
                     Toast.error('No Company Id or User Id!');
                 }
+                this.updateUnreadCount();
 
             }
         },
@@ -66,6 +70,18 @@
             })
         },
         methods:{
+            async updateUnreadCount(){
+              let params = {
+                  'user_id': this.user.user_id,
+                  'company_id': this.user.company_id
+              }
+              let res = await getunreadCount(params, this.auth);
+              let data = res.data;
+              if(data.success){
+                  let count = data.count;
+                  this.$store.commit('updateNotification', count);
+              }
+            },
             connectWebSocket(url, attempts, closeSocket){
                 let user_id = this.user.user_id;
                 let company_id = this.user.company_id;
