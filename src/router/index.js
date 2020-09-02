@@ -7,6 +7,7 @@ import Chat from "@/View/Chat";
 import Report from "@/View/Report";
 import {SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
 import ChatRoom from "@/View/ChatRoom";
+import Search from "@/View/Search";
 Vue.use(VueRouter);
 
 const routes = [
@@ -40,6 +41,12 @@ const routes = [
                 path: '/report',
                 name: 'Report',
                 component: Report,
+                meta: {requiredAuth: true}
+            },
+            {
+                path: '/search',
+                name: 'Search',
+                component: Search,
                 meta: {requiredAuth: true}
             }
         ]

@@ -51,6 +51,11 @@
                         icon: 'el-icon-s-data',
                         index: 'report',
                         title: 'Report'
+                    },
+                    {
+                        icon: 'el-icon-search',
+                        index: 'search',
+                        title: 'Search'
                     }
                 ]
             };
