@@ -18,7 +18,7 @@
     import vHeader from "../components/Header.vue";
     import vSidebar from "../components/Sidebar.vue";
     import {SessionStorage} from "@/utils/SessionStorage";
-    import {SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
+    import {SESSION_KEY_LOGIN_USER, NEW_CHAT_MESSAGE} from "@/utils/Constants";
     import {Tools} from "@/utils/Tools";
     import {Toast} from "@/utils/Toast";
 
@@ -50,7 +50,7 @@
                 }
                 if(Tools.isNotEmpty(this.user) && Tools.isNotEmpty(this.user.user_id) && Tools.isNotEmpty(this.user.company_id)
                 && Tools.isNotEmpty(this.user.sub_domain)){
-                    // this.connectWebSocket(websocketUrl,1, false);
+                    this.connectWebSocket(websocketUrl,1, false);
                 }else{
                     Toast.error('No Company Id or User Id!');
                 }
@@ -77,7 +77,11 @@
                 }
                 this.WEBSOCKET = new WebSocket(url + '/chat/' + user_id + '/' + company_id + '/' + sub_domain);
                 this.WEBSOCKET.onmessage = (event) => {
-
+                    let data = JSON.parse(event.data);
+                    if(data.type === 'chat'){
+                        let messages = data.messages;
+                        this.$bus.emit(NEW_CHAT_MESSAGE, messages);
+                    }
                 }
                 this.WEBSOCKET.onclose = (e)=>{
                     console.log('websocket closed: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)

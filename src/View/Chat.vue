@@ -45,7 +45,7 @@
     import Roomblock from "../components/Roomblock";
     import AutoCompleteInput from "../components/AutoCompleteInput";
     import {SessionStorage} from "@/utils/SessionStorage";
-    import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN, CHATROOM} from "@/utils/Constants";
+    import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN, CHATROOM, NEW_CHAT_MESSAGE} from "@/utils/Constants";
     import {getAllRooms} from "@/quantumApi/chat/chat";
 
     export default {
@@ -132,7 +132,46 @@
             this.initParams();
             this.getRooms();
         },
+        mounted(){
+            this.$bus.on(NEW_CHAT_MESSAGE, (msg) => {
+
+            })
+        },
+        beforeDestroy(){
+            this.$bus.off(NEW_CHAT_MESSAGE, (msg) => {
+
+            })
+        },
         methods: {
+            newMessageReceived(messages){
+                let message, room, index;
+                for(index = 0;index < messages.length;index++){
+                    message = messages[index];
+                    let room = this.findInArray(this.chatRooms, message.room_id, 'room_id');
+                    if(room){
+                        this.$set(room, 'message', message);
+                        if(!message.read){
+                            this.unreadCountChange(room, 1);
+                        }
+                        this.$store.commit('unshiftchatRoom', room);
+                    }
+                }
+            },
+            unreadCountChange(chatRoom, newCount){
+                let newcount = chatRoom.unreadCount + newCount;
+                Vue.set(chatRoom, 'unreadCount', newCount);
+                this.$store.commit('updatedisplayedRooms', chatRoom);
+                this.$store.commit('updatechatRooms', chatRoom);
+                this.$store.commit('updateNotification', newcount)
+            },
+            findInArray: function(array, target, field, returnIndex){
+                field = field || 'id';
+                for(let index=0; index < array.length; index++){
+                    if(array[index][field] == target)
+                        return returnIndex ? index : array[index];
+                }
+                return returnIndex ? -1 : null;
+            },
             onTagAdded(){
 
             },
@@ -238,7 +277,6 @@
                 return newArray;
             },
             openRoom(chatRoom){
-                console.log('open room' + chatRoom.room_id);
                 SessionStorage.setJSON(CHATROOM, chatRoom);
                 this.$router.push('/chatroom');
             },

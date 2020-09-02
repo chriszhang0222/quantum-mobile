@@ -19,8 +19,6 @@ export default new Vuex.Store({
         displayedRooms: [],
         chatRoomMap: {},
         chatNotification: {
-            messages: [],
-            oldMessageCount: undefined,
             unreadCount: 0
         },
     },

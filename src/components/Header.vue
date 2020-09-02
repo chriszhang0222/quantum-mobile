@@ -11,9 +11,16 @@
             </el-col>
             <el-col :span="2" :xs="{offset:5}" :md="{offset:10}" :sm="{offset:8}" :lg="{offset:11}">
                 <div class="message-container">
-                    <el-badge :value="2">
-                    <font-awesome-icon icon="comments" @click="toChat"/>
-                    </el-badge>
+                    <template v-if="chatNotification.unreadCount > 0">
+                        <el-badge :value="chatNotification.unreadCount">
+                            <font-awesome-icon icon="comments" @click="toChat"/>
+                        </el-badge>
+                    </template>
+                    <template v-else>
+                        <el-badge>
+                            <font-awesome-icon icon="comments" @click="toChat"/>
+                        </el-badge>
+                    </template>
                 </div>
             </el-col>
             <el-col :span="2">
@@ -62,6 +69,9 @@
             username(){
                 let name = SessionStorage.getJson(SESSION_KEY_LOGIN_USER).username;
                 return name == null ? '' : name;
+            },
+            chatNotification(){
+                return this.$store.state.chatNotification;
             }
         },
         data: function(){

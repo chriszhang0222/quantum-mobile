@@ -23,3 +23,4 @@ export const reportType = [
 ]
 
 export const CHATROOM = "CHAT_ROOM";
+export const NEW_CHAT_MESSAGE = "NEW_CHAT_MESSAGE";
