@@ -29,7 +29,7 @@
                     </el-row>
                 </div>
                 <div v-show="chatRoom.message.body === null || chatRoom.message.body === undefined">
-                    <el-row v-show="chatRoom.message.body === null || chatRoom.message.body === undefined">
+                    <el-row v-show="chatRoom.message.body === null || chatRoom.message.body === undefined" class="margin-top20">
                         <el-col :offset="6" :lg="{offset:2, span:22}" :span="18">
                             <span class="pull-left discussion-short-chat-message">There are no messages.</span>
                         </el-col>

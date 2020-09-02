@@ -16,12 +16,16 @@
                             :limit="5"
                             :hide-input-on-limit="true"
                             @tag-added="onTagAdded"
+                            @tag-removed="onTagRemoved"
                             v-bind:wrapper-class="'tags-input-wrapper-custom'"
-                            :typeahead="true">
+                            :typeahead="true"
+                ref="autocomplete">
                 </AutoCompleteInput>
                 <img class="add-discussion-recipient-input"
                      style="margin-right: 5px"
                      :src="imgUrl.src"
+                     v-show="userSearch.length > 0"
+                     @click="createNewChatGroup"
                    >
                     </el-col>
                     </el-row>
@@ -46,13 +50,15 @@
     import AutoCompleteInput from "../components/AutoCompleteInput";
     import {SessionStorage} from "@/utils/SessionStorage";
     import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN, CHATROOM, NEW_CHAT_MESSAGE} from "@/utils/Constants";
-    import {getAllRooms} from "@/quantumApi/chat/chat";
+    import {getAllRooms, createRoom} from "@/quantumApi/chat/chat";
+    import {Toast} from "@/utils/Toast";
 
     export default {
         name: "Chat",
         components: {Roomblock, AutoCompleteInput},
         data(){
             return{
+                userSearch: [],
                 auth: null,
                 userId: null,
                 companyId: null,
@@ -171,8 +177,8 @@
                 }
                 return returnIndex ? -1 : null;
             },
-            onTagAdded(){
-
+            onTagAdded(slug){
+                this.userSearch.push(slug);
             },
             async getRooms(loadMore, callBack){
                 let vm = this;
@@ -278,6 +284,58 @@
             openRoom(chatRoom){
                 SessionStorage.setJSON(CHATROOM, chatRoom);
                 this.$router.push('/chatroom');
+            },
+            onTagRemoved(slug){
+                let index = null;
+                for(let i=0;i<this.userSearch.length;i++){
+                    if(this.userSearch[i] == slug){
+                        index = i;
+                        break;
+                    }
+                }
+                this.userSearch.splice(index, 1);
+            },
+            createNewChatGroup(){
+                let ids = this.getUserIds(this.userSearch);
+                this.userSearch = [];
+                this.$refs['autocomplete'].clearTags()
+                this.createNewChatWithIds(ids);
+            },
+            async createNewChatWithIds(userIds){
+                if(userIds.length == 0){
+                    return;
+                }
+                let params = {
+                    'user_ids': JSON.stringify(userIds)
+                }
+                let room;
+                let resp = await createRoom(params, this.auth);
+                if(resp.status === 200){
+                    let data = resp.data;
+                    if(data.success){
+                        if(data.new){
+                            room = data.room;
+                            this.$store.commit('unshiftchatRoom', room);
+                            Toast.success('New Chat Room Created!');
+                        }else{
+                            room = data.room;
+                            room = this.findInArray(this.$store.state.chatRooms, room.room_id, 'room_id');
+                            this.$store.commit('unshiftchatRoom', room);
+                            Toast.success('Room ' + room.name + ' already exists!');
+                        }
+                    }else{
+                        Toast.error(data.message);
+                    }
+                }else{
+                    Toast.error(resp);
+                }
+            },
+            getUserIds: function(groups){
+                let ids = []
+                for(let i=0;i<groups.length;i++){
+                    ids.push(groups[i].id);
+                }
+                return ids;
             },
         }
     }

@@ -123,7 +123,7 @@
                      style="margin-right: 5px"
                      :src="img.add"
                 >
-                <font-awesome-icon class="pull-right" style="margin-top: 15px" icon="comments" size="xs"
+                <font-awesome-icon class="pull-right" style="margin-top: 10px" icon="comments" size="lg"
                 @click="backtochatroom"></font-awesome-icon>
             </div>
             <div class="discussion-message-view" :style="{height: this.windowHeight - 90  + 'px'}">

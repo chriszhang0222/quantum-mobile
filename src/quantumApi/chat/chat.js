@@ -23,3 +23,7 @@ export const updateMessageStatusApi = (params, auth) => {
 export const editRoomName = (params, auth, callback) => {
     return apiAsyncAuth('post', '/chat/editroomname/', params, callback, auth);
 }
+
+export const createRoom = (params, auth) => {
+    return apiSyncAuth('post', '/chat/create_new_chat_group/', params, auth);
+}
