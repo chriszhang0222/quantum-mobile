@@ -27,3 +27,7 @@ export const editRoomName = (params, auth, callback) => {
 export const createRoom = (params, auth) => {
     return apiSyncAuth('post', '/chat/create_new_chat_group/', params, auth);
 }
+
+export const addUserInRoom = (params, auth) => {
+    return apiSyncAuth('post', '/chat/add_new_members/', params, auth);
+}

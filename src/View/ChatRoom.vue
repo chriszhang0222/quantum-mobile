@@ -111,17 +111,21 @@
                         :typeahead-hide-discard="true"
                         :existing-tags="existing_tags"
                         :user-id="user.user_id"
-                        typeahead-url="/chat/get_users_in_company/?name=:search"
+                        :typeahead-url="typeahead_url"
                         :typeahead-max-results=5
                         :limit=5
                         :hide-input-on-limit=true
-                        @tag-added="onTagAddRoom"
+                        @tag-added="onTagAdd"
+                        @tag-removed="onTagRemoved"
                         v-bind:wrapper-class="'tags-input-wrapper-chat'"
-                        :typeahead="true">
+                        :typeahead="true"
+                ref="autocomplete">
                 </AutoCompleteInput>
                 <img class="add-user-in-room"
                      style="margin-right: 5px"
                      :src="img.add"
+                     v-show="this.new_users.length > 0"
+                     @click="addNewMember"
                 >
                 <font-awesome-icon class="pull-right" style="margin-top: 10px" icon="comments" size="lg"
                 @click="backtochatroom"></font-awesome-icon>
@@ -143,7 +147,7 @@
 <script>
     import {SessionStorage} from "@/utils/SessionStorage";
     import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN, CHATROOM, NEW_CHAT_MESSAGE} from "@/utils/Constants";
-    import {loadChatMessage, searchMessage, updateMessageStatusApi} from "@/quantumApi/chat/chat";
+    import {loadChatMessage, searchMessage, updateMessageStatusApi, addUserInRoom } from "@/quantumApi/chat/chat";
     import Messages from "@/components/Messages";
     import {debounce} from 'throttle-debounce'
     import AutoCompleteInput from "@/components/AutoCompleteInput";
@@ -184,6 +188,8 @@
         },
         data(){
             return {
+                typeahead_url: process.env.VUE_APP_SERVER + 'chat/get_users_in_company/?name=:search&user_id=:userID',
+                new_users: [],
                 existing_tags: [{full_name: ''}],
                 windowHeight: 0,
                 user: {},
@@ -205,6 +211,44 @@
             }
         },
         methods:{
+            addNewMember(){
+                let members = this.chatRoom.members;
+                let new_member_ids = [];
+                for(let member of this.new_users){
+                    if(!this.exist_user(member, members)){
+                        new_member_ids.push(member.id);
+                    }
+                }
+                this.$refs['autocomplete'].clearTags();
+                this.new_users = [];
+                if(new_member_ids.length > 0){
+                    let postData = {
+                        new_member_ids: JSON.stringify(new_member_ids),
+                        room_id: this.chatRoom.room_id,
+                        user_id: this.user.user_id,
+                        company_id: this.user.company_id
+                    }
+                    addUserInRoom(postData, this.auth)
+                    .then((res) => {
+                       if(res.status === 200){
+                           let data = res.data;
+                           if(data.success){
+                               this.$set(this.chatRoom, 'members', data.member_list);
+                               Toast.success('Add new members to room successfully');
+                           }
+                       }
+                    });
+
+                }
+            },
+            exist_user(user, users){
+              for(let exist of users){
+                  if(user.id === exist.id){
+                      return true;
+                  }
+              }
+              return false;
+            },
             newMessageReceive(msg){
                 let message
                 let vm = this;
@@ -300,8 +344,18 @@
                     this.$store.commit('updateNotification', count);
                 }
             },
-            onTagAddRoom(slug){
-
+            onTagAdd(slug){
+                this.new_users.push(slug);
+            },
+            onTagRemoved(slug){
+                let index = null;
+                for(let i=0;i<this.new_users.length;i++){
+                    if(this.new_users[i] == slug){
+                        index = i;
+                        break;
+                    }
+                }
+                this.new_users.splice(index, 1);
             },
             initData(){
                 this.auth = SessionStorage.get(AUTH_TOKEN);
