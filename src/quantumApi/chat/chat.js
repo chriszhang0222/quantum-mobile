@@ -19,3 +19,7 @@ export const getunreadCount = (params, auth) => {
 export const updateMessageStatusApi = (params, auth) => {
     return apiSyncAuth('post', '/chat/updatemessagestatus/', params, auth);
 }
+
+export const editRoomName = (params, auth, callback) => {
+    return apiAsyncAuth('post', '/chat/editroomname/', params, callback, auth);
+}

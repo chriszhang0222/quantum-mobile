@@ -4,7 +4,7 @@
              v-bind:class="{'discussion-unread' : chatRoom.unreadCount > 0}">
             <div class="discussion-message-taskname">
                 <span class="pull-left discussion-room-name">{{ chatRoom.name }}</span>
-                <span class="pull-right margin-left10"><font-awesome-icon icon="edit" /></span>
+                <span class="pull-right margin-left10" @click="dialogFormVisible = true"><font-awesome-icon icon="edit" /></span>
                 <span class="discussion-prettytime pull-right" v-show="chatRoom.unreadCount > 0">{{ chatRoom.unreadCount }} new</span>
             </div>
             <div v-on:click="$emit('openroom', chatRoom)">
@@ -37,11 +37,25 @@
                 </div>
             </div>
         </div>
+        <el-dialog title="Edit Room Name" :visible.sync="dialogFormVisible">
+            <el-form :model="chatRoom">
+                <el-form-item label="Room Name">
+                    <el-input v-model="chatRoom.name"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="editRoom">Confirm</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import moment from 'moment';
+    import {editRoomName } from "@/quantumApi/chat/chat";
+    import {SessionStorage} from "@/utils/SessionStorage";
+    import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN, CHATROOM, NEW_CHAT_MESSAGE} from "@/utils/Constants";
     export default {
         name: "Roomblock",
         props: {
@@ -56,6 +70,7 @@
         },
         data(){
             return{
+                dialogFormVisible: false,
                 count: 1,
                 imgSrc: {
                     src: require('../assets/img/user.png'),
@@ -70,6 +85,19 @@
                 let count = this.chatRoom.unreadCount;
                 this.chatRoom = Object.assign({}, this.chatRoom, {'unreadCount': count+2});
             },
+            editRoom(){
+                let auth = SessionStorage.get(AUTH_TOKEN);
+                let params = {
+                    'room_id': this.chatRoom.room_id,
+                    'name': this.chatRoom.name
+                }
+                editRoomName(params, auth, (res) => {
+                    if(res.data.success) {
+                        this.$store.commit('updatechatRooms', this.chatRoom);
+                    }
+                });
+                this.dialogFormVisible = false;
+            }
         }
     }
 </script>
