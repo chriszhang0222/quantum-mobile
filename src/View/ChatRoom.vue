@@ -198,10 +198,10 @@
         },
         methods:{
             newMessageReceive(msg){
-                let message, index;
+                let message
                 let vm = this;
-                for(index = 0; index < msg.length;index++){
-                    message = message[index];
+                for(let index = 0; index < msg.length;index++){
+                    message = msg[index];
                     this.$set(this.chatRoom, 'messageLoaded', true);
                     this.pushNewMessgaes(message, this.DISCUSSION_CONTAINER, (message) => {
                         if(message.read === undefined || message.read === true){
@@ -221,7 +221,7 @@
                 this.$set(this.chatRoom, 'newMessageReceived', true);
                 setTimeout(() => {
                     this.$set(this.chatRoom, 'newMessageReceived', false);
-                }, 2000)
+                }, 4000)
 
             },
             updatePendingMessage(message, deleteMessage){
