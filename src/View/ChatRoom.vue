@@ -140,7 +140,7 @@
 <script>
     import {SessionStorage} from "@/utils/SessionStorage";
     import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN, CHATROOM} from "@/utils/Constants";
-    import {loadChatMessage, searchMessage} from "@/quantumApi/chat/chat";
+    import {loadChatMessage, searchMessage, updateMessageStatusApi} from "@/quantumApi/chat/chat";
     import Messages from "@/components/Messages";
     import {debounce} from 'throttle-debounce'
     import AutoCompleteInput from "@/components/AutoCompleteInput";
@@ -151,6 +151,7 @@
          this.initData();
         },
         mounted(){
+            let vm = this;
             let box = document.getElementById('input-box');
             setTimeout(() => {
                 box.focus()
@@ -161,10 +162,9 @@
                 'top': height
             });
             this.loadMessages(this.scroll_options, null, (messages) =>{
-
+                vm.readMessages(messages);
             })
             this.windowHeight = window.innerHeight;
-            console.log(this.windowHeight);
         },
         data(){
             return {
@@ -187,6 +187,37 @@
             }
         },
         methods:{
+            readMessages(messages){
+                let unreadMessageIds = [];
+                for(let i=0;i<messages.length;i++){
+                    let message = messages[i];
+                    if(!message.read){
+                        unreadMessageIds.push(message.id);
+                        message.read = true;
+                    }
+                }
+                this.updateMessageStatus(unreadMessageIds)
+
+            },
+            async updateMessageStatus(messageIds){
+                if(messageIds.length === 0){
+                    return;
+                }
+                let params = {
+                    'user_id': this.user.user_id,
+                    'messages': JSON.stringify(messageIds),
+                    'status': 'read'
+                };
+                let res = await updateMessageStatusApi(params, this.auth);
+                let data = res.data;
+                if(data.success){
+                    let count = -messageIds.length;
+                    let newCount = this.chatRoom.unreadCount + count;
+                    this.$set(this.chatRoom, 'unreadCount', newCount);
+                    this.$store.commit('updatechatRooms', this.chatRoom);
+                    this.$store.commit('updateNotification', count);
+                }
+            },
             onTagAddRoom(slug){
 
             },
@@ -280,7 +311,7 @@
             },
             backtochat(){
                 SessionStorage.pop(CHATROOM);
-              this.$router.back();
+                this.$router.back();
             },
             searchInputChange(chatRoom, initial){
                   if(chatRoom.searchText.trim() === ""){

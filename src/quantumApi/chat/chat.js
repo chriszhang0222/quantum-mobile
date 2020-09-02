@@ -15,3 +15,7 @@ export const searchMessage = (params, auth) => {
 export const getunreadCount = (params, auth) => {
     return apiSyncAuth('post', '/chat/unread_count/', params, auth);
 }
+
+export const updateMessageStatusApi = (params, auth) => {
+    return apiSyncAuth('post', '/chat/updatemessagestatus/', params, auth);
+}
