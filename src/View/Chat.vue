@@ -135,14 +135,12 @@
         mounted(){
             let vm = this;
             this.$bus.on(NEW_CHAT_MESSAGE, (msg) => {
-                vm.newMessageReceived(msg);
-            })
+                this.newMessageReceived(msg);
+            });
         },
         beforeDestroy(){
             let vm = this;
-            this.$bus.off(NEW_CHAT_MESSAGE, (msg) => {
-                vm.newMessageReceived(msg);
-            })
+            this.$bus.off(NEW_CHAT_MESSAGE)
         },
         methods: {
             newMessageReceived(messages){
@@ -164,7 +162,6 @@
                 this.$set(chatRoom, 'unreadCount', newcount);
                 this.$store.commit('updatedisplayedRooms', chatRoom);
                 this.$store.commit('updatechatRooms', chatRoom);
-                this.$store.commit('updateNotification', newcount)
             },
             findInArray: function(array, target, field, returnIndex){
                 field = field || 'id';

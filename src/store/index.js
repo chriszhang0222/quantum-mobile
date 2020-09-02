@@ -21,8 +21,12 @@ export default new Vuex.Store({
         chatNotification: {
             unreadCount: 0
         },
+        websocket: null
     },
     mutations: {
+        setWebSocket(state, conn){
+          state.websocket = conn;
+        },
         sethomehistoram(state, data){
             state.home_historgam = data;
         },

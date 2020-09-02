@@ -61,6 +61,11 @@
 
             }
         },
+        computed: {
+          webSocket(){
+              return this.$store.state.websocket
+            }
+        },
         mounted(){
 
         },
@@ -86,27 +91,36 @@
                 let user_id = this.user.user_id;
                 let company_id = this.user.company_id;
                 let sub_domain = this.user.sub_domain;
+                let websocket = null;
                 if(closeSocket){
-                    if(this.WEBSOCKET !== null){
-                        this.WEBSOCKET.close();
+                    if(this.webSocket !== null){
+                        this.webSocket.close();
                     }
                 }
-                this.WEBSOCKET = new WebSocket(url + '/chat/' + user_id + '/' + company_id + '/' + sub_domain);
-                this.WEBSOCKET.onmessage = (event) => {
+                websocket = new WebSocket(url + '/chat/' + user_id + '/' + company_id + '/' + sub_domain);
+                this.$store.commit('setWebSocket', websocket);
+                websocket.onmessage = (event) => {
                     let data = JSON.parse(event.data);
                     if(data.type === 'chat'){
                         let messages = data.messages;
+                        let count = 0;
+                        for(let message of messages){
+                            if(!message.read){
+                                count += 1;
+                            }
+                        }
+                        this.$store.commit('updateNotification', count);
                         this.$bus.emit(NEW_CHAT_MESSAGE, messages);
                     }
                 }
-                this.WEBSOCKET.onclose = (e)=>{
+                websocket.onclose = (e)=>{
                     console.log('websocket closed: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
                     console.log(e)
                     setTimeout(()=>{
                         this.connectWebSocket(url, attempts+1);
                     }, this.generateInterval(attempts))
                 }
-                this.WEBSOCKET.onerror = function(e){
+                websocket.onerror = function(e){
                     console.log('connection error');
                     console.log(e);
                 }

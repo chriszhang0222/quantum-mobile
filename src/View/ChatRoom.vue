@@ -1,7 +1,9 @@
 <template>
     <div>
         <div class="chatroom-header" v-bind:class="{'new-message-received': chatRoom.newMessageReceived}">
-            <el-button type="primary" icon="el-icon-refresh-left" class="pull-left" @click="backtochat">Back</el-button>
+            <el-button type="primary" icon="el-icon-refresh-left" class="pull-left "
+                       v-bind:class="{'new-message-received': chatRoom.newMessageReceived}"
+                       @click="backtochat">Back</el-button>
             <span class="header-name"> {{ chatRoom.name }}</span>
         </div>
         <div class="message-container" v-show="!chatRoom.showMembers">
@@ -152,6 +154,11 @@
         created(){
          this.initData();
         },
+        computed:{
+          webSocket(){
+              return this.$store.state.websocket;
+          }
+        },
         mounted(){
             let vm = this;
             let box = document.getElementById('input-box');
@@ -171,11 +178,9 @@
                 vm.newMessageReceive(msg);
             })
         },
+
         beforeDestroy(){
-            let vm = this;
-            this.$bus.off(NEW_CHAT_MESSAGE, (msg) => {
-                vm.newMessageReceive(msg);
-            })
+            this.$bus.off(NEW_CHAT_MESSAGE);
         },
         data(){
             return {
@@ -196,6 +201,7 @@
                     container: 'scroll-container'
                 },
                 pendingMessages: {},
+                unSentMessages: []
             }
         },
         methods:{
@@ -220,10 +226,12 @@
                 this.$set(this.chatRoom, 'message', message);
                 this.$store.commit('unshiftchatRoom', this.chatRoom);
                 this.$store.commit('updatechatRooms', this.chatRoom);
-                this.$set(this.chatRoom, 'newMessageReceived', true);
-                setTimeout(() => {
-                    this.$set(this.chatRoom, 'newMessageReceived', false);
-                }, 4000)
+                if(message.from_user_id !== this.user.user_id) {
+                    this.$set(this.chatRoom, 'newMessageReceived', true);
+                    setTimeout(() => {
+                        this.$set(this.chatRoom, 'newMessageReceived', false);
+                    }, 4000)
+                }
 
             },
             updatePendingMessage(message, deleteMessage){
@@ -253,7 +261,7 @@
                 }
                 currentMessages.push(message);
                 this.$set(this.chatRoom, 'messages', currentMessages);
-                if(container){
+                if(container && document.getElementById(this.DISCUSSION_CONTAINER)){
                     this.scrollElement({
                         animation: true,
                         container: container,
@@ -418,8 +426,8 @@
                 }
             },
             sendMessageToWebSocket(message){
-              if(this.WEBSOCKET !== null && this.WEBSOCKET.readyState === 1){
-                  this.WEBSOCKET.send(JSON.stringify(message.messageToSend));
+              if(this.webSocket !== null && this.webSocket.readyState === 1){
+                  this.webSocket.send(JSON.stringify(message.messageToSend));
                   return true;
               }else{
                   if(!message.attempts){
@@ -447,7 +455,7 @@
             },
             backtochat(){
                 SessionStorage.pop(CHATROOM);
-                this.$router.back();
+                this.$router.push('/chat')
             },
             searchInputChange(chatRoom, initial){
                   if(chatRoom.searchText.trim() === ""){
@@ -553,9 +561,10 @@
         position: relative;
         left: -40px;
     }
-    .chatroom-header.new-message-received{
+    .new-message-received{
         background-color: #5dc282 !important;
         border-bottom: 1px solid #5dc282;
+        border-color: #5dc282;
     }
     .discussion-tool-bar {
         height: 35px;
