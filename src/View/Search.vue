@@ -93,54 +93,61 @@
                         <el-col  :span="24">
                             <el-button
                                     style="float: right"
-                                    type="primary" icon="el-icon-search">Search</el-button>
+                                    type="primary" icon="el-icon-search"
+                            @click="onSearch"
+                                    :loading="loading">Search</el-button>
                         </el-col>
                     </el-row>
                 </el-form>
             </el-card>
+        </el-main>
+        <div>
             <el-card shadow="hover" class="margin-top20">
-                <span class="demonstration">Total: {{ total }}</span>
+                <span class="demonstration"><strong>Total Supplier Count: {{ total }}</strong></span>
                 <el-row>
                     <el-col :span="12" align="left">
-                    <div class="block">
-                        <el-pagination
-                                @current-change="handleCurrentChange"
-                                small
-                                background
-                                :page-size="20"
-                                :page-count="5"
-                                layout="prev, pager, next"
-                                :total="this.total">
-                        </el-pagination>
-                    </div>
+                        <div class="block">
+                            <el-pagination
+                                    @current-change="handleCurrentChange"
+                                    small
+                                    background
+                                    :page-size="20"
+                                    :page-count="5"
+                                    layout="prev, pager, next"
+                                    :total="this.total">
+                            </el-pagination>
+                        </div>
                     </el-col>
                 </el-row>
                 <el-table
                         v-loading="loading"
-                :data="supplier_list"
-                border>
+                        :data="supplier_list"
+                        border>
                     <el-table-column
                             prop="internal_number"
                             label="Vendor#"
                     >
                     </el-table-column>
                     <el-table-column
-                            prop="vendorname"
+
                             label="Supplier Name"
                     >
+                        <template slot-scope="scope">
+                            <div v-html="scope.row.vendorname"></div>
+                        </template>
                     </el-table-column>
-                   <el-table-column label="Certificates"
-                   align="center">
-                       <template slot-scope="scope" v-if="scope.row.certificate_categories[0].length > 0">
-                           <font-awesome-icon icon="certificate" size="lg" style="color: #3a8ee6"
-                                              @click="handleClick(scope.$index, scope.row)"/>
-                       </template>
-                       <template slot-scope="scope" v-else>
-                           <font-awesome-icon icon="certificate" size="lg"/>
-                       </template>
-                   </el-table-column>
+                    <el-table-column label="Certificates"
+                                     align="center">
+                        <template slot-scope="scope" v-if="scope.row.certificate_categories[0].length > 0">
+                            <font-awesome-icon icon="certificate" size="lg" style="color: #3a8ee6"
+                                               @click="handleClick(scope.$index, scope.row)"/>
+                        </template>
+                        <template slot-scope="scope" v-else>
+                            <font-awesome-icon icon="certificate" size="lg"/>
+                        </template>
+                    </el-table-column>
                     <el-table-column
-                    label="NAICS Code and Description"
+                            label="NAICS Code and Description"
                     >
                         <template slot-scope="scope">
                             {{ scope.row.primarynaicscode }}
@@ -149,15 +156,15 @@
 
                     </el-table-column>
                     <el-table-column
-                        prop="servicedescription"
-                        label="Service and Production">
+                            prop="servicedescription"
+                            label="Service and Production">
                         <template slot-scope="scope">
-                          {{ scope.row.servicedescription.substring(0,40)}}...
+                            {{ scope.row.servicedescription.substring(0,40)}}...
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="status"
-                    label="Status">
+                            prop="status"
+                            label="Status">
 
                     </el-table-column>
 
@@ -165,31 +172,30 @@
             </el-card>
 
             <el-dialog title="Certificates" :visible.sync="dialogTableVisible"
-            width="100%">
+                       width="100%">
                 <el-row v-for="(data,index) in this.cert_data" :key="index" class="margin-bottom10">
                     <div class="alert-info">
                         <div style="padding: 10px">
-                        <el-row class="margin-bottom10">
-                            <el-col align="left"><font-awesome-icon icon="certificate" size="lg" style="margin-right: 10px"/>
-                                <strong>{{ data.certagency }}</strong>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12" align="left">
-                                <label><strong>Type:</strong> </label>
-                                {{ data.divcat}}
-                            </el-col>
-                            <el-col :span="12" align="left">
-                                <label><strong>Expiration</strong></label>
-                                {{ data.certexpdate}}
-                            </el-col>
-                        </el-row>
+                            <el-row class="margin-bottom10">
+                                <el-col align="left"><font-awesome-icon icon="certificate" size="lg" style="margin-right: 10px"/>
+                                    <strong>{{ data.certagency }}</strong>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="12" align="left">
+                                    <label><strong>Type:</strong> </label>
+                                    {{ data.divcat}}
+                                </el-col>
+                                <el-col :span="12" align="left">
+                                    <label><strong>Expiration</strong></label>
+                                    {{ data.certexpdate}}
+                                </el-col>
+                            </el-row>
                         </div>
                     </div>
                 </el-row>
             </el-dialog>
-
-        </el-main>
+        </div>
     </div>
 </template>
 
@@ -257,6 +263,21 @@
                 this.cert_data = row.certificate_categories[0];
                 this.dialogTableVisible = true;
             },
+            onSearch(){
+                console.log(this.searchForm);
+                this.params = {
+                    'q': this.searchForm.name,
+                    'revenue': this.searchForm.revenue,
+                    'state': this.searchForm.state,
+                    'diverse': this.searchForm.diverse,
+                    'favorites': this.searchForm.favorites,
+                    'is_self_assessment_taken': this.searchForm.assessment,
+                    'prime': this.searchForm.prime,
+                    'non_prime': this.searchForm.non_prime
+                }
+                this.loading = true;
+                this.getSupplierSearch(this.params);
+            }
         }
     }
 </script>
