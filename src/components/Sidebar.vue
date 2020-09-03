@@ -56,7 +56,7 @@
                         icon: 'el-icon-search',
                         index: 'search',
                         title: 'Search'
-                    }
+                    },
                 ]
             };
         },

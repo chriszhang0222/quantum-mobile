@@ -78,3 +78,5 @@ export const state_list = [
     ['WV', 'West Virginia'],
     ['WY', 'Wyoming']
 ]
+
+export const SEARCH_FORM_PRAMS = 'SEARCH_FORM_PRAMS'
