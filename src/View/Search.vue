@@ -52,7 +52,7 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="20">
-                        <el-col :span="4">
+                        <el-col :span="6">
                             <el-form-item label="Diverse">
                             <el-switch
                                     v-model="searchForm.diverse"
@@ -79,12 +79,12 @@
                                 </el-switch>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8">
-                            <el-form-item label="Prime">
-                                <el-checkbox v-model="searchForm.prime"></el-checkbox>
+                        <el-col :span="6" align="left">
+                            <el-form-item>
+                                <el-checkbox v-model="searchForm.prime"></el-checkbox><strong>Prime</strong>
                             </el-form-item>
-                            <el-form-item label="Non Prime">
-                                <el-checkbox v-model="searchForm.non_prime"></el-checkbox>
+                            <el-form-item>
+                                <el-checkbox v-model="searchForm.non_prime"></el-checkbox><strong>Non Prime</strong>
                             </el-form-item>
                         </el-col>
 
