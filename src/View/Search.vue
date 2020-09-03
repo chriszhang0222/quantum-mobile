@@ -167,6 +167,14 @@
                             label="Status">
 
                     </el-table-column>
+                    <el-table-column label="Supplier Detail">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    type="success"
+                                    @click="handleDetail(scope.$index, scope.row)">Detail</el-button>
+                        </template>
+                    </el-table-column>
 
                 </el-table>
             </el-card>
@@ -203,7 +211,7 @@
     import {state_list} from "@/utils/Constants";
     import {supplierSearch} from "@/quantumApi/supplier/supplier";
     import {SessionStorage} from "@/utils/SessionStorage";
-    import {AUTH_TOKEN} from "@/utils/Constants";
+    import {AUTH_TOKEN, SEARCH_FORM_PRAMS, SUPPLIER_ID} from "@/utils/Constants";
     import {Toast} from "@/utils/Toast";
 
     export default {
@@ -277,7 +285,13 @@
                 }
                 this.loading = true;
                 this.getSupplierSearch(this.params);
-            }
+            },
+            handleDetail(index, row){
+                SessionStorage.setJSON(SEARCH_FORM_PRAMS, this.params);
+                let id = row.pk;
+                SessionStorage.set(SUPPLIER_ID, id);
+                this.$router.push('/supplier')
+            },
         }
     }
 </script>

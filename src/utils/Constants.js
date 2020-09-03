@@ -79,4 +79,5 @@ export const state_list = [
     ['WY', 'Wyoming']
 ]
 
-export const SEARCH_FORM_PRAMS = 'SEARCH_FORM_PRAMS'
+export const SEARCH_FORM_PRAMS = 'SEARCH_FORM_PRAMS';
+export const SUPPLIER_ID = 'SUPPLIER_ID';
