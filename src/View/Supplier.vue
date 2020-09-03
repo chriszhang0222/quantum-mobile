@@ -293,7 +293,8 @@
         },
         methods:{
             backToSearch(){
-
+                SessionStorage.remove(SUPPLIER_ID);
+                this.$router.push('/search');
             },
             async loadSupplier(){
                 let resp = await supplierDetail({
@@ -303,7 +304,6 @@
                     let data = resp.data;
                     this.supplier = data.data.supplier
                     this.certificates = data.data.certificates;
-                    console.log(this.certificates)
                 }
             }
         }

@@ -91,6 +91,10 @@
                     </el-row>
                     <el-row>
                         <el-col  :span="24">
+                            <el-button style="float: left" icon="el-icon-close"
+                            @click="clearForm">
+                                Clear
+                            </el-button>
                             <el-button
                                     style="float: right"
                                     type="primary" icon="el-icon-search"
@@ -108,6 +112,8 @@
                     <el-col :span="12" align="left">
                         <div class="block">
                             <el-pagination
+                                    v-if="pgShow"
+                                    :current-page.sync="currentPage"
                                     @current-change="handleCurrentChange"
                                     small
                                     background
@@ -213,17 +219,30 @@
     import {SessionStorage} from "@/utils/SessionStorage";
     import {AUTH_TOKEN, SEARCH_FORM_PRAMS, SUPPLIER_ID} from "@/utils/Constants";
     import {Toast} from "@/utils/Toast";
+    import {Tools} from "@/utils/Tools";
 
     export default {
         name: "Search",
         created(){
           this.auth = SessionStorage.get(AUTH_TOKEN);
+          this.params = SessionStorage.getJson(SEARCH_FORM_PRAMS);
+          if(Tools.isEmpty(this.params)){
+              this.params = {};
+          }
         },
         mounted(){
+            if(Tools.isNotEmpty(this.params)){
+                SessionStorage.remove(SEARCH_FORM_PRAMS);
+                this.passValueToForm();
+                this.currentPage = this.params.page
+            }
           this.getSupplierSearch(this.params);
+            this.pgShow = true;
         },
         data(){
             return {
+                pgShow: false,
+                currentPage: 1,
                 loading: true,
                 auth: '',
                 searchForm: {
@@ -254,9 +273,19 @@
             }
         },
         methods:{
+            passValueToForm(){
+              this.searchForm.name = this.params.q;
+              this.searchForm.prime = this.params.prime;
+              this.searchForm.non_prime = this.params.non_prime;
+              this.searchForm.assessment = this.params.is_self_assessment_taken;
+              this.searchForm.favorites = this.params.favorites;
+              this.searchForm.revenue = this.params.revenue;
+              this.searchForm.diverse = this.params.diverse;
+              this.searchForm.rating = this.params.min_rating;
+              this.searchForm.state = this.params.state;
+            },
             async getSupplierSearch(params){
                 let resp = await supplierSearch(params, this.auth);
-                console.log(resp.data);
                 this.supplier_list = resp.data.suppliers;
                 this.total = resp.data.total
                 this.loading = false;
@@ -265,6 +294,7 @@
                 this.loading = true;
                 let start = (val-1) * 20;
                 this.params['start'] = start;
+                this.params['page'] = val;
                 this.getSupplierSearch(this.params);
             },
             handleClick(index, row){
@@ -272,16 +302,16 @@
                 this.dialogTableVisible = true;
             },
             onSearch(){
-                console.log(this.searchForm);
                 this.params = {
                     'q': this.searchForm.name,
                     'revenue': this.searchForm.revenue,
                     'state': this.searchForm.state,
                     'diverse': this.searchForm.diverse,
                     'favorites': this.searchForm.favorites,
-                    'is_self_assessment_taken': this.searchForm.assessment,
+                    // 'is_self_assessment_taken': this.searchForm.assessment,
                     'prime': this.searchForm.prime,
-                    'non_prime': this.searchForm.non_prime
+                    'non_prime': this.searchForm.non_prime,
+                    'min_rating': this.searchForm.rating
                 }
                 this.loading = true;
                 this.getSupplierSearch(this.params);
@@ -292,6 +322,18 @@
                 SessionStorage.set(SUPPLIER_ID, id);
                 this.$router.push('/supplier')
             },
+            clearForm(){
+                this.params = {};
+                this.searchForm.rating = '';
+                this.searchForm.diverse = false;
+                this.searchForm.revenue = '';
+                this.searchForm.favorites = false;
+                this.searchForm.assessment = false;
+                this.searchForm.name = '';
+                this.searchForm.state = [];
+                this.searchForm.non_prime = true;
+                this.searchForm.prime = true
+            }
         }
     }
 </script>
