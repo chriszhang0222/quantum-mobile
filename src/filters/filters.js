@@ -1,5 +1,5 @@
 let formatNumber = (obj) => {
-    if (isNaN(obj)) {
+    if (isNaN(obj) || obj === null || obj === undefined || obj === '') {
         return 0;
     }
     return ("" + obj).replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g, "$1,");
