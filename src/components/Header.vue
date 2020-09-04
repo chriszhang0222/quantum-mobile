@@ -74,6 +74,7 @@
     import {SessionStorage} from "@/utils/SessionStorage";
     import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN} from "@/utils/Constants";
     import {Toast} from "@/utils/Toast";
+    import {Confirm} from "@/utils/confirm";
 
     export default {
         name: "Header",
@@ -122,12 +123,15 @@
                 this.$bus.emit("collapse", this.collapse);
             },
             logout(){
-                SessionStorage.pop(AUTH_TOKEN);
-                SessionStorage.pop(SESSION_KEY_LOGIN_USER);
-                this.$message.success('Logout Successfully!');
-                setTimeout(() => {
-                    this.$router.push('/');
-                }, 1000)
+                Confirm('Are you sure to logout?', () => {
+                    SessionStorage.pop(AUTH_TOKEN);
+                    SessionStorage.pop(SESSION_KEY_LOGIN_USER);
+                    this.$message.success('Logout Successfully!');
+                    setTimeout(() => {
+                        this.$router.push('/');
+                    }, 1000)
+                });
+
             },
             toChat(){
                 this.$router.push('/chat')

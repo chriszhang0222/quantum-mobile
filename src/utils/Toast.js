@@ -1,8 +1,8 @@
-import Swal from 'sweetalert';
+import Swal from 'sweetalert2';
 export const Toast = {
     success: function (message) {
-        Swal({
-            position: 'top-end',
+        Swal.fire({
+            position: 'center',
             icon: 'success',
             title: message,
             showConfirmButton: false,
@@ -11,8 +11,8 @@ export const Toast = {
     },
 
     error: function (message) {
-        Swal({
-            position: 'top-end',
+        Swal.fire({
+            position: 'center',
             icon: 'error',
             title: message,
             showConfirmButton: false,
@@ -20,8 +20,8 @@ export const Toast = {
     },
 
     warning: function (message) {
-        Swal({
-            position: 'top-end',
+        Swal.fire({
+            position: 'center',
             icon: 'warning',
             title: message,
             showConfirmButton: false,

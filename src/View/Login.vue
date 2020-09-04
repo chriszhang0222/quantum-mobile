@@ -41,6 +41,7 @@
     import {SessionStorage} from "@/utils/SessionStorage";
     import {AUTH_TOKEN, SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
     import {homePageHistoram} from "@/quantumApi/chart/chartQuantumApi";
+    import {Tools} from "@/utils/Tools";
     import axios from 'axios';
     export default {
         name: "Login",
