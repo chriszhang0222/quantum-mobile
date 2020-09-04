@@ -32,7 +32,8 @@
                 auth: '',
                 user: {
 
-                }
+                },
+                group: '',
             }
         },
         created() {

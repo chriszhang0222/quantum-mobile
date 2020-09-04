@@ -93,7 +93,14 @@
                     SessionStorage.setJSON(SESSION_KEY_LOGIN_USER, resp.user);
                     SessionStorage.set(AUTH_TOKEN, resp.access);
                     this.$message.success('Login Successfully!!');
-                    this.$router.push('/dashboard');
+                    let user = resp.user;
+                    if(user.group === 'company user' || user.group === 'company admin') {
+                        this.$router.push('/dashboard');
+                    }else if(user.group === 'supplier'){
+                        this.$router.push('/select')
+                    }else{
+                        return ;
+                    }
                 }else{
                     let message = resp.message;
                     this.$message.error(message);

@@ -12,6 +12,7 @@ import Supplier from "@/View/Supplier";
 import SupplierProfile from "@/View/SupplierProfile";
 import SelectCompany from "@/View/SelectCompany";
 import AddSupplier from "@/View/AddSupplier";
+import {SessionStorage} from "@/utils/SessionStorage";
 Vue.use(VueRouter);
 
 const routes = [
@@ -29,43 +30,43 @@ const routes = [
                 path: '/dashboard',
                 name: 'Dashboard',
                 component: Dashboard,
-                meta: {requiredAuth: true}
+                meta: {requiredAuth: true, company: true}
             },
             {
                 path: '/chat',
                 name: 'Chat',
                 component: Chat,
-                meta: {requiredAuth: true}
+                meta: {requiredAuth: true, company:true}
             },
             {
                 path: '/chatroom',
                 name: 'ChatRoom',
                 component: ChatRoom,
-                meta: {requiredAuth: true}
+                meta: {requiredAuth: true, company:true}
             },
             {
                 path: '/report',
                 name: 'Report',
                 component: Report,
-                meta: {requiredAuth: true}
+                meta: {requiredAuth: true, company:true}
             },
             {
                 path: '/search',
                 name: 'Search',
                 component: Search,
-                meta: {requiredAuth: true}
+                meta: {requiredAuth: true, company:true}
             },
             {
                 path: '/supplier',
                 name: 'Supplier',
                 component: Supplier,
-                meta: {requiredAuth: true}
+                meta: {requiredAuth: true, company:true}
             },
             {
                 path: '/profile',
                 name: '/profile',
                 component: SupplierProfile,
-                meta: {}
+                meta: {requiredAuth: true, supplier:true}
             }
         ]
     }
@@ -85,7 +86,14 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     if(to.meta.requiredAuth){
         if(sessionStorage.getItem(SESSION_KEY_LOGIN_USER)){
-            next();
+            let user = SessionStorage.getJson(SESSION_KEY_LOGIN_USER);
+            if(to.meta.company){
+                if(user.group === 'company user' || user.group === 'company admin'){
+                    next();
+                }else if(user.group === 'supplier'){
+                    next({path: '/select'})
+                }
+            }
         }else{
             next({path: '/'});
         }
