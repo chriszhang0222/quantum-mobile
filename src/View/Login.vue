@@ -47,6 +47,15 @@
         created(){
         },
         mounted(){
+            let user = SessionStorage.getJson(SESSION_KEY_LOGIN_USER);
+            if(Tools.isNotEmpty(user)){
+                let group = user.group;
+                if(group === 'company user' || group === 'company admin'){
+                    this.$router.push('/dashboard');
+                }else if(group === 'supplier'){
+                    this.$router.push('/select');
+                }
+            }
         },
         data(){
             return {
