@@ -10,12 +10,16 @@ import ChatRoom from "@/View/ChatRoom";
 import Search from "@/View/Search";
 import Supplier from "@/View/Supplier";
 import SupplierProfile from "@/View/SupplierProfile";
+import SelectCompany from "@/View/SelectCompany";
+import AddSupplier from "@/View/AddSupplier";
 Vue.use(VueRouter);
 
 const routes = [
     {path:'*',redirect:"/login"},
     {path: '', redirect: "/login"},
     {path:'/login', component:Login},
+    {path: '/add', component: AddSupplier},
+    {path: '/select', component: SelectCompany},
     {
         path: '/home',
         name: 'Home',
@@ -61,7 +65,7 @@ const routes = [
                 path: '/profile',
                 name: '/profile',
                 component: SupplierProfile,
-                meta: {requiredAuth: true}
+                meta: {}
             }
         ]
     }
