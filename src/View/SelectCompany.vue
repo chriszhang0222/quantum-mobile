@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="wrapper">
-            <vHeader :group="group"></vHeader>
+            <vHeader :show-chat="false"></vHeader>
             <div class="content-box" style="left: 0px">
                 <div class="content">
                         <p>Hello</p>

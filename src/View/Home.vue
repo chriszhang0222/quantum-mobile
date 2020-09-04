@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="wrapper">
-            <vHeader :group="group"> </vHeader>
+            <vHeader :show-chat="true"> </vHeader>
             <vSidebar :group="group"></vSidebar>
             <div class="content-box" :class="{'content-collapse':collapse}">
                 <div class="content">

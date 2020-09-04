@@ -10,7 +10,7 @@
                    <span @click="backHome"> Quantum</span>
             </el-col>
             <el-col :span="2" :xs="{offset:5}" :md="{offset:10}" :sm="{offset:8}" :lg="{offset:11}">
-                <div class="message-container">
+                <div class="message-container" v-if="showChat">
                     <template v-if="chatNotification.unreadCount > 0">
                         <el-badge :value="chatNotification.unreadCount">
                             <font-awesome-icon icon="comments" @click="toChat"/>
@@ -23,7 +23,22 @@
                     </template>
                 </div>
             </el-col>
-            <el-col :span="2">
+            <template v-if="showChat">
+                <el-col :span="2" align="right">
+                    <div class="header-user-con">
+                        <el-dropdown class="user-name" trigger="click" @command="handleCommand">
+                        <span class="el-dropdown-link">
+                            {{username}}
+                        </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="logout">Logout</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                </el-col>
+            </template>
+            <template v-else>
+            <el-col :span="2" :xs="{offset:6}" :md="{offset:11}" :sm="{offset:10}" :lg="{offset:12}" align="right">
                 <div class="header-user-con">
                     <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                         <span class="el-dropdown-link">
@@ -35,6 +50,7 @@
                     </el-dropdown>
                 </div>
             </el-col>
+            </template>
 <!--        <div class="header-right">-->
 <!--            <div class="header-user-con">-->
 <!--                <el-dropdown class="user-name" trigger="click" @command="handleCommand">-->
@@ -62,8 +78,8 @@
     export default {
         name: "Header",
         props: {
-          group: {
-              type: String
+          showChat:{
+              type: Boolean
           }
         },
         mounted() {
