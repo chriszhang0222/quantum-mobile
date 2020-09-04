@@ -36,13 +36,13 @@ const routes = [
                 path: '/chat',
                 name: 'Chat',
                 component: Chat,
-                meta: {requiredAuth: true, company:true}
+                meta: {requiredAuth: true}
             },
             {
                 path: '/chatroom',
                 name: 'ChatRoom',
                 component: ChatRoom,
-                meta: {requiredAuth: true, company:true}
+                meta: {requiredAuth: true}
             },
             {
                 path: '/report',
@@ -93,6 +93,14 @@ router.beforeEach((to, from, next) => {
                 }else if(user.group === 'supplier'){
                     next({path: '/select'})
                 }
+            }else if(to.meta.supplier){
+                if(user.group === 'supplier'){
+                    next();
+                }else{
+                    next({path: '/'});
+                }
+            }else{
+                next();
             }
         }else{
             next({path: '/'});

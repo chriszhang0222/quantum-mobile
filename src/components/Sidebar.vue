@@ -38,6 +38,11 @@
 
 <script>
     export default {
+        props: {
+          group: {
+              type: String
+          }
+        },
         data() {
             return {
                 collapse: false,

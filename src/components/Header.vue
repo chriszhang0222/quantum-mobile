@@ -57,9 +57,15 @@
 <script>
     import {SessionStorage} from "@/utils/SessionStorage";
     import {SESSION_KEY_LOGIN_USER, AUTH_TOKEN} from "@/utils/Constants";
+    import {Toast} from "@/utils/Toast";
 
     export default {
         name: "Header",
+        props: {
+          group: {
+              type: String
+          }
+        },
         mounted() {
             if (document.body.clientWidth < 1500) {
                 this.collapseChange();

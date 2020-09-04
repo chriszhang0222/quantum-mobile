@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="wrapper">
-            <vHeader></vHeader>
-            <vSidebar></vSidebar>
+            <vHeader :group="group"> </vHeader>
+            <vSidebar :group="group"></vSidebar>
             <div class="content-box" :class="{'content-collapse':collapse}">
                 <div class="content">
                     <transition name="move">
@@ -41,6 +41,7 @@
                 this.collapse = msg;
             });
             this.user = SessionStorage.getJson(SESSION_KEY_LOGIN_USER);
+            this.group = this.user.group;
             this.auth = SessionStorage.get(AUTH_TOKEN);
             if(this.user === null || this.user === undefined || Tools.isEmpty(this.user)){
                 this.$router.push('/');
