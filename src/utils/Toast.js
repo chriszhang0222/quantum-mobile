@@ -6,6 +6,7 @@ export const Toast = {
             icon: 'success',
             title: message,
             showConfirmButton: false,
+            showCancelButton: true,
             timer: 3000
         })
     },
@@ -16,6 +17,7 @@ export const Toast = {
             icon: 'error',
             title: message,
             showConfirmButton: false,
+            showCancelButton: true,
         })
     },
 
@@ -25,6 +27,7 @@ export const Toast = {
             icon: 'warning',
             title: message,
             showConfirmButton: false,
+            showCancelButton: true,
             timer: 3000
         })
     }
