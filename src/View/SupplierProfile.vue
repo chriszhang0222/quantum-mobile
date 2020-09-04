@@ -1,5 +1,7 @@
 <template>
-    <div>Supplier Profile</div>
+    <div>
+        <div>{{ $route.params.id }}</div>
+    </div>
 </template>
 
 <script>

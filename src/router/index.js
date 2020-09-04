@@ -19,8 +19,8 @@ const routes = [
     {path:'*',redirect:"/login"},
     {path: '', redirect: "/login"},
     {path:'/login', component:Login},
-    {path: '/add', component: AddSupplier},
-    {path: '/select', component: SelectCompany},
+    {path: '/add_supplier', component: AddSupplier, meta: {requiredAuth: true, supplier: true}},
+    {path: '/select', component: SelectCompany, meta: {requiredAuth: true, supplier: true}},
     {
         path: '/home',
         name: 'Home',
@@ -63,8 +63,8 @@ const routes = [
                 meta: {requiredAuth: true, company:true}
             },
             {
-                path: '/profile',
-                name: '/profile',
+                path: '/profile/:id',
+                name: 'Profile',
                 component: SupplierProfile,
                 meta: {requiredAuth: true, supplier:true}
             }

@@ -406,3 +406,17 @@ a {
 }
 
 .page-header{margin:0 0 12px;border-bottom:1px dotted #E2E2E2;padding-bottom:16px;padding-top:7px}.page-header h1{padding:0;margin:0 8px;font-size:24px;font-weight:lighter;color:#2679B5}h1,h2,h3,h4,h5,h6{font-weight:400}
+
+.title-block{
+    width: 100%;
+    padding: 8px 16px;
+    margin: 0;
+    box-sizing: border-box;
+    border-radius: 0px;
+    position: relative;
+    background-color: #909399;
+    color: #fff;
+    font-weight: bold;
+    font-size: 17px;
+    text-align: center;
+}
