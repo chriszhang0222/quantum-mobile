@@ -448,12 +448,12 @@
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item label="Does your company track Tier II spend?">
-                            <el-checkbox v-model="supplier.track_tier2_spend"></el-checkbox>
+                            <el-checkbox v-model="supplier.track_tier2_spend" border></el-checkbox>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="Have you previously done business with Demo Company?">
-                            <el-checkbox v-model="supplier.previousbiz"></el-checkbox>
+                            <el-checkbox v-model="supplier.previousbiz" border></el-checkbox>
                         </el-form-item>
                     </el-col>
                 </el-row>
