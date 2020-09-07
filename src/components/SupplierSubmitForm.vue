@@ -286,10 +286,61 @@
             <el-form>
                 <el-row>
                     <el-form-item label="Primary NAICS Code">
-                        <el-select style="width: 100%"></el-select>
+                        <el-select style="width: 100%"
+                                   filterable
+                                   remote
+                                   :remote-method="getNaics"
+                                   @change="primaryNaicsChange"
+                                   v-model="primarynaics"
+                        >
+                            <el-option
+                                    v-for="item in naics_list"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.label">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="Secondary NAICS Code">
-                        <el-select style="width: 100%"></el-select>
+                        <el-select style="width: 100%"
+                                  v-model="secondarynaics"
+                                   filterable
+                                   remote
+                                   :remote-method="getNaics"
+                                   @change="secondNaicsChange">
+                            <el-option
+                                    v-for="item in naics_list"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.label">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-row>
+            </el-form>
+        </div>
+
+        <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span>Commodity Code</span>
+        </div>
+        <div class="input-card">
+            <el-form>
+                <el-row>
+                    <el-form-item label="Commodity">
+                        <el-select style="width: 100%"
+                                   filterable
+                                   remote
+                                   :remote-method="getCommodity"
+                                   @change="commodityChange"
+                                   v-model="commodity"
+                        >
+                            <el-option
+                                    v-for="item in commodity_list"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.label">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-row>
             </el-form>
@@ -301,6 +352,8 @@
 <script>
     import {Tools} from "@/utils/Tools";
     import {state_list} from "@/utils/Constants";
+    import {Toast} from "@/utils/Toast";
+    import {supplierNaics, supplierCommodity} from "@/quantumApi/supplier/supplier";
 
     export default {
         name: "SupplierSubmitForm",
@@ -341,11 +394,52 @@
                     [2, 'Distributor/Re-seller'],
                     [3, 'Other']
                 ],
-                show_parent: false
+                show_parent: false,
+                naics_list: [],
+                commodity_list: [],
+                primarynaics: '',
+                secondarynaics: '',
+                commodity: ''
             }
         },
         methods: {
-
+            getCommodity(query){
+              let vm = this;
+              if(query !== ''){
+                  supplierCommodity({'term': query})
+                  .then((res) => {
+                      if(res.status === 200){
+                          vm.commodity_list = res.data;
+                      }
+                  })
+              }
+            },
+            commodityChange(val){
+                val = val.split("-");
+                this.supplier.commodity = val[0].trim();
+                this.supplier.commoditydescription = val[1].trim();
+            },
+            getNaics(query){
+                let vm = this;
+                if(query !== ''){
+                    supplierNaics({'term': query})
+                    .then((res) => {
+                        if(res.status === 200) {
+                            vm.naics_list = res.data;
+                        }
+                    });
+                }
+            },
+            primaryNaicsChange(val){
+                val = val.split("-");
+                this.supplier.primarynaicscode = val[0].trim();
+                this.supplier.primarynaicsdescription = val[1].trim();
+            },
+            secondNaicsChange(val){
+                val = val.split("-");
+                this.supplier.secondarynaicscode = val[0].trim();
+                this.supplier.secondarynaicsdescription = val[1].trim();
+            }
         }
     }
 </script>
