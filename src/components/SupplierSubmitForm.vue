@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="title-block" style="text-align: center">
+        <div class="title-block" style="text-align: center;margin-top: 10px">
             <span>Company Information</span>
         </div>
         <div class="input-card">
@@ -168,7 +168,50 @@
                 </el-row>
             </el-form>
         </div>
+
+        <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span>Parent Company Information</span>
+        </div>
+        <div class="input-card">
+            <el-form>
+                <el-row :gutter="20">
+                    <el-col :span="24">
+                        <el-form-item label="Is there a parent company?">
+                            <el-checkbox v-model="show_parent"></el-checkbox>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="Parent Company Name" :required="show_parent">
+                            <el-input v-model="supplier.parentcompanyname" :disabled="!show_parent"
+                            placeholder="Parent Compant Name"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Parent Fed Tax ID" :required="show_parent">
+                            <el-input v-model="supplier.parentcompanyfedid" :disabled="!show_parent"
+                            placeholder="Parent Company Fed Tax ID"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
+
+        <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span> Company Contact Information</span>
+        </div>
+        <div class="input-card">
+            <el-form>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
     </div>
+
 </template>
 
 <script>
@@ -213,7 +256,8 @@
                     [1, 'Manufacturer'],
                     [2, 'Distributor/Re-seller'],
                     [3, 'Other']
-                ]
+                ],
+                show_parent: false
             }
         },
         methods: {
