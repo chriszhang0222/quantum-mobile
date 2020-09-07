@@ -205,8 +205,92 @@
             <el-form>
                 <el-row :gutter="20">
                     <el-col :span="12">
-
+                        <el-form-item label="Name">
+                            <el-input placeholder="Name" v-model="supplier.contactname"></el-input>
+                        </el-form-item>
                     </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Title">
+                            <el-input placeholder="Title" v-model="supplier.contacttitle"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="Email">
+                            <el-input placeholder="Email" v-model="supplier.contactemail"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Phone">
+                            <el-input placeholder="Title" v-model="supplier.contactphone"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="Cell">
+                            <el-input placeholder="Cell" v-model="supplier.contactcell"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Fax">
+                            <el-input placeholder="Fax" v-model="supplier.contactfax"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20" class="margin-top20">
+                    <el-col :span="12">
+                        <el-form-item label="Secondary Contact Name">
+                            <el-input placeholder="Secondary Contact Name" v-model="supplier.contactname2"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Title">
+                            <el-input placeholder="Title" v-model="supplier.contacttitle2"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="Email">
+                            <el-input placeholder="Email" v-model="supplier.contactemail2"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Phone">
+                            <el-input placeholder="Title" v-model="supplier.contactphone2"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="Cell">
+                            <el-input placeholder="Cell" v-model="supplier.contactcell2"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Fax">
+                            <el-input placeholder="Fax" v-model="supplier.contactfax2"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
+
+        <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span>NAICS Code</span>
+        </div>
+        <div class="input-card">
+            <el-form>
+                <el-row>
+                    <el-form-item label="Primary NAICS Code">
+                        <el-select style="width: 100%"></el-select>
+                    </el-form-item>
+                    <el-form-item label="Secondary NAICS Code">
+                        <el-select style="width: 100%"></el-select>
+                    </el-form-item>
                 </el-row>
             </el-form>
         </div>
@@ -276,6 +360,9 @@
     }
     .el-form-item__label{
         line-height: 20px;
+    }
+    .el-select{
+        width: 100%;
     }
 
 </style>
