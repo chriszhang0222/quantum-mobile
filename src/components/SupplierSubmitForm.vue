@@ -8,7 +8,7 @@
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item label="Company Name" required>
-                            <el-input type="text" v-model="supplier.name" placeholder="Company Name">
+                            <el-input type="text" v-model="supplier.vendorname" placeholder="Company Name">
                             </el-input>
                         </el-form-item>
                     </el-col>
@@ -459,6 +459,16 @@
                 </el-row>
             </el-form>
         </div>
+
+        <div class="input-card">
+        <el-row>
+            <el-col :span="12" align="left">
+                <el-button type="success" @click="submitForm">
+                    Submit
+                </el-button>
+            </el-col>
+        </el-row>
+        </div>
     </div>
 
 </template>
@@ -479,18 +489,13 @@
                 type: Object
             }
         },
-        created(){
-          if(!Tools.isNotEmpty(this.supplier_data)){
-              this.supplier = this.supplier_data
-          }else{
-              this.supplier = {}
-          }
+        computed:{
+            supplier(){
+                return this.supplier_data;
+            }
         },
         data(){
             return {
-                supplier: {
-
-                },
                 public_choice: ['Private', 'Public'],
                 structureCode: [
                     'Corporation',
@@ -577,6 +582,8 @@
                 val = val.split("-");
                 this.supplier.secondarynaicscode = val[0].trim();
                 this.supplier.secondarynaicsdescription = val[1].trim();
+            },
+            submitForm(){
             }
         }
     }
