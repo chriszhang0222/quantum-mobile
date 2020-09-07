@@ -345,6 +345,120 @@
                 </el-row>
             </el-form>
         </div>
+
+        <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span>Company Details</span>
+        </div>
+        <div class="input-card">
+            <el-form>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="Primary Location Name">
+                            <el-input v-model="supplier.primarylocation" placeholder="Primary Location Name"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="8">
+                        <el-form-item label="U.S. Service Areas">
+                            <el-select multiple v-model="supplier.geographicservicearea">
+                                <el-option v-for="(item, index) in state_list"
+                                           :key="index"
+                                           :value="item[0]"
+                                           :label="item[1]">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="International Service Areas">
+                            <el-select multiple v-model="supplier.otherlocation">
+                                <el-option v-for="(item, index) in service_area"
+                                :key="index"
+                                :value="item"
+                                :label="item">
+
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="Number of Permanent Employees">
+                        <el-select v-model="supplier.employeecount">
+                            <el-option v-for="(item, index) in employee_number"
+                            :key="index"
+                            :label="item[1]"
+                            :value="item[0]">
+                            </el-option>
+                        </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="Number of Women Employees">
+                            <el-input placeholder="Number of Women Employees"
+                                      v-model="supplier.womanemployeecount">
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="Number of Minority Employees">
+                            <el-input placeholder="Number of Minority Employees"
+                                      v-model="supplier.minorityemployeecount">
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="24">
+                        <el-form-item label=" Do you have a Signed Statement of Non-Disclosure or Vendor Services Agreement on file with Demo Company?">
+                            <el-checkbox v-model="supplier.has_signed_nda">
+                            </el-checkbox>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="24">
+                        <el-form-item label="Top Five Business Customers">
+                            <el-input v-model="supplier.topfive"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="Keywords pertinent to your product and services (eg. Technical consulting/Regulatory/SOP/GMP, Management consulting/Agile/OCM/CX, IT Consulting/Data migration/Instruction Design)">
+                            <AutoCompleteInput
+                                    style="width: 100%"
+                            v-model="supplier.keywords"
+                            placeholder="Add Keyword">
+                            </AutoCompleteInput>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="Products and Services">
+                            <el-input placeholder="Describe your business capabilities"
+                                      type="textarea"
+                                      :autosize="{ minRows: 2, maxRows: 2}"
+                                      v-model="supplier.servicedescription"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="Does your company track Tier II spend?">
+                            <el-checkbox v-model="supplier.track_tier2_spend"></el-checkbox>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Have you previously done business with Demo Company?">
+                            <el-checkbox v-model="supplier.previousbiz"></el-checkbox>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
     </div>
 
 </template>
@@ -354,9 +468,11 @@
     import {state_list} from "@/utils/Constants";
     import {Toast} from "@/utils/Toast";
     import {supplierNaics, supplierCommodity} from "@/quantumApi/supplier/supplier";
+    import AutoCompleteInput from "@/components/AutoCompleteInput";
 
     export default {
         name: "SupplierSubmitForm",
+        components: {AutoCompleteInput},
         props: {
             supplier_data: {
                 required: false,
@@ -399,7 +515,29 @@
                 commodity_list: [],
                 primarynaics: '',
                 secondarynaics: '',
-                commodity: ''
+                commodity: '',
+                service_area: [
+                    'East Asia and The Pacific',
+                    'South Asia',
+                    'Africa',
+                    'North America',
+                    'South America',
+                    'Europe',
+                    'Middle East',
+                    'Russia and Eurasia'
+                ],
+                employee_number: [
+                    ["50", "0-50"],
+                    ["100", "51-100"],
+                    ["150", "101-150"],
+                    ["200", "151-200"],
+                    ["250", "201-250"],
+                    ["500", "251-500"],
+                    ["750", "501-750"],
+                    ["1000", "751-1000"],
+                    ["1500", "1001-1500"],
+                    ["2000", "More than 1500"]
+                ]
             }
         },
         methods: {
@@ -456,6 +594,10 @@
         line-height: 20px;
     }
     .el-select{
+        width: 100%;
+    }
+    .tags-input {
+        padding: 10px 10px;
         width: 100%;
     }
 
