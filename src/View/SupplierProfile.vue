@@ -10,12 +10,43 @@
 
 <script>
     import SupplierSubmitForm from "@/components/SupplierSubmitForm";
+    import {SessionStorage} from "@/utils/SessionStorage";
+    import {AUTH_TOKEN, SEARCH_FORM_PRAMS, SUPPLIER_ID} from "@/utils/Constants";
+    import {supplierEdit} from "@/quantumApi/supplier/supplier";
+
     export default {
         name: "SupplierProfile",
         components: {SupplierSubmitForm},
+        computed:{
+            supplier_id(){
+                return this.$route.params.id
+            }
+        },
+        created(){
+            this.auth = SessionStorage.get(AUTH_TOKEN);
+            supplierEdit({'supplier_id': this.supplier_id}, this.auth)
+            .then((res) => {
+                if(res.status === 200){
+                    this.supplier = res.data;
+                    this.supplier.geographicservicearea = this.supplier.geographicservicearea.split('|').join(',');
+                    this.supplier.otherlocation = this.supplier.otherlocation.split('|').join(',');
+                    let keywords = [];
+                    this.supplier.keywords.split(',').forEach((item, index) => {
+                        keywords.push({
+                            key: '',
+                            value: item
+                        })
+                    });
+                    this.supplier.keywords = keywords;
+
+
+                }
+            })
+        },
         data(){
             return {
-                supplier: {}
+                supplier: {},
+                auth: '',
             }
         }
     }

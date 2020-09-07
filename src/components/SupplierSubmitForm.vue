@@ -177,20 +177,20 @@
                 <el-row :gutter="20">
                     <el-col :span="24">
                         <el-form-item label="Is there a parent company?">
-                            <el-checkbox v-model="show_parent"></el-checkbox>
+                            <el-checkbox v-model="supplier.parentcompany"></el-checkbox>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :span="12">
-                        <el-form-item label="Parent Company Name" :required="show_parent">
-                            <el-input v-model="supplier.parentcompanyname" :disabled="!show_parent"
+                        <el-form-item label="Parent Company Name" :required="supplier.parentcompany">
+                            <el-input v-model="supplier.parentcompanyname" :disabled="!supplier.parentcompany"
                             placeholder="Parent Compant Name"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="Parent Fed Tax ID" :required="show_parent">
-                            <el-input v-model="supplier.parentcompanyfedid" :disabled="!show_parent"
+                        <el-form-item label="Parent Fed Tax ID" :required="supplier.parentcompany">
+                            <el-input v-model="supplier.parentcompanyfedid" :disabled="!supplier.parentcompany"
                             placeholder="Parent Company Fed Tax ID"></el-input>
                         </el-form-item>
                     </el-col>
@@ -458,6 +458,13 @@
                     </el-col>
                 </el-row>
             </el-form>
+        </div>
+
+        <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span>Company Classification</span>
+        </div>
+        <div class="input-card">
+
         </div>
 
         <div class="input-card">
