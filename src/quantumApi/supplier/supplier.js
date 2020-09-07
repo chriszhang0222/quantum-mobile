@@ -15,3 +15,7 @@ export const supplierNaics = (params) => {
 export const supplierCommodity = (params) => {
     return apiSyncAuth("get", "/supplier/commoditycode/", params);
 }
+
+export const supplierEdit = (params, auth) => {
+    return apiSyncAuth('get', "/supplier/edit_mobile/", params, auth);
+}
