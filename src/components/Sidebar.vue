@@ -25,7 +25,8 @@
                     </el-submenu>
                 </template>
                 <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index">
+                    <el-menu-item :index="item.index" :key="item.index"
+                    v-show="group.indexOf(item.meta) >= 0">
                         <i :class="item.icon"></i>
                         <span slot="title">{{ item.title }}</span>
                     </el-menu-item>
@@ -50,17 +51,20 @@
                     {
                         icon: 'el-icon-pie-chart',
                         index: 'dashboard',
-                        title: 'Dashboard'
+                        title: 'Dashboard',
+                        meta: 'company'
                     },
                     {
                         icon: 'el-icon-s-data',
                         index: 'report',
-                        title: 'Report'
+                        title: 'Report',
+                        meta: 'company'
                     },
                     {
                         icon: 'el-icon-search',
                         index: 'search',
-                        title: 'Search'
+                        title: 'Search',
+                        meta: 'company'
                     },
                 ]
             };
