@@ -285,8 +285,9 @@
         <div class="input-card">
             <el-form>
                 <el-row>
+                    <el-col :span="24">
                     <el-form-item label="Primary NAICS Code">
-                        <el-select style="width: 100%"
+                        <el-select
                                    filterable
                                    remote
                                    :remote-method="getNaics"
@@ -294,28 +295,35 @@
                                    v-model="primarynaics"
                         >
                             <el-option
-                                    v-for="item in naics_list"
-                                    :key="item.value"
+                                    :style="{left: windowWidth <= 500 ? 500 + 'px' : 0 + 'px'}"
+                                    v-for="(item,index) in naics_list"
+                                    :key="index"
                                     :label="item.label"
                                     :value="item.label">
                             </el-option>
                         </el-select>
+
                     </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
                     <el-form-item label="Secondary NAICS Code">
-                        <el-select style="width: 100%"
+                        <el-select
                                   v-model="secondarynaics"
                                    filterable
                                    remote
                                    :remote-method="getNaics"
                                    @change="secondNaicsChange">
                             <el-option
-                                    v-for="item in naics_list"
-                                    :key="item.value"
+                                    v-for="(item,index) in naics_list"
+                                    :key="index"
                                     :label="item.label"
                                     :value="item.label">
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    </el-col>
                 </el-row>
             </el-form>
         </div>
@@ -327,7 +335,7 @@
             <el-form>
                 <el-row>
                     <el-form-item label="Commodity">
-                        <el-select style="width: 100%"
+                        <el-select
                                    filterable
                                    remote
                                    :remote-method="getCommodity"
@@ -426,7 +434,7 @@
                 </el-row>
                 <el-row>
                     <el-col :span="24">
-                        <el-form-item label="Keywords pertinent to your product and services (eg. Technical consulting/Regulatory/SOP/GMP, Management consulting/Agile/OCM/CX, IT Consulting/Data migration/Instruction Design)">
+                        <el-form-item label="Keywords pertinent to your product and services">
                             <AutoCompleteInput
                                     style="width: 100%"
                             v-model="supplier.keywords"
@@ -461,10 +469,52 @@
         </div>
 
         <div class="title-block" style="text-align: center;margin-top: 20px">
-            <span>Company Classification</span>
+            <span>References</span>
         </div>
         <div class="input-card">
+            <el-form>
+                <el-row :gutter="10">
+                    <el-col :span="12">
+                    <el-form-item>
+                        <el-input placeholder="Name" v-model="supplier.referencename1"></el-input>
+                    </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item>
+                            <el-input placeholder="Phone" v-model="supplier.referencephone1"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="10">
+                    <el-col :span="12">
+                        <el-form-item>
+                            <el-input placeholder="Email" v-model="supplier.referenceemail1"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item>
+                            <el-input placeholder="Company" v-model="supplier.referencecompany1"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
 
+        <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span>Sustainability/Community Involvement</span>
+        </div>
+        <div class="input-card">
+            <el-form>
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item>
+                            <el-input v-model="supplier.socialprogram"
+                                      type="textarea"
+                                      :autosize="{ minRows: 2, maxRows: 4}"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
         </div>
 
         <div class="input-card">
@@ -503,6 +553,7 @@
         },
         data(){
             return {
+                windowWidth: window.innerWidth,
                 public_choice: ['Private', 'Public'],
                 structureCode: [
                     'Corporation',
@@ -598,8 +649,9 @@
 
 <style>
     .input-card{
-        padding: 5px;
+        padding: 10px;
         background-color: white;
+        border-bottom: 2px solid #373a43;;
     }
     .el-form-item {
         margin-bottom: 5px;
@@ -613,6 +665,9 @@
     .tags-input {
         padding: 10px 10px;
         width: 100%;
+    }
+    .el-form-item__label{
+        text-align: left !important;
     }
 
 </style>
