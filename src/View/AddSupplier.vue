@@ -3,7 +3,10 @@
         <vHeader :show-chat="false"></vHeader>
         <div class="content-box" style="left: 0px">
             <div class="content">
-                <span>Add Supplier</span>
+                <supplier-submit-form
+                :supplier_data="supplier">
+
+                </supplier-submit-form>
             </div>
         </div>
     </div>
@@ -11,9 +14,15 @@
 
 <script>
     import vHeader from '../components/Header';
+    import SupplierSubmitForm from "@/components/SupplierSubmitForm";
     export default {
         name: "AddSupplier",
-        components:{vHeader},
+        components:{vHeader, SupplierSubmitForm},
+        data(){
+            return {
+                supplier: {}
+            }
+        }
     }
 </script>
 
