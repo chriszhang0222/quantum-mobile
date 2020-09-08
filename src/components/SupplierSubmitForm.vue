@@ -469,6 +469,57 @@
         </div>
 
         <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span>Certificates</span>
+        </div>
+        <div class="input-card">
+            <el-form>
+                <div>
+                    <el-row :gutter="5">
+                        <el-col :span="8">
+                            <el-form-item label="Source">
+                                <el-select v-model="cert_upload.source">
+                                    <el-option value="agency" label="Agency"></el-option>
+                                    <el-option value="self" label="self"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="Type">
+                                <el-select v-model="cert_upload.type">
+                                    <el-option v-for="(item,index) in cert_types" :key="index"
+                                    :label="item" :value="item"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="Agency">
+                                <el-input ></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="5">
+                        <el-col :span="8">
+                            <el-form-item label="Cert Number">
+                                <el-input placeholder="Cert Number"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="Expiration Date">
+                                <el-date-picker placeholder="Expiration Date" style="width: 100%"></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8" align="left">
+                            <el-button type="primary" size="large" style="width: 100%" @click="selectFile">Upload</el-button>
+                            <input hidden type="file" ref="file" id="file_input0">
+                        </el-col>
+                    </el-row>
+                </div>
+            </el-form>
+        </div>
+
+        <div class="title-block" style="text-align: center;margin-top: 20px">
             <span>Company Classification</span>
         </div>
         <div class="input-card">
@@ -630,6 +681,9 @@
         },
         data(){
             return {
+                cert_upload:{
+                    source: 'agency',
+                },
                 sbe_result: '',
                 innerVisible: false,
                 sbe_status:{
@@ -730,6 +784,9 @@
             },
             submitForm(){
 
+            },
+            selectFile(){
+                document.getElementById('file_input0').click()
             },
             checkSBEStatus(){
                 this.sbe_result = '';
