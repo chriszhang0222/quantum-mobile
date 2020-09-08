@@ -14,20 +14,20 @@ let truetransfer = (obj) => {
 function checkAddZone(num) {
     return num < 10 ? `0${num.toString()}` : num
 }
+function dateFormatter(nows) {
+    if (!nows) return ''
+    const now = new Date(nows)
+    const year = now.getFullYear()
+
+    let month = now.getMonth() + 1
+    month = checkAddZone(month)
+
+    let date = now.getDate()
+    date = checkAddZone(date)
+    return `${year}-${month}-${date}`
+}
 
 const dateFilter = {
-    dateFormatter(nows) {
-        if (!nows) return ''
-        const now = new Date(nows)
-        const year = now.getFullYear()
-
-        let month = now.getMonth() + 1
-        month = checkAddZone(month)
-
-        let date = now.getDate()
-        date = checkAddZone(date)
-        return `${year}-${month}-${date}`
-    },
 
     dateTimeFormatter(t) {
         if (!t) return ''
@@ -66,5 +66,6 @@ const dateFilter = {
 }
 export default {
     formatNumber,
-    truetransfer
+    truetransfer,
+    dateFormatter
 }

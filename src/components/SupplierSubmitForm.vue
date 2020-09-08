@@ -468,57 +468,57 @@
             </el-form>
         </div>
 
-        <div class="title-block" style="text-align: center;margin-top: 20px">
-            <span>Ownership</span>
-        </div>
-        <div class="input-card">
-            <el-form>
-                <el-row :gutter="20">
-                    <el-col :span="8">
-                        <el-form-item label="Owned by corporate">
-                            <el-checkbox></el-checkbox>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="Owner Name">
-                            <el-input placeholder="Owner Name"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="Ethnicity">
-                            <el-select>
-                                <el-option v-for="(item,index) in ethnicity"
-                                :value="item"
-                                :key="index"
-                                :label="item">
+<!--        <div class="title-block" style="text-align: center;margin-top: 20px">-->
+<!--            <span>Ownership</span>-->
+<!--        </div>-->
+<!--        <div class="input-card">-->
+<!--            <el-form>-->
+<!--                <el-row :gutter="20">-->
+<!--                    <el-col :span="8">-->
+<!--                        <el-form-item label="Owned by corporate">-->
+<!--                            <el-checkbox></el-checkbox>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                    <el-col :span="8">-->
+<!--                        <el-form-item label="Owner Name">-->
+<!--                            <el-input placeholder="Owner Name"></el-input>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                    <el-col :span="8">-->
+<!--                        <el-form-item label="Ethnicity">-->
+<!--                            <el-select>-->
+<!--                                <el-option v-for="(item,index) in ethnicity"-->
+<!--                                :value="item"-->
+<!--                                :key="index"-->
+<!--                                :label="item">-->
 
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="20">
-                    <el-col :span="8">
-                        <el-form-item label="Ownership %">
-                            <el-input value=""></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="Gender">
-                            <el-select>
-                                <el-option value="M" label="M"></el-option>
-                                <el-option value="F" label="F"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="US Citizen / Perm. Resident">
-                            <el-checkbox></el-checkbox>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-form>
-        </div>
+<!--                                </el-option>-->
+<!--                            </el-select>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                </el-row>-->
+<!--                <el-row :gutter="20">-->
+<!--                    <el-col :span="8">-->
+<!--                        <el-form-item label="Ownership %">-->
+<!--                            <el-input value=""></el-input>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                    <el-col :span="8">-->
+<!--                        <el-form-item label="Gender">-->
+<!--                            <el-select>-->
+<!--                                <el-option value="M" label="M"></el-option>-->
+<!--                                <el-option value="F" label="F"></el-option>-->
+<!--                            </el-select>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                    <el-col :span="8">-->
+<!--                        <el-form-item label="US Citizen / Perm. Resident">-->
+<!--                            <el-checkbox></el-checkbox>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                </el-row>-->
+<!--            </el-form>-->
+<!--        </div>-->
 
         <div class="title-block" style="text-align: center;margin-top: 20px">
             <span>Certificates</span>
@@ -543,7 +543,7 @@
                         <el-col :span="8">
                             <el-form-item label="Type">
                                 <el-select v-model="cert_upload.type">
-                                    <el-option v-for="(item,index) in cert_types" :key="index"
+                                    <el-option v-for="(item,index) in cert_type_self" :key="index"
                                     :label="item" :value="item"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -711,10 +711,32 @@
                 <el-button type="primary" @click="checkSBEStatus">Check</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="SUPPLIER SELF-CERTIFICATION FORM" :visible.sync="show_self_cert" width="100%">
+        <el-dialog :title="'SUPPLIER ' +  cert_upload.type + ' SELF-CERTIFICATION FORM'" :visible.sync="show_self_cert" width="100%">
             <el-form>
+                <el-row align="left">
+                    <el-col :span="24" align="left">
+                    <span>Company Name: {{ supplier.vendorname }}</span>
+                    </el-col>
+                </el-row>
+                <el-row align="left">
+                    <el-col :span="24" align="left">
+                        <span>Date: {{ new Date()|dateFormatter }}</span>
+                    </el-col>
+                </el-row>
                 <el-row>
-                    <span>Company Name:</span>
+                    <el-col :span="24" align="left">
+                        <strong>You selected self-certification for {{ cert_upload.type }}.
+                            <template v-if="cert_upload.type !== '' && cert_dic[cert_upload.type.toUpperCase().trim()].desc">
+                                <p>{{ cert_dic[cert_upload.type].desc }}</p>
+                            </template>
+                        </strong>
+                    </el-col>
+                </el-row>
+                <el-row class="margin-top20">
+                    <el-col :span="24" align="left">
+                        By my signature below, I certify that I have correctly and accurately identified the proper Business Classification for my company identified above. I understand that my act of correctly classifying my company is imperative to ensure proper classification in various data systems and for proper reporting of information. I also understand that federal law provides penalties for misrepresentation of size and owner status information. I further understand that I and/or my company may be held responsible for any damages incurred by Northbound as a result of any false or inaccurate information I provide here. I agree to notify Northbound by means of re-submitting an updated Business Classification Form if my company's Business Classification should ever change at any point in the future from the classification I have recorded here.
+                        <strong>This form is valid for 1(one) year from the date completed.</strong>
+                    </el-col>
                 </el-row>
             </el-form>
         </el-dialog>
@@ -728,7 +750,7 @@
     import {Toast} from "@/utils/Toast";
     import {supplierNaics, supplierCommodity,  isSmallBusiness} from "@/quantumApi/supplier/supplier";
     import AutoCompleteInput from "@/components/AutoCompleteInput";
-    import {CERT_TYPES, ETHNICITY} from "@/utils/Constants";
+    import {CERT_TYPES, ETHNICITY, CERT_TYPES_IN_CERTIFICATE_SUBMIT, CERT_DIC} from "@/utils/Constants";
 
     export default {
         name: "SupplierSubmitForm",
@@ -750,6 +772,7 @@
         },
         data(){
             return {
+                cert_dic: CERT_DIC,
                 show_self_cert: false,
                 cert_upload:{
                     source: 'agency',
@@ -766,6 +789,7 @@
                 dialogFormVisible: false,
                 ethnicity: ETHNICITY,
                 cert_types: CERT_TYPES,
+                cert_type_self: CERT_TYPES_IN_CERTIFICATE_SUBMIT,
                 windowWidth: window.innerWidth,
                 public_choice: ['Private', 'Public'],
                 structureCode: [

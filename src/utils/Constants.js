@@ -92,42 +92,47 @@ export const CERT_TYPES_IN_CERTIFICATE_SUBMIT = [
 export const ETHNICITY = ['Caucasian', 'African American', 'Native American', 'Asian Subcontinent American',
 'Hispanic American', 'Asian Pacific American', 'Undefined']
 
-export const cert_dic = {
-    MBE: {
+export const CERT_DIC = {
+    'MBE': {
         full: 'MINORITY Business Enterprise',
         desc: ' By selecting this you acknowledge you meet the following requirements. Both current and historical facts are considered in determining ownership qualifications and participation in the management and operations of the company. Your business is a for-profit enterprise. Your business is physically located in the United States or its trust territories. Your business is at least 51% ethnic minority owned. Ethnic minority owned is defined as any business having owner(s) belonging to the following minority groups: African-American, Hispanic-American, Native American, Asian and Pacific Islander American (Asian-Indian included). The minority/ethnic owner(s) of the business are U.S. citizens. The minority/ethnic owner(s) of the business must be active in management and daily business operations.'
     },
-    WBE: {
+    'WBE': {
         full: 'Veteran Business Enterprise',
         desc: 'By selecting this you acknowledge you are a firm that is at least 51% owned and operated by Veterans.'
     },
-    DBE: {
+    'DBE': {
         full: '',
         desc: ''
     },
-    DVBE: {
+    'DVBE': {
         full: '',
         desc: ''
     },
-    HUBZone: {
+    'HUBZONE': {
         full: '',
         desc: 'By selecting you acknowledge you meet the requirement as follows. A business is defined as HUBZone certified if they meet the following criteria: 1. They are a small business as defined by the Small Business Administration (SBA) for size standards. 2. At least 51% owned and controlled by U.S. citizens, or a Community Development Corporation, an agricultural cooperative, or an Indian tribe (including Alaska Native Corporations). 3. The firm\'s principal office (where the greatest number of employees work) must be in a HUBZone. 4. 35% of the firm\'s total workforce must reside in a HUBZone.'
     },
-    SDB: {
+    'SDB': {
         full: 'Small Disadvantaged Business',
         desc: 'By selecting this you acknowledge the personal net worth of majority business owner does not exceed $1,320,000. Items excluded from a person\'s net worth calculation include an individual\'s ownership interest in the applicant firm, and his or her equity in their primary residence. The Firm is at least 51%-owned by a socially and economically disadvantaged individual(s) who also controls the firm. Disadvantaged owner must be a U.S. citizen or lawfully admitted permanent resident of the U.S. Firm must be a small business that meets the SBA\'s size standard and does not exceed $22.41 million in gross annual receipts in the previous three fiscal years.'
     },
-    LGBT:{
+    'LGBT':{
         full: '',
         desc: 'By selecting you acknowledge you meet the requirement as follows. A business is defined as LGBTBE certified if they at least 51% owned, operated, managed, and controlled by a LGBT person or persons who are either U.S. citizens or lawful permanent residents. The business exercises independence from any non-LGBT business enterprise.'
     },
-    ANC: {
+    'ANC': {
         full: '',
         desc: ''
     },
-    SBE:{
+    'SBE':{
         full: 'Small Business Enterprise',
         desc: ' By selecting you acknowledge you meet the requirement as follows.A business is defined as a Small Business Enterprise (SBE) if they meet certain economic criteria. Size standards vary by industry, and are based on the number of employees or the amount of annual receipts the business has.'
+    },
+    'VBE': {
+        full: '',
+        desc: ''
     }
 
 }
+
