@@ -81,3 +81,9 @@ export const state_list = [
 
 export const SEARCH_FORM_PRAMS = 'SEARCH_FORM_PRAMS';
 export const SUPPLIER_ID = 'SUPPLIER_ID';
+
+export const CERT_TYPES = ['MBE', 'WBE', 'SBE', 'EDWOSB', 'VBE', 'VOSB', 'DVBE', "WOSB",
+'SDVOSB', 'SDB', 'LGBT', '8A', 'Disabled', 'HUBZone', 'ANC', 'HBCU', 'ACDBE']
+
+export const ETHNICITY = ['Caucasian', 'African American', 'Native American', 'Asian Subcontinent American',
+'Hispanic American', 'Asian Pacific American', 'Undefined']
