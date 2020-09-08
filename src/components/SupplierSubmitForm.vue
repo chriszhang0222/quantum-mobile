@@ -469,6 +469,43 @@
         </div>
 
         <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span>Company Classification</span>
+        </div>
+        <div class="input-card">
+            <el-form>
+                <el-row>
+                    <el-col :span="24" align="left">
+                        <el-checkbox-group v-model="certtypes">
+                            <el-checkbox v-for="item in cert_types"
+                            :value="item"
+                            :key="item"
+                            :label="item">
+                            </el-checkbox>
+                        </el-checkbox-group>
+                    </el-col>
+                </el-row>
+                <el-row class="margin-top20" :gutter="20">
+                    <el-col :span="12">
+                        <label></label>
+                        <el-button style="margin-top: 20px" size="sm" @click="dialogFormVisible=true">Check Small Business</el-button>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Ethnicity">
+                            <el-select v-model="supplier.ethnicity">
+                                <el-option
+                                        v-for="(item,index) in ethnicity"
+                                        :key="index"
+                                        :label="item"
+                                        :value="item">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
+
+        <div class="title-block" style="text-align: center;margin-top: 20px">
             <span>References</span>
         </div>
         <div class="input-card">
@@ -526,6 +563,42 @@
             </el-col>
         </el-row>
         </div>
+
+        <el-dialog title="Check Small Business Status" :visible.sync="dialogFormVisible" width="100%">
+            <el-dialog
+                    width="30%"
+                    title=""
+                    :visible.sync="innerVisible"
+                    append-to-body>
+                <el-row>
+                    <h2>{{ sbe_result }}</h2>
+                </el-row>
+            </el-dialog>
+            <el-form>
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item required label="NAICS Code">
+                            <el-autocomplete v-model="sbe_status.code" style="width: 100%"
+                                             value-key="label"
+                                      :fetch-suggestions="queryNAICS"
+                                      @select="handleNAICSinCheck"
+                            ></el-autocomplete>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="NAICS Description">
+                            <el-input v-model="sbe_status.desc" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="checkSBEStatus">Check</el-button>
+            </div>
+        </el-dialog>
     </div>
 
 </template>
@@ -534,8 +607,9 @@
     import {Tools} from "@/utils/Tools";
     import {state_list} from "@/utils/Constants";
     import {Toast} from "@/utils/Toast";
-    import {supplierNaics, supplierCommodity} from "@/quantumApi/supplier/supplier";
+    import {supplierNaics, supplierCommodity,  isSmallBusiness} from "@/quantumApi/supplier/supplier";
     import AutoCompleteInput from "@/components/AutoCompleteInput";
+    import {CERT_TYPES, ETHNICITY} from "@/utils/Constants";
 
     export default {
         name: "SupplierSubmitForm",
@@ -548,11 +622,24 @@
         },
         computed:{
             supplier(){
-                return this.supplier_data;
+                return this.supplier_data || {};
+            },
+            certtypes(){
+                return this.supplier_data.certtypes || [];
             }
         },
         data(){
             return {
+                sbe_result: '',
+                innerVisible: false,
+                sbe_status:{
+                  code: '',
+                  desc: '',
+                    query: ''
+                },
+                dialogFormVisible: false,
+                ethnicity: ETHNICITY,
+                cert_types: CERT_TYPES,
                 windowWidth: window.innerWidth,
                 public_choice: ['Private', 'Public'],
                 structureCode: [
@@ -642,7 +729,48 @@
                 this.supplier.secondarynaicsdescription = val[1].trim();
             },
             submitForm(){
-            }
+
+            },
+            checkSBEStatus(){
+                this.sbe_result = '';
+                if(this.sbe_status.code === ''){
+                    this.$message.error('NAICS Code is Required');
+                    return;
+                }
+                let params = {
+                    naics_code: this.sbe_status.query,
+                    naics_name: this.sbe_status.desc
+                }
+                isSmallBusiness(params)
+                .then((res) => {
+                    if(res.status === 200){
+                        this.innerVisible = true;
+                        this.sbe_result = res.data.message;
+                    }else{
+                        return;
+                    }
+                })
+
+            },
+            queryNAICS(query, cb){
+                if(query === ''){
+                    return;
+                }
+                supplierNaics({term: query})
+                .then((res) => {
+                    if(res.status === 200){
+                        cb(res.data);
+                    }
+                });
+
+
+            },
+            handleNAICSinCheck(val){
+                let data = val.label;
+                let naics = data.split('-')
+                this.sbe_status.desc = naics[1].trim();
+                this.sbe_status.query = naics[0].trim();
+            },
         }
     }
 </script>
