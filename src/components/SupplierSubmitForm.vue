@@ -477,7 +477,7 @@
                     <el-row :gutter="5">
                         <el-col :span="8">
                             <el-form-item label="Source">
-                                <el-select v-model="cert_upload.source">
+                                <el-select v-model="cert_upload.source" @change="sourceChange">
                                     <el-option value="agency" label="Agency"></el-option>
                                     <el-option value="self" label="self"></el-option>
                                 </el-select>
@@ -491,13 +491,17 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8">
+                        <el-col :span="8" v-if="cert_upload.agency">
                             <el-form-item label="Agency">
                                 <el-input ></el-input>
                             </el-form-item>
                         </el-col>
+                        <el-col :span="8" v-if="!cert_upload.agency && cert_upload.type.length > 0">
+                            <el-button size="large" style="margin-top: 20px" @click="showSelfCert">
+                                <font-awesome-icon icon="edit"></font-awesome-icon>Self Certify</el-button>
+                        </el-col>
                     </el-row>
-                    <el-row :gutter="5">
+                    <el-row :gutter="5" v-if="cert_upload.agency">
                         <el-col :span="8">
                             <el-form-item label="Cert Number">
                                 <el-input placeholder="Cert Number"></el-input>
@@ -509,7 +513,7 @@
                             </el-form-item>
                         </el-col>
                     </el-row>
-                    <el-row>
+                    <el-row v-if="cert_upload.agency">
                         <el-col :span="8" align="left">
                             <el-button type="primary" size="large" style="width: 100%" @click="selectFile">Upload</el-button>
                             <input hidden type="file" ref="file" id="file_input0">
@@ -650,6 +654,13 @@
                 <el-button type="primary" @click="checkSBEStatus">Check</el-button>
             </div>
         </el-dialog>
+        <el-dialog title="SUPPLIER SELF-CERTIFICATION FORM" :visible.sync="show_self_cert" width="100%">
+            <el-form>
+                <el-row>
+                    <span>Company Name:</span>
+                </el-row>
+            </el-form>
+        </el-dialog>
     </div>
 
 </template>
@@ -668,7 +679,8 @@
         props: {
             supplier_data: {
                 required: false,
-                type: Object
+                type: Object,
+                agency: true
             }
         },
         computed:{
@@ -681,8 +693,11 @@
         },
         data(){
             return {
+                show_self_cert: false,
                 cert_upload:{
                     source: 'agency',
+                    agency: true,
+                    type: ''
                 },
                 sbe_result: '',
                 innerVisible: false,
@@ -745,6 +760,16 @@
             }
         },
         methods: {
+            showSelfCert(){
+                this.show_self_cert = true;
+            },
+            sourceChange(val){
+                if(val === 'agency'){
+                    this.cert_upload.agency = true;
+                }else if(val === 'self'){
+                    this.cert_upload.agency = false;
+                }
+            },
             getCommodity(query){
               let vm = this;
               if(query !== ''){
