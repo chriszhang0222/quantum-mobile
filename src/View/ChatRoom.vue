@@ -89,10 +89,10 @@
                                      placeholder="Enter message..."
                                 >
                                 </div>
-                                <button id="discussion-send-chat-button" class="message-send"
+                                <el-button id="discussion-send-chat-button" class="message-send"
                                         v-on:click="prepareAndSendNewMessage(chatRoom)">
                                     Send
-                                </button>
+                                </el-button>
                                 <div class="discussion-add-file" v-on:click="openFileModal(chatRoom)">
                                     <font-awesome-icon icon="file-word"></font-awesome-icon>
                                 </div>
@@ -686,7 +686,7 @@
         height: 50px;
         width: 50px;
         top: 18px;
-        right: 35px;
+        right: 70px;
         border: none;
         color: #4A90E2;
         background-color: transparent;
@@ -725,7 +725,7 @@
 
     .message-send{
         position: absolute;
-        top: 20px;
+        top: 15px;
         right: 10px;
         border: none;
         color: #4A90E2;
