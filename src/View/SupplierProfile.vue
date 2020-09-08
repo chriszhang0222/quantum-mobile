@@ -13,6 +13,7 @@
     import {SessionStorage} from "@/utils/SessionStorage";
     import {AUTH_TOKEN, SEARCH_FORM_PRAMS, SUPPLIER_ID} from "@/utils/Constants";
     import {supplierEdit} from "@/quantumApi/supplier/supplier";
+    import {Toast} from "@/utils/Toast";
 
     export default {
         name: "SupplierProfile",
@@ -38,7 +39,7 @@
                         })
                     });
                     this.supplier.keywords = keywords;
-
+                    this.$set(this.supplier, 'certtypes', this.supplier.certtypes.split(','))
 
                 }
             })
