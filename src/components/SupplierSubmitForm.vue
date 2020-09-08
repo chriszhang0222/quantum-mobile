@@ -469,6 +469,58 @@
         </div>
 
         <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span>Ownership</span>
+        </div>
+        <div class="input-card">
+            <el-form>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="Owned by corporate">
+                            <el-checkbox></el-checkbox>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="Owner Name">
+                            <el-input placeholder="Owner Name"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="Ethnicity">
+                            <el-select>
+                                <el-option v-for="(item,index) in ethnicity"
+                                :value="item"
+                                :key="index"
+                                :label="item">
+
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="Ownership %">
+                            <el-input value=""></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="Gender">
+                            <el-select>
+                                <el-option value="M" label="M"></el-option>
+                                <el-option value="F" label="F"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="US Citizen / Perm. Resident">
+                            <el-checkbox></el-checkbox>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
+
+        <div class="title-block" style="text-align: center;margin-top: 20px">
             <span>Certificates</span>
         </div>
         <div class="input-card">
@@ -478,8 +530,13 @@
                         <el-col :span="8">
                             <el-form-item label="Source">
                                 <el-select v-model="cert_upload.source" @change="sourceChange">
-                                    <el-option value="agency" label="Agency"></el-option>
-                                    <el-option value="self" label="self"></el-option>
+                                    <template v-if="supplier.id">
+                                        <el-option value="agency" label="Agency"></el-option>
+                                        <el-option value="self" label="self"></el-option>
+                                    </template>
+                                    <template v-else>
+                                        <el-option value="agency" label="Agency"></el-option>
+                                    </template>
                                 </el-select>
                             </el-form-item>
                         </el-col>
