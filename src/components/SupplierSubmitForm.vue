@@ -527,6 +527,11 @@
         <div class="input-card">
             <el-form>
                 <div>
+                    <el-row class="margin-bottom10" v-if="supplier.id !== null && supplier.id !== undefined">
+                        <el-col :span="24" align="left">
+                            <el-button @click="showExistCert">Show Uploaded Certificates</el-button>
+                        </el-col>
+                    </el-row>
                     <el-row :gutter="5">
                         <el-col :span="8">
                             <el-form-item label="Source">
@@ -677,7 +682,7 @@
         </el-row>
         </div>
 
-        <el-dialog title="Check Small Business Status" :visible.sync="dialogFormVisible" width="100%">
+        <el-dialog title="Check Small Business Status" :append-to-body="true" :visible.sync="dialogFormVisible" width="100%">
             <el-dialog
                     width="30%"
                     title=""
@@ -712,7 +717,7 @@
                 <el-button type="primary" @click="checkSBEStatus">Check</el-button>
             </div>
         </el-dialog>
-        <el-dialog :title="'SUPPLIER ' +  cert_upload.type + ' SELF-CERTIFICATION FORM'" :visible.sync="show_self_cert" width="100%">
+        <el-dialog :title="'SUPPLIER ' +  cert_upload.type + ' SELF-CERTIFICATION FORM'" :visible.sync="show_self_cert" width="100%" :append-to-body="true">
             <el-form>
                 <el-row align="left">
                     <el-col :span="24" align="left">
@@ -740,6 +745,9 @@
                     </el-col>
                 </el-row>
             </el-form>
+        </el-dialog>
+        <el-dialog title="Certificates" :visible.sync="exist_certs" width="100%" :append-to-body="true">
+            <el-row></el-row>
         </el-dialog>
     </div>
 
@@ -773,6 +781,7 @@
         },
         data(){
             return {
+                exist_certs: false,
                 owner_form:{},
                 cert_dic: CERT_DIC,
                 show_self_cert: false,
@@ -845,6 +854,10 @@
         methods: {
             showSelfCert(){
                 this.show_self_cert = true;
+            },
+            showExistCert(){
+              console.log(this.supplier.id);
+              this.exist_certs = true;
             },
             sourceChange(val){
                 if(val === 'agency'){
