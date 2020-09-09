@@ -34,6 +34,9 @@ export default new Vuex.Store({
             let count_ = state.chatNotification.unreadCount;
             Vue.set(state.chatNotification, 'unreadCount', count_+count);
         },
+        setNotificationCount(state, count){
+          Vue.set(state.chatNotification, 'unreadCount', count);
+        },
         concatRoom(state, rooms){
             let allrooms = state.chatRooms.concat(rooms);
             state.chatRooms = allrooms;

@@ -86,7 +86,7 @@
               let data = res.data;
               if(data.success){
                   let count = data.count;
-                  this.$store.commit('updateNotification', count);
+                  this.$store.commit('setNotificationCount', count);
               }
             },
             connectWebSocket(url, attempts, closeSocket){
