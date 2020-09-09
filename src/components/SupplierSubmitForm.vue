@@ -472,6 +472,11 @@
             <span>Ownership</span>
         </div>
         <div class="input-card">
+            <el-row class="margin-bottom10" v-if="supplier.id !== null && supplier.id !== undefined">
+                <el-col :span="24" align="left">
+                    <el-button @click="exist_owner=true">Show Submitted Ownership</el-button>
+                </el-col>
+            </el-row>
             <el-form>
                 <el-row :gutter="20">
                     <el-col :span="8">
@@ -747,7 +752,44 @@
             </el-form>
         </el-dialog>
         <el-dialog title="Certificates" :visible.sync="exist_certs" width="100%" :append-to-body="true">
-            <el-row></el-row>
+            <el-row>
+                <el-col :span="8"> <span>Agency</span></el-col>
+                <el-col :span="8"><span>Diversity Category</span></el-col>
+                <el-col :span="8"><span>Expiration Date</span></el-col>
+            </el-row>
+            <el-divider></el-divider>
+            <template v-for="(cert, index) in supplier.suppliercertificates_set" class="margin-bottom10">
+                <el-row :key="index" class="margin-bottom10">
+                    <el-col :span="8">{{cert.certagency }}</el-col>
+                    <el-col :span="8">{{cert.divcat}}</el-col>
+                    <el-col :span="8">{{cert.certexpdate}}</el-col>
+                </el-row>
+                <el-divider :key="index"></el-divider>
+            </template>
+        </el-dialog>
+        <el-dialog title="Ownership" :visible.sync="exist_owner" width="100%" :append-to-body="true">
+            <template v-for="(owner, index) in supplier.supplierowner_set">
+                <el-row :key="owner.name" class="margin-bottom10" :gutter="20">
+                    <el-col :span="8">
+                        <span>Name: </span>{{ owner.name }}
+                    </el-col>
+                    <el-col :span="8">
+                        <span>Ethnicity: </span>{{owner.ethnicity}}
+                    </el-col>
+                    <el-col :span="8">
+                        <span>Gender: </span>{{ owner.gender}}
+                    </el-col>
+                </el-row>
+                <el-row :key="index+100" class="margin-bottom10" :gutter="20">
+                    <el-col :span="8">
+                        <span>Percentage: </span>{{owner.percentageowner}}
+                    </el-col>
+                    <el-col :span="8">
+                        <span>US Citizen:</span>{{owner.uscitizen|truetransfer}}
+                    </el-col>
+                </el-row>
+                <el-divider :key="index"></el-divider>
+            </template>
         </el-dialog>
     </div>
 
@@ -781,6 +823,7 @@
         },
         data(){
             return {
+                exist_owner: false,
                 exist_certs: false,
                 owner_form:{},
                 cert_dic: CERT_DIC,
