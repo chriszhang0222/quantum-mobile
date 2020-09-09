@@ -177,7 +177,7 @@
                 <el-row :gutter="20">
                     <el-col :span="24">
                         <el-form-item label="Is there a parent company?">
-                            <el-checkbox v-model="supplier.parentcompany"></el-checkbox>
+                            <el-switch v-model="supplier.parentcompany"></el-switch>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -420,8 +420,8 @@
                 <el-row :gutter="20">
                     <el-col :span="24">
                         <el-form-item label=" Do you have a Signed Statement of Non-Disclosure or Vendor Services Agreement on file with Demo Company?">
-                            <el-checkbox v-model="supplier.has_signed_nda">
-                            </el-checkbox>
+                            <el-switch v-model="supplier.has_signed_nda">
+                            </el-switch>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -456,69 +456,70 @@
                 <el-row :gutter="20">
                     <el-col :span="12">
                         <el-form-item label="Does your company track Tier II spend?">
-                            <el-checkbox v-model="supplier.track_tier2_spend" border></el-checkbox>
+                            <el-switch v-model="supplier.track_tier2_spend" ></el-switch>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="Have you previously done business with Demo Company?">
-                            <el-checkbox v-model="supplier.previousbiz" border></el-checkbox>
+                            <el-switch v-model="supplier.previousbiz"></el-switch>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </el-form>
         </div>
 
-<!--        <div class="title-block" style="text-align: center;margin-top: 20px">-->
-<!--            <span>Ownership</span>-->
-<!--        </div>-->
-<!--        <div class="input-card">-->
-<!--            <el-form>-->
-<!--                <el-row :gutter="20">-->
-<!--                    <el-col :span="8">-->
-<!--                        <el-form-item label="Owned by corporate">-->
-<!--                            <el-checkbox></el-checkbox>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                    <el-col :span="8">-->
-<!--                        <el-form-item label="Owner Name">-->
-<!--                            <el-input placeholder="Owner Name"></el-input>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                    <el-col :span="8">-->
-<!--                        <el-form-item label="Ethnicity">-->
-<!--                            <el-select>-->
-<!--                                <el-option v-for="(item,index) in ethnicity"-->
-<!--                                :value="item"-->
-<!--                                :key="index"-->
-<!--                                :label="item">-->
+        <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span>Ownership</span>
+        </div>
+        <div class="input-card">
+            <el-form>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="Owned by corporate">
+                            <el-switch v-model="owner_form.is_owned_by_corporate">
+                            </el-switch>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="Owner Name">
+                            <el-input placeholder="Owner Name" v-model="owner_form.name"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="Ethnicity" >
+                            <el-select v-model="owner_form.race">
+                                <el-option v-for="(item,index) in ethnicity"
+                                :value="item"
+                                :key="index"
+                                :label="item">
 
-<!--                                </el-option>-->
-<!--                            </el-select>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                </el-row>-->
-<!--                <el-row :gutter="20">-->
-<!--                    <el-col :span="8">-->
-<!--                        <el-form-item label="Ownership %">-->
-<!--                            <el-input value=""></el-input>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                    <el-col :span="8">-->
-<!--                        <el-form-item label="Gender">-->
-<!--                            <el-select>-->
-<!--                                <el-option value="M" label="M"></el-option>-->
-<!--                                <el-option value="F" label="F"></el-option>-->
-<!--                            </el-select>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                    <el-col :span="8">-->
-<!--                        <el-form-item label="US Citizen / Perm. Resident">-->
-<!--                            <el-checkbox></el-checkbox>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                </el-row>-->
-<!--            </el-form>-->
-<!--        </div>-->
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="8">
+                        <el-form-item label="Ownership %">
+                            <el-input v-model="owner_form.percentageowner"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="Gender">
+                            <el-select v-model="owner_form.gender">
+                                <el-option value="M" label="M"></el-option>
+                                <el-option value="F" label="F"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="US Citizen / Perm. Resident">
+                            <el-switch v-model="owner_form.uscitizen"></el-switch>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
 
         <div class="title-block" style="text-align: center;margin-top: 20px">
             <span>Certificates</span>
@@ -772,6 +773,7 @@
         },
         data(){
             return {
+                owner_form:{},
                 cert_dic: CERT_DIC,
                 show_self_cert: false,
                 cert_upload:{
