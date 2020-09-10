@@ -584,7 +584,7 @@
                     <el-row v-if="cert_upload.agency">
                         <el-col :span="8" align="left">
                             <el-button type="primary" size="large" style="width: 100%" @click="selectFile">Upload</el-button>
-                            <input hidden type="file" ref="file" id="file_input0">
+                            <input hidden type="file" ref="cert_file" id="file_input0">
                         </el-col>
                     </el-row>
                 </div>
@@ -799,7 +799,7 @@
     import {Tools} from "@/utils/Tools";
     import {state_list} from "@/utils/Constants";
     import {Toast} from "@/utils/Toast";
-    import {supplierNaics, supplierCommodity,  isSmallBusiness} from "@/quantumApi/supplier/supplier";
+    import {supplierNaics, supplierCommodity,  isSmallBusiness, supplierEditPost} from "@/quantumApi/supplier/supplier";
     import AutoCompleteInput from "@/components/AutoCompleteInput";
     import {CERT_TYPES, ETHNICITY, CERT_TYPES_IN_CERTIFICATE_SUBMIT, CERT_DIC} from "@/utils/Constants";
 
@@ -811,6 +811,9 @@
                 required: false,
                 type: Object,
                 agency: true
+            },
+            auth: {
+                required: true
             }
         },
         computed:{
@@ -947,6 +950,8 @@
                 this.supplier.secondarynaicsdescription = val[1].trim();
             },
             submitForm(){
+                this.supplier.certForm = this.$refs.cert_file.files[0];
+                supplierEditPost({supplier: this.supplier}, this.auth);
 
             },
             selectFile(){

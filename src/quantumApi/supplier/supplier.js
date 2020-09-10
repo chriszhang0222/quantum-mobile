@@ -20,6 +20,10 @@ export const supplierEdit = (params, auth) => {
     return apiSyncAuth('get', "/supplier/edit_mobile/", params, auth);
 }
 
+export const supplierEditPost = (params, auth) => {
+    return apiSyncAuth('post', "/supplier/edit_mobile/", params, auth);
+}
+
 export const isSmallBusiness = (params) => {
     return apiSyncAuth('get', "/supplier/is_small_business/", params);
 }

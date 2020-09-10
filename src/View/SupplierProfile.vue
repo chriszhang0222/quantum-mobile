@@ -2,6 +2,7 @@
     <div>
         <supplier-submit-form
                 :supplier_data="supplier"
+                :auth="this.auth"
         >
 
         </supplier-submit-form>
