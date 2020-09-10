@@ -2,7 +2,7 @@
     <div>
         <supplier-submit-form v-if="supplier_load"
                 :supplier_data="supplier"
-                :auth="this.auth"
+                :auth="auth"
         >
 
         </supplier-submit-form>

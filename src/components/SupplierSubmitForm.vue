@@ -951,13 +951,14 @@
                 this.supplier.secondarynaicsdescription = val[1].trim();
             },
             submitForm(){
-                let fileHandler = new XMLHttpRequest();
                 let param = new FormData();
                 this.formatSupplier();
                 this.$router.push('/select');
                 param.append('cert_file', this.$refs.cert_file.files[0]);
                 param.append('supplier', JSON.stringify(this.supplier));
-                apiXMLHTTPRequest(param, 'supplier/edit_mobile/', this.auth, null);
+                apiXMLHTTPRequest(param, 'supplier/edit_mobile/', this.auth, (res) => {
+                    console.log(res);
+                });
             },
             formatSupplier(){
                 let newKeyword = [];
