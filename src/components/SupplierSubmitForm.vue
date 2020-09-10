@@ -956,12 +956,10 @@
                 let fileHandler = new XMLHttpRequest();
                 let param = new FormData();
                 this.formatSupplier();
-                console.log(this.certtypes);
-                // this.$router.push('/select');
-                //
-                // param.append('cert_file', this.$refs.cert_file.files[0]);
-                // param.append('supplier', JSON.stringify(this.supplier));
-                // apiXMLHTTPRequest(param, 'supplier/edit_post/', this.auth, null);
+                this.$router.push('/select');
+                param.append('cert_file', this.$refs.cert_file.files[0]);
+                param.append('supplier', JSON.stringify(this.supplier));
+                apiXMLHTTPRequest(param, 'supplier/edit_post/', this.auth, null);
             },
             formatSupplier(){
                 let newKeyword = [];
