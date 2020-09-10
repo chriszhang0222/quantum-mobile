@@ -30,8 +30,8 @@
             .then((res) => {
                 if(res.status === 200){
                     this.supplier = res.data;
-                    this.supplier.geographicservicearea = this.supplier.geographicservicearea.split('|').join(',');
-                    this.supplier.otherlocation = this.supplier.otherlocation.split('|').join(',');
+                    this.supplier.geographicservicearea = this.supplier.geographicservicearea.split('|')
+                    this.supplier.otherlocation = this.supplier.otherlocation.split('|')
                     let keywords = [];
                     this.supplier.keywords.split(',').forEach((item, index) => {
                         keywords.push({

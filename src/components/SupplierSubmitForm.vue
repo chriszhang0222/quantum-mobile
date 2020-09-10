@@ -368,18 +368,20 @@
 
                     <el-col :span="8">
                         <el-form-item label="U.S. Service Areas">
-                            <el-select multiple v-model="supplier.geographicservicearea">
+                            <el-select multiple v-model="supplier.geographicservicearea"
+                            :collapse-tags="true">
                                 <el-option v-for="(item, index) in state_list"
                                            :key="index"
                                            :value="item[0]"
-                                           :label="item[1]">
+                                           :label="item[1]"
+                                >
                                 </el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="International Service Areas">
-                            <el-select multiple v-model="supplier.otherlocation">
+                            <el-select multiple v-model="supplier.otherlocation" :collapse-tags="true">
                                 <el-option v-for="(item, index) in service_area"
                                 :key="index"
                                 :value="item"
@@ -953,9 +955,28 @@
             submitForm(){
                 let fileHandler = new XMLHttpRequest();
                 let param = new FormData();
+                this.formatSupplier();
+                console.log(this.supplier);
+                this.$router.push('/select');
+
                 param.append('cert_file', this.$refs.cert_file.files[0]);
                 param.append('supplier', JSON.stringify(this.supplier));
                 apiXMLHTTPRequest(param, 'supplier/edit_post/', this.auth, null);
+            },
+            formatSupplier(){
+                let newKeyword = [];
+                if(this.supplier.keywords !== undefined && this.supplier.keywords.length !== 0){
+                    this.supplier.keywords.forEach((key,val) => {
+                        newKeyword.push(key.value);
+                    })
+                }
+                this.supplier.keywords = newKeyword.join(',');
+                if(this.supplier.geographicservicearea !== undefined && this.supplier.geographicservicearea.length > 0){
+                    this.supplier.geographicservicearea = this.supplier.geographicservicearea.join('|');
+                }
+                if(this.supplier.otherlocation !== undefined && this.supplier.otherlocation.length > 0){
+                    this.supplier.otherlocation = this.supplier.otherlocation.join('|');
+                }
             },
             selectFile(){
                 document.getElementById('file_input0').click()
@@ -1000,6 +1021,9 @@
                 this.sbe_status.desc = naics[1].trim();
                 this.sbe_status.query = naics[0].trim();
             },
+            handleGeoOption(val){
+                alert(val);
+            }
         }
     }
 </script>
