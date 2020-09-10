@@ -1,6 +1,6 @@
 <template>
     <div>
-        <supplier-submit-form
+        <supplier-submit-form v-if="supplier_load"
                 :supplier_data="supplier"
                 :auth="this.auth"
         >
@@ -33,6 +33,7 @@
                     this.supplier.geographicservicearea = this.supplier.geographicservicearea.split('|')
                     this.supplier.otherlocation = this.supplier.otherlocation.split('|')
                     let keywords = [];
+                    this.supplier.certtypes = this.supplier.certtypes.split(',');
                     this.supplier.keywords.split(',').forEach((item, index) => {
                         keywords.push({
                             key: '',
@@ -40,13 +41,13 @@
                         })
                     });
                     this.supplier.keywords = keywords;
-                    this.$set(this.supplier, 'certtypes', this.supplier.certtypes.split(','))
-
+                    this.supplier_load = true;
                 }
             })
         },
         data(){
             return {
+                supplier_load: false,
                 supplier: {},
                 auth: '',
             }

@@ -600,7 +600,7 @@
             <el-form>
                 <el-row>
                     <el-col :span="24" align="left">
-                        <el-checkbox-group v-model="certtypes">
+                        <el-checkbox-group v-model="supplier.certtypes">
                             <el-checkbox v-for="item in cert_types"
                             :value="item"
                             :key="item"
@@ -802,9 +802,10 @@
     import {Tools} from "@/utils/Tools";
     import {state_list} from "@/utils/Constants";
     import {Toast} from "@/utils/Toast";
-    import {supplierNaics, supplierCommodity,  isSmallBusiness, supplierEditPost, apiXMLHTTPRequest} from "@/quantumApi/supplier/supplier";
+    import {supplierNaics, supplierCommodity,  isSmallBusiness, supplierEditPost} from "@/quantumApi/supplier/supplier";
     import AutoCompleteInput from "@/components/AutoCompleteInput";
     import {CERT_TYPES, ETHNICITY, CERT_TYPES_IN_CERTIFICATE_SUBMIT, CERT_DIC} from "@/utils/Constants";
+    import {apiXMLHTTPRequest} from "@/quantumApi/axiosCommon";
 
     export default {
         name: "SupplierSubmitForm",
@@ -821,11 +822,8 @@
         },
         computed:{
             supplier(){
-                return this.supplier_data || {};
+                return this.supplier_data || {certtypes:[]};
             },
-            certtypes(){
-                return this.supplier_data.certtypes || [];
-            }
         },
         data(){
             return {
@@ -959,7 +957,7 @@
                 this.$router.push('/select');
                 param.append('cert_file', this.$refs.cert_file.files[0]);
                 param.append('supplier', JSON.stringify(this.supplier));
-                apiXMLHTTPRequest(param, 'supplier/edit_post/', this.auth, null);
+                apiXMLHTTPRequest(param, 'supplier/edit_mobile/', this.auth, null);
             },
             formatSupplier(){
                 let newKeyword = [];
