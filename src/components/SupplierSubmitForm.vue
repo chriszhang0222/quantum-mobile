@@ -956,12 +956,12 @@
                 let fileHandler = new XMLHttpRequest();
                 let param = new FormData();
                 this.formatSupplier();
-                console.log(this.supplier);
-                this.$router.push('/select');
-
-                param.append('cert_file', this.$refs.cert_file.files[0]);
-                param.append('supplier', JSON.stringify(this.supplier));
-                apiXMLHTTPRequest(param, 'supplier/edit_post/', this.auth, null);
+                console.log(this.certtypes);
+                // this.$router.push('/select');
+                //
+                // param.append('cert_file', this.$refs.cert_file.files[0]);
+                // param.append('supplier', JSON.stringify(this.supplier));
+                // apiXMLHTTPRequest(param, 'supplier/edit_post/', this.auth, null);
             },
             formatSupplier(){
                 let newKeyword = [];
@@ -973,9 +973,18 @@
                 this.supplier.keywords = newKeyword.join(',');
                 if(this.supplier.geographicservicearea !== undefined && this.supplier.geographicservicearea.length > 0){
                     this.supplier.geographicservicearea = this.supplier.geographicservicearea.join('|');
+                }else{
+                    this.supplier.geographicservicearea = '';
                 }
                 if(this.supplier.otherlocation !== undefined && this.supplier.otherlocation.length > 0){
                     this.supplier.otherlocation = this.supplier.otherlocation.join('|');
+                }else{
+                    this.supplier.otherlocation = '';
+                }
+                if(this.cert_types.length > 0){
+                    this.supplier.certtypes = this.cert_types.join(',');
+                }else{
+                    this.supplier.certtypes = '';
                 }
             },
             selectFile(){
