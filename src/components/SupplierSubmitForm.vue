@@ -800,7 +800,7 @@
     import {Tools} from "@/utils/Tools";
     import {state_list} from "@/utils/Constants";
     import {Toast} from "@/utils/Toast";
-    import {supplierNaics, supplierCommodity,  isSmallBusiness, supplierEditPost} from "@/quantumApi/supplier/supplier";
+    import {supplierNaics, supplierCommodity,  isSmallBusiness, supplierEditPost, apiXMLHTTPRequest} from "@/quantumApi/supplier/supplier";
     import AutoCompleteInput from "@/components/AutoCompleteInput";
     import {CERT_TYPES, ETHNICITY, CERT_TYPES_IN_CERTIFICATE_SUBMIT, CERT_DIC} from "@/utils/Constants";
 
@@ -955,18 +955,7 @@
                 let param = new FormData();
                 param.append('cert_file', this.$refs.cert_file.files[0]);
                 param.append('supplier', JSON.stringify(this.supplier));
-                fileHandler.onreadystatechange = () => {
-                    if(fileHandler.readyState === 4 && fileHandler.status === 200){
-                        let result = JSON.parse(fileHandler.responseText);
-                        //uploadCompleteCallBack(result);
-                    }
-                }
-                fileHandler.open('POST', 'http://192.168.0.101:8001/supplier/edit_post/', true);
-                if(fileHandler.readyState === 1){
-                    fileHandler.send(param);
-                }
-                // axios.post('http://192.168.0.101:8001/supplier/edit_post/',   param, { headers: {'Content-Type': 'multipart/form-data',  'Authorization': 'Bearer ' + this.auth}})
-
+                apiXMLHTTPRequest(param, 'supplier/edit_post/', this.auth, null);
             },
             selectFile(){
                 document.getElementById('file_input0').click()

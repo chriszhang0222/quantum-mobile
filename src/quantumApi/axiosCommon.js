@@ -184,3 +184,20 @@ export const apiSyncFormPost = (params, url, auth) => {
         traditional: true
     });
 }
+
+export const apiXMLHTTPRequest = (params, url, auth, callback) => {
+    let fileHandler = new XMLHttpRequest();
+    fileHandler.setRequestHeader('Authorization', 'Bearer ' + auth);
+    fileHandler.onreadystatechange = () => {
+        if(fileHandler.readyState === 4 && fileHandler.status === 200){
+            let result = JSON.parse(fileHandler.responseText);
+            if(callback){
+                callback(result);
+            }
+        }
+    }
+    fileHandler.open('POST', baseUrl + url, true);
+    if(fileHandler.readyState === 1){
+        fileHandler.send(params);
+    }
+}
