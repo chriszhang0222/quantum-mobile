@@ -977,8 +977,8 @@
                 }else{
                     this.supplier.otherlocation = '';
                 }
-                if(this.cert_types.length > 0){
-                    this.supplier.certtypes = this.cert_types.join(',');
+                if(this.supplier.certtypes.length > 0){
+                    this.supplier.certtypes = this.supplier.certtypes.join(',');
                 }else{
                     this.supplier.certtypes = '';
                 }
