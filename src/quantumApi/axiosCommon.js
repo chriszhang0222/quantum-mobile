@@ -19,17 +19,20 @@ if(auth !== '' && auth !== undefined && auth !== null){
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
         'X-CSRFToken': getCookie('csrftoken', token),
         'Authorization': 'Bearer ' + auth,
+        'Accept': 'application/json'
     };
 }else {
     axios.defaults.headers = {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-        'X-CSRFToken': getCookie('csrftoken', token)
+        'X-CSRFToken': getCookie('csrftoken', token),
+        'Accept': 'application/json'
     };
 }
 
 axios.defaults.headers = {
     'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-    'X-CSRFToken': getCookie('csrftoken', token)
+    'X-CSRFToken': getCookie('csrftoken', token),
+    'Accept': 'application/json'
 };
 
 
@@ -166,4 +169,18 @@ export const apiSyncAuth = (method, url, params, auth) =>{
             traditional: true
         });
     }
+}
+
+export const apiSyncFormPost = (params, url, auth) => {
+    return axios({
+        headers: {
+            'Authorization': 'Bearer ' + auth,
+        },
+        timeout: 8000,
+        method: "post",
+        baseURL: baseUrl,
+        url: url,
+        data: params,
+        traditional: true
+    });
 }

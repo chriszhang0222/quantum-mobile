@@ -1,4 +1,4 @@
-import {apiSyncAuth, apiAsyncAuth} from "@/quantumApi/axiosCommon";
+import {apiSyncAuth, apiAsyncAuth, apiSyncFormPost} from "@/quantumApi/axiosCommon";
 
 export const supplierSearch = (params, auth) => {
     return apiSyncAuth("get", "/supplier/search_api/", params, auth);
@@ -21,7 +21,7 @@ export const supplierEdit = (params, auth) => {
 }
 
 export const supplierEditPost = (params, auth) => {
-    return apiSyncAuth('post', "/supplier/edit_mobile/", params, auth);
+    return apiSyncFormPost(params,"/supplier/edit_mobile/", auth);
 }
 
 export const isSmallBusiness = (params) => {

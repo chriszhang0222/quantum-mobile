@@ -4,7 +4,8 @@
         <div class="content-box" style="left: 0px">
             <div class="content">
                 <supplier-submit-form
-                :supplier_data="supplier">
+                :supplier_data="supplier"
+                :auth="auth">
 
                 </supplier-submit-form>
             </div>
@@ -15,12 +16,18 @@
 <script>
     import vHeader from '../components/Header';
     import SupplierSubmitForm from "@/components/SupplierSubmitForm";
+    import {SessionStorage} from "@/utils/SessionStorage";
+    import {AUTH_TOKEN, SEARCH_FORM_PRAMS, SUPPLIER_ID} from "@/utils/Constants";
     export default {
         name: "AddSupplier",
         components:{vHeader, SupplierSubmitForm},
+        created(){
+          this.auth = SessionStorage.get(AUTH_TOKEN);
+        },
         data(){
             return {
-                supplier: {}
+                supplier: {},
+                auth: ''
             }
         }
     }

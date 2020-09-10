@@ -584,7 +584,7 @@
                     <el-row v-if="cert_upload.agency">
                         <el-col :span="8" align="left">
                             <el-button type="primary" size="large" style="width: 100%" @click="selectFile">Upload</el-button>
-                            <input hidden type="file" ref="cert_file" id="file_input0">
+                            <input hidden type="file" ref="cert_file" id="file_input0" name="cert_file0">
                         </el-col>
                     </el-row>
                 </div>
@@ -796,6 +796,7 @@
 </template>
 
 <script>
+    import axios from 'axios';
     import {Tools} from "@/utils/Tools";
     import {state_list} from "@/utils/Constants";
     import {Toast} from "@/utils/Toast";
@@ -950,8 +951,21 @@
                 this.supplier.secondarynaicsdescription = val[1].trim();
             },
             submitForm(){
-                this.supplier.certForm = this.$refs.cert_file.files[0];
-                supplierEditPost({supplier: this.supplier}, this.auth);
+                let fileHandler = new XMLHttpRequest();
+                let param = new FormData();
+                param.append('cert_file', this.$refs.cert_file.files[0]);
+                param.append('supplier', JSON.stringify(this.supplier));
+                fileHandler.onreadystatechange = () => {
+                    if(fileHandler.readyState === 4 && fileHandler.status === 200){
+                        let result = JSON.parse(fileHandler.responseText);
+                        //uploadCompleteCallBack(result);
+                    }
+                }
+                fileHandler.open('POST', 'http://192.168.0.101:8001/supplier/edit_post/', true);
+                if(fileHandler.readyState === 1){
+                    fileHandler.send(param);
+                }
+                // axios.post('http://192.168.0.101:8001/supplier/edit_post/',   param, { headers: {'Content-Type': 'multipart/form-data',  'Authorization': 'Bearer ' + this.auth}})
 
             },
             selectFile(){
