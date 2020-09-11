@@ -688,7 +688,8 @@
                 <el-row :gutter="10">
                     <el-col :span="20">
                     <el-button type="primary" size="large" style="width: 100%" @click="additionalFile(index)">Upload</el-button>
-                    <input hidden type="file" :ref="'additionalFile' + index" :id="'additionalFile' + index" :name="'additionalFile' + index" @change="additionalFileChanged">
+                    <input hidden type="file" :ref="'additionalFile' + index" :id="'additionalFile' + index" :name="'additionalFile' + index" @change="additionalFileChanged(index)">
+                    <el-alert type="success" v-if="item.uploaded">{{ item.name }}</el-alert>
                     </el-col>
                     <el-col :span="4">
                         <el-button @click="add_additional(index)"><i class="el-icon-circle-plus"></i></el-button>
@@ -848,6 +849,8 @@
             return {
                 additional_File: [
                     {value: '',
+                        uploaded: false,
+                        name:'',
                     key: 'additional0'}
                 ],
                 exist_owner: false,
@@ -926,15 +929,20 @@
                 let key = index + 1;
                 this.additional_File.push({
                     key: 'additionalFile' + key,
-                    value: ''
+                    value: '',
+                    uploaded: false,
+                    name: '',
                 });
             },
             additionalFile(index){
                 let id = 'additionalFile' + index;
                 document.getElementById(id).click();
             },
-            additionalFileChanged(){
-              this.$message.success('Upload file successfully!')
+            additionalFileChanged(index){
+                let id = 'additionalFile' + index;
+              this.$message.success('Upload file successfully!');
+              this.additional_File[index].uploaded = true;
+              this.additional_File[index].name = document.getElementById(id).files[0].name
             },
             showSelfCert(){
                 this.show_self_cert = true;
