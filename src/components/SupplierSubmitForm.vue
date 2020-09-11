@@ -295,7 +295,7 @@
                                    v-model="primarynaics"
                         >
                             <el-option
-                                    :style="{left: windowWidth <= 500 ? 500 + 'px' : 0 + 'px'}"
+                                    :style="{left: windowWidth <= 500 ? 550 + 'px' : 0 + 'px'}"
                                     v-for="(item,index) in naics_list"
                                     :key="index"
                                     :label="item.label"
@@ -316,6 +316,7 @@
                                    :remote-method="getNaics"
                                    @change="secondNaicsChange">
                             <el-option
+                                    :style="{left: windowWidth <= 500 ? 550 + 'px' : 0 + 'px'}"
                                     v-for="(item,index) in naics_list"
                                     :key="index"
                                     :label="item.label"
@@ -343,10 +344,11 @@
                                    v-model="commodity"
                         >
                             <el-option
+                                    :style="{left: windowWidth <= 500 ? 550 + 'px' : 0 + 'px'}"
                                     v-for="item in commodity_list"
                                     :key="item.value"
                                     :label="item.label"
-                                    :value="item.label">
+                                    :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -840,6 +842,8 @@
     import AutoCompleteInput from "@/components/AutoCompleteInput";
     import {CERT_TYPES, ETHNICITY, CERT_TYPES_IN_CERTIFICATE_SUBMIT, CERT_DIC} from "@/utils/Constants";
     import {apiXMLHTTPRequest} from "@/quantumApi/axiosCommon";
+    import {SessionStorage} from "@/utils/SessionStorage";
+    import {SESSION_KEY_LOGIN_USER, NEW_CHAT_MESSAGE, AUTH_TOKEN} from "@/utils/Constants";
 
     export default {
         name: "SupplierSubmitForm",
@@ -852,15 +856,19 @@
             },
             auth: {
                 required: true
-            }
+            },
         },
         computed:{
             supplier(){
                 return this.supplier_data || {certtypes:[]};
             },
         },
+        mounted(){
+            this.user_id = SessionStorage.getJson(SESSION_KEY_LOGIN_USER).user_id;
+        },
         data(){
             return {
+                user_id: null,
                 additional_file_show: false,
                 additional_File: [
                     {value: '',
@@ -975,22 +983,23 @@
             },
             getCommodity(query){
               let vm = this;
+              this.commodity_list = [];
               if(query !== ''){
                   supplierCommodity({'term': query})
                   .then((res) => {
                       if(res.status === 200){
-                          vm.commodity_list = res.data;
+                          vm.commodity_list = res.data.results;
                       }
                   })
               }
             },
             commodityChange(val){
-                val = val.split("-");
-                this.supplier.commodity = val[0].trim();
-                this.supplier.commoditydescription = val[1].trim();
+                this.supplier.commodity = val;
+                this.supplier.commoditydescription = val;
             },
             getNaics(query){
                 let vm = this;
+                this.naics_list = [];
                 if(query !== ''){
                     supplierNaics({'term': query})
                     .then((res) => {
@@ -1016,6 +1025,7 @@
                 this.$router.push('/select');
                 param.append('cert_file', this.$refs.cert_file.files[0]);
                 param.append('supplier', JSON.stringify(this.supplier));
+                param.append('user_id', this.user_id);
                 for(let i = 0;i<this.additional_File.length;i++){
                     if(this.additional_File[i].uploaded && this.additional_File[i].name !== ''){
                         param.append('additionalFile-'+i, this.$refs['additionalFile'+i][0].files[0]);
