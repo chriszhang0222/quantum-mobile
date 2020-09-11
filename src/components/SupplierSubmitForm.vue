@@ -683,12 +683,17 @@
             <span>Upload Additional Company Information</span>
         </div>
         <div class="input-card">
+            <el-row v-if="supplier.id !== undefined && supplier.supplierfile_set.length > 0">
+                <el-col :span="24" align="left">
+                    <el-button @click="additional_file_show = true">Show uploaded Files</el-button>
+                </el-col>
+            </el-row>
             <el-form>
                 <el-form-item v-for="(item, index) in additional_File" :key="item.key">
                 <el-row :gutter="10">
                     <el-col :span="20">
                     <el-button type="primary" size="large" style="width: 100%" @click="additionalFile(index)">Upload</el-button>
-                    <input hidden type="file" :ref="'additionalFile' + index" :id="'additionalFile' + index" :name="'additionalFile' + index" @change="additionalFileChanged(index)">
+                    <input hidden type="file" :ref="'additionalFile' + index" :id="'additionalFile' + index" :name="'additionalFile' + index" @change="additionalFileChanged(index)"/>
                     <el-alert type="success" v-if="item.uploaded">{{ item.name }}</el-alert>
                     </el-col>
                     <el-col :span="4">
@@ -813,6 +818,15 @@
                 <el-divider :key="index"></el-divider>
             </template>
         </el-dialog>
+        <el-dialog title="Additional Company Information" :visible.sync="additional_file_show" width="100%" :append-to-body="true">
+            <el-row v-for="(item, index) in supplier.supplierfile_set" class="margin-bottom10" :key="index">
+                <el-col :span="20">
+                    {{ item.filename}}
+                </el-col>
+                <el-divider></el-divider>
+            </el-row>
+
+        </el-dialog>
     </div>
 
 </template>
@@ -847,6 +861,7 @@
         },
         data(){
             return {
+                additional_file_show: false,
                 additional_File: [
                     {value: '',
                         uploaded: false,
@@ -1001,6 +1016,11 @@
                 this.$router.push('/select');
                 param.append('cert_file', this.$refs.cert_file.files[0]);
                 param.append('supplier', JSON.stringify(this.supplier));
+                for(let i = 0;i<this.additional_File.length;i++){
+                    if(this.additional_File[i].uploaded && this.additional_File[i].name !== ''){
+                        param.append('additionalFile-'+i, this.$refs['additionalFile'+i][0].files[0]);
+                    }
+                }
                 apiXMLHTTPRequest(param, 'supplier/edit_mobile/', this.auth, (res) => {
                     console.log(res);
                 });
