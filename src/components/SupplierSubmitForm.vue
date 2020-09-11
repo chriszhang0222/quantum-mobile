@@ -679,6 +679,25 @@
             </el-form>
         </div>
 
+        <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span>Upload Additional Company Information</span>
+        </div>
+        <div class="input-card">
+            <el-form>
+                <el-form-item v-for="(item, index) in additional_File" :key="item.key">
+                <el-row :gutter="10">
+                    <el-col :span="20">
+                    <el-button type="primary" size="large" style="width: 100%" @click="additionalFile(index)">Upload</el-button>
+                    <input hidden type="file" :ref="'additionalFile' + index" :id="'additionalFile' + index" :name="'additionalFile' + index" @change="additionalFileChanged">
+                    </el-col>
+                    <el-col :span="4">
+                        <el-button @click="add_additional(index)"><i class="el-icon-circle-plus"></i></el-button>
+                    </el-col>
+                </el-row>
+                </el-form-item>
+            </el-form>
+        </div>
+
         <div class="input-card">
         <el-row>
             <el-col :span="12" align="left">
@@ -827,6 +846,10 @@
         },
         data(){
             return {
+                additional_File: [
+                    {value: '',
+                    key: 'additional0'}
+                ],
                 exist_owner: false,
                 exist_certs: false,
                 owner_form:{},
@@ -899,6 +922,20 @@
             }
         },
         methods: {
+            add_additional(index){
+                let key = index + 1;
+                this.additional_File.push({
+                    key: 'additionalFile' + key,
+                    value: ''
+                });
+            },
+            additionalFile(index){
+                let id = 'additionalFile' + index;
+                document.getElementById(id).click();
+            },
+            additionalFileChanged(){
+              this.$message.success('Upload file successfully!')
+            },
             showSelfCert(){
                 this.show_self_cert = true;
             },
