@@ -344,7 +344,7 @@
                                    v-model="commodity"
                         >
                             <el-option
-                                    :style="{left: windowWidth <= 500 ? 550 + 'px' : 0 + 'px'}"
+                                    :style="{left: windowWidth <= 500 ? 500 + 'px' : 0 + 'px'}"
                                     v-for="item in commodity_list"
                                     :key="item.value"
                                     :label="item.label"
@@ -481,7 +481,7 @@
                     <el-button @click="exist_owner=true">Show Submitted Ownership</el-button>
                 </el-col>
             </el-row>
-            <el-form>
+            <el-form :rules="owner_rules" ref="ownerForm" :model="owner_form">
                 <el-row :gutter="20">
                     <el-col :span="8">
                         <el-form-item label="Owned by corporate">
@@ -490,12 +490,12 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                        <el-form-item label="Owner Name">
+                        <el-form-item label="Owner Name" prop="name">
                             <el-input placeholder="Owner Name" v-model="owner_form.name"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                        <el-form-item label="Ethnicity" >
+                        <el-form-item label="Ethnicity" prop="ethnicity">
                             <el-select v-model="owner_form.race">
                                 <el-option v-for="(item,index) in ethnicity"
                                 :value="item"
@@ -509,7 +509,7 @@
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <el-form-item label="Ownership %">
+                        <el-form-item label="Ownership %" prop="percentage">
                             <el-input v-model="owner_form.percentageowner"></el-input>
                         </el-form-item>
                     </el-col>
@@ -868,6 +868,11 @@
         },
         data(){
             return {
+                owner_rules: {
+                    name: [{required: true, message: 'Please input ownername', trigger: 'blur'}],
+                    ethnicity: [{required: true, message: 'Please select ethnicity', trigger: 'blur'}],
+                    percentage: [{required: true, message: 'Please input percentage', trigger: 'blur'}]
+                },
                 user_id: null,
                 additional_file_show: false,
                 additional_File: [
@@ -1020,6 +1025,17 @@
                 this.supplier.secondarynaicsdescription = val[1].trim();
             },
             submitForm(){
+                let allFormValid = true;
+                this.$refs.ownerForm.validate(valid => {
+                    if(!valid){
+                        allFormValid = false;
+                        this.$message.error('Ownership is required');
+                        return;
+                    }
+                });
+                if(!allFormValid){
+                    return;
+                }
                 let param = new FormData();
                 this.formatSupplier();
                 this.$router.push('/select');
@@ -1031,9 +1047,9 @@
                         param.append('additionalFile-'+i, this.$refs['additionalFile'+i][0].files[0]);
                     }
                 }
-                apiXMLHTTPRequest(param, 'supplier/edit_mobile/', this.auth, (res) => {
-                    console.log(res);
-                });
+                // apiXMLHTTPRequest(param, 'supplier/edit_mobile/', this.auth, (res) => {
+                //     console.log(res);
+                // });
             },
             formatSupplier(){
                 let newKeyword = [];
