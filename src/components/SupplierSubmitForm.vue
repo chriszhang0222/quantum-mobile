@@ -534,7 +534,7 @@
             <span>Certificates</span>
         </div>
         <div class="input-card">
-            <el-form :model="cert_upload">
+            <el-form :model="cert_upload" :rules="cert_upload_rules" ref="certificateForm">
                 <div>
                     <el-row class="margin-bottom10" v-if="supplier.id !== null && supplier.id !== undefined">
                         <el-col :span="24" align="left">
@@ -588,9 +588,9 @@
                     </el-row>
                     <el-row v-if="cert_upload.agency">
                         <el-col :span="8" align="left">
-                            <el-button type="primary" size="large" style="width: 100%" @click="selectFile">Upload</el-button>
-                            <input hidden type="file" ref="cert_file" id="file_input0" name="cert_file0">
-                            <el-alert type="error" v-if="!cert_upload.has_file"></el-alert>
+                            <el-button type="primary" size="large" style="width: 100%" @click="selectCertFile">Upload</el-button>
+                            <input hidden type="file" ref="cert_file" id="file_input0" name="cert_file0" @change="certFileChanged">
+                            <el-alert type="error" v-if="!cert_upload.has_file">You didn't upload a file</el-alert>
                         </el-col>
                     </el-row>
                 </div>
@@ -846,6 +846,7 @@
     import {apiXMLHTTPRequest} from "@/quantumApi/axiosCommon";
     import {SessionStorage} from "@/utils/SessionStorage";
     import {SESSION_KEY_LOGIN_USER, NEW_CHAT_MESSAGE, AUTH_TOKEN} from "@/utils/Constants";
+    import {cert_upload_rules_agency} from "@/utils/Constants";
 
     export default {
         name: "SupplierSubmitForm",
@@ -876,9 +877,6 @@
                     percentage: [{required: true, message: 'Please input percentage', trigger: 'blur'}]
                 },
                 cert_upload_rules: {
-                  type: [{required: true, message: 'Type required', trigger: 'blur'}],
-                  agency: [{required: true, message: 'Agency required'}],
-                  expdate: [{required: true, message: 'Agency required'}]
                 },
                 user_id: null,
                 additional_file_show: false,
@@ -896,7 +894,7 @@
                 cert_upload:{
                     source: 'agency',
                     agency: true,
-                    type: null,
+                    type: '',
                     invalid: false,
                     has_file: true,
                     expdate: null,
@@ -977,6 +975,9 @@
                 let id = 'additionalFile' + index;
                 document.getElementById(id).click();
             },
+            certFileChanged(){
+              this.cert_upload.has_file = true;
+            },
             additionalFileChanged(index){
                 let id = 'additionalFile' + index;
               this.$message.success('Upload file successfully!');
@@ -1044,6 +1045,22 @@
                         return;
                     }
                 });
+                if(this.cert_upload.type !== '' || this.cert_upload.expdate !== null || this.cert_upload.agency_name !== null){
+                    this.cert_upload_rules = cert_upload_rules_agency;
+                    this.$refs.certificateForm.validate(valid => {
+                       if(!valid){
+                           allFormValid = false;
+                           this.$message.error('Certificate is not complete!');
+                           return;
+                       }
+                    });
+                    if(this.$refs.cert_file.files[0] === undefined || this.$refs.cert_file.files[0] === null){
+                        allFormValid = false;
+                        this.cert_upload.has_file = false;
+                    }
+
+                }
+
                 return allFormValid;
             },
             submitForm(){
@@ -1090,7 +1107,7 @@
                     this.supplier.certtypes = '';
                 }
             },
-            selectFile(){
+            selectCertFile(){
                 document.getElementById('file_input0').click()
             },
             checkSBEStatus(){

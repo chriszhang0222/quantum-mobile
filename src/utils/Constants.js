@@ -136,3 +136,9 @@ export const CERT_DIC = {
 
 }
 
+export const cert_upload_rules_agency = {
+    type: [{required: true, message: 'Type required', trigger: 'blur'}],
+    agency: [{required: true, message: 'Agency required', trigger: 'blur'}],
+    expdate: [{required: true, message: 'Expiration date required', trigger: 'blur'}]
+}
+
