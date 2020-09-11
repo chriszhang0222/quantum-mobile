@@ -534,7 +534,7 @@
             <span>Certificates</span>
         </div>
         <div class="input-card">
-            <el-form>
+            <el-form :model="cert_upload">
                 <div>
                     <el-row class="margin-bottom10" v-if="supplier.id !== null && supplier.id !== undefined">
                         <el-col :span="24" align="left">
@@ -547,7 +547,7 @@
                                 <el-select v-model="cert_upload.source" @change="sourceChange">
                                     <template v-if="supplier.id">
                                         <el-option value="agency" label="Agency"></el-option>
-                                        <el-option value="self" label="self"></el-option>
+                                        <el-option value="self" label="Self"></el-option>
                                     </template>
                                     <template v-else>
                                         <el-option value="agency" label="Agency"></el-option>
@@ -556,7 +556,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="Type">
+                            <el-form-item label="Type" prop="type">
                                 <el-select v-model="cert_upload.type">
                                     <el-option v-for="(item,index) in cert_type_self" :key="index"
                                     :label="item" :value="item"></el-option>
@@ -564,8 +564,8 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8" v-if="cert_upload.agency">
-                            <el-form-item label="Agency">
-                                <el-input ></el-input>
+                            <el-form-item label="Agency" prop="agency">
+                                <el-input v-model="cert_upload.agency_name" ></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8" v-if="!cert_upload.agency && cert_upload.type.length > 0">
@@ -576,12 +576,13 @@
                     <el-row :gutter="5" v-if="cert_upload.agency">
                         <el-col :span="8">
                             <el-form-item label="Cert Number">
-                                <el-input placeholder="Cert Number"></el-input>
+                                <el-input placeholder="Cert Number" v-model="cert_upload.certnumber"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="Expiration Date">
-                                <el-date-picker placeholder="Expiration Date" style="width: 100%"></el-date-picker>
+                            <el-form-item label="Expiration Date" prop="expdate">
+                                <el-date-picker placeholder="Expiration Date" style="width: 100%"
+                                v-model="cert_upload.expdate"></el-date-picker>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -589,6 +590,7 @@
                         <el-col :span="8" align="left">
                             <el-button type="primary" size="large" style="width: 100%" @click="selectFile">Upload</el-button>
                             <input hidden type="file" ref="cert_file" id="file_input0" name="cert_file0">
+                            <el-alert type="error" v-if="!cert_upload.has_file"></el-alert>
                         </el-col>
                     </el-row>
                 </div>
@@ -873,6 +875,11 @@
                     ethnicity: [{required: true, message: 'Please select ethnicity', trigger: 'blur'}],
                     percentage: [{required: true, message: 'Please input percentage', trigger: 'blur'}]
                 },
+                cert_upload_rules: {
+                  type: [{required: true, message: 'Type required', trigger: 'blur'}],
+                  agency: [{required: true, message: 'Agency required'}],
+                  expdate: [{required: true, message: 'Agency required'}]
+                },
                 user_id: null,
                 additional_file_show: false,
                 additional_File: [
@@ -889,7 +896,11 @@
                 cert_upload:{
                     source: 'agency',
                     agency: true,
-                    type: ''
+                    type: null,
+                    invalid: false,
+                    has_file: true,
+                    expdate: null,
+                    agency_name: null,
                 },
                 sbe_result: '',
                 innerVisible: false,
@@ -1024,7 +1035,7 @@
                 this.supplier.secondarynaicscode = val[0].trim();
                 this.supplier.secondarynaicsdescription = val[1].trim();
             },
-            submitForm(){
+            validateForm(){
                 let allFormValid = true;
                 this.$refs.ownerForm.validate(valid => {
                     if(!valid){
@@ -1033,7 +1044,10 @@
                         return;
                     }
                 });
-                if(!allFormValid){
+                return allFormValid;
+            },
+            submitForm(){
+                if(!this.validateForm()){
                     return;
                 }
                 let param = new FormData();
@@ -1042,6 +1056,7 @@
                 param.append('cert_file', this.$refs.cert_file.files[0]);
                 param.append('supplier', JSON.stringify(this.supplier));
                 param.append('user_id', this.user_id);
+                param.append('ownership', this.owner_form);
                 for(let i = 0;i<this.additional_File.length;i++){
                     if(this.additional_File[i].uploaded && this.additional_File[i].name !== ''){
                         param.append('additionalFile-'+i, this.$refs['additionalFile'+i][0].files[0]);
