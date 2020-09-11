@@ -26,7 +26,7 @@
         },
         data(){
             return {
-                supplier: {},
+                supplier: {certtypes: []},
                 auth: ''
             }
         }

@@ -41,7 +41,12 @@
                         })
                     });
                     this.supplier.keywords = keywords;
+                    this.supplier.supplierfile_set = this.supplier.supplierfile_set.filter((item) =>{
+                        return item.type === '';
+                    });
+                    console.log(this.supplier);
                     this.supplier_load = true;
+
                 }
             })
         },
