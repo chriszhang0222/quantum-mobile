@@ -564,7 +564,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8" v-if="cert_upload.agency">
-                            <el-form-item label="Agency" prop="agency">
+                            <el-form-item label="Agency" prop="agency_name">
                                 <el-input v-model="cert_upload.agency_name" ></el-input>
                             </el-form-item>
                         </el-col>
