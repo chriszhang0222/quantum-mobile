@@ -865,6 +865,15 @@
             supplier(){
                 return this.supplier_data || {certtypes:[]};
             },
+            primarynaics(){
+                return this.supplier_data.primarynaicscode + '-' + this.supplier_data.primarynaicsdescription;
+            },
+            secondarynaics(){
+                return this.supplier_data.secondarynaicscode + '-' + this.supplier_data.secondarynaicsdescription;
+            },
+            commodity(){
+                return this.supplier_data.commodity;
+            }
         },
         mounted(){
             this.user_id = SessionStorage.getJson(SESSION_KEY_LOGIN_USER).user_id;
@@ -934,9 +943,6 @@
                 show_parent: false,
                 naics_list: [],
                 commodity_list: [],
-                primarynaics: '',
-                secondarynaics: '',
-                commodity: '',
                 service_area: [
                     'East Asia and The Pacific',
                     'South Asia',
