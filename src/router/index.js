@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from "@/View/Login";
 import Home from "@/View/Home";
 import Dashboard from "@/View/Dashboard";
 import Chat from "@/View/Chat";
@@ -18,54 +17,63 @@ Vue.use(VueRouter);
 const routes = [
     {path:'*',redirect:"/login"},
     {path: '', redirect: "/login"},
-    {path:'/login', component:Login},
-    {path: '/add_supplier', component: AddSupplier, meta: {requiredAuth: true, supplier: true}},
-    {path: '/select', component: SelectCompany, meta: {requiredAuth: true, supplier: true}},
+    {path:'/login', component:() => import('@/View/Login')},
+    {path: '/add_supplier',
+        component: () => import('@/View/AddSupplier'),
+        meta: {
+        requiredAuth: true,
+            supplier: true
+        }
+    },
+    {path: '/select',
+        component: () => import('@/View/SelectCompany'),
+        meta: {requiredAuth: true, supplier: true}
+    },
     {
         path: '/home',
         name: 'Home',
-        component: Home,
+        component: () => import('@/View/Home'),
         children: [
             {
                 path: '/dashboard',
                 name: 'Dashboard',
-                component: Dashboard,
+                component: () => import('@/View/Dashboard'),
                 meta: {requiredAuth: true, company: true}
             },
             {
                 path: '/chat',
                 name: 'Chat',
-                component: Chat,
+                component: () => import('@/View/Chat'),
                 meta: {requiredAuth: true}
             },
             {
                 path: '/chatroom',
                 name: 'ChatRoom',
-                component: ChatRoom,
+                component: () => import('@/View/ChatRoom'),
                 meta: {requiredAuth: true}
             },
             {
                 path: '/report',
                 name: 'Report',
-                component: Report,
+                component: () => import('@/View/Report'),
                 meta: {requiredAuth: true, company:true}
             },
             {
                 path: '/search',
                 name: 'Search',
-                component: Search,
+                component: () => import('@/View/Search'),
                 meta: {requiredAuth: true, company:true}
             },
             {
                 path: '/supplier',
                 name: 'Supplier',
-                component: Supplier,
+                component: () => import('@/View/Supplier'),
                 meta: {requiredAuth: true, company:true}
             },
             {
                 path: '/profile/:id',
                 name: 'Profile',
-                component: SupplierProfile,
+                component: () => import('@/View/SupplierProfile'),
                 meta: {requiredAuth: true, supplier:true}
             }
         ]
