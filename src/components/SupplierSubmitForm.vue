@@ -580,9 +580,9 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="Expiration Date" prop="expdate">
+                            <el-form-item label="Expiration Date" prop="certexpdate">
                                 <el-date-picker placeholder="Expiration Date" style="width: 100%"
-                                v-model="cert_upload.certexpdate"></el-date-picker>
+                                v-model="cert_upload.certexpdate" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
                             </el-form-item>
                         </el-col>
                     </el-row>
