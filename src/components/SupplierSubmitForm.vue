@@ -1161,11 +1161,11 @@
                 param.append('supplier', JSON.stringify(this.supplier));
                 param.append('user_id', this.user_id);
                 if(Tools.isNotEmpty(this.owner_form)) {
-                    param.append('ownership', this.owner_form);
+                    param.append('ownership', JSON.stringify(this.owner_form));
                 }
                 if(this.cert_upload.has_file) {
                     param.append('cert_file', this.$refs.cert_file.files[0]);
-                    param.append('certificate', this.cert_upload);
+                    param.append('certificate', JSON.stringify(this.cert_upload));
                 }
                 if(this.additional_File.length > 0) {
                     for (let i = 0; i < this.additional_File.length; i++) {
