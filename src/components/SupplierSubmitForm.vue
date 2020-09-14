@@ -590,6 +590,7 @@
                         <el-col :span="8" align="left">
                             <el-button type="primary" size="large" style="width: 100%" @click="selectCertFile">Upload</el-button>
                             <input hidden type="file" ref="cert_file" id="file_input0" name="cert_file0" @change="certFileChanged">
+                            <el-alert type="success" v-if="cert_upload.fileName !== null">{{cert_upload.fileName}}</el-alert>
                             <el-alert type="error" v-if="!cert_upload.has_file">You didn't upload a file</el-alert>
                         </el-col>
                     </el-row>
@@ -986,6 +987,7 @@
                     certexpdate: null,
                     agency_name: null,
                     certnumber: null,
+                    fileName: null
                 },
                 sbe_result: '',
                 innerVisible: false,
@@ -1064,6 +1066,7 @@
             },
             certFileChanged(){
               this.cert_upload.has_file = true;
+              this.cert_upload.fileName = this.$refs.cert_file.files[0].name;
             },
             additionalFileChanged(index){
                 let id = 'additionalFile' + index;
