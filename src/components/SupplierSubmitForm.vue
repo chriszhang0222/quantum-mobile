@@ -910,6 +910,16 @@
             </el-form>
         </el-dialog>
         <el-dialog title="Certificates" :visible.sync="exist_certs" width="100%" :append-to-body="true">
+            <el-dialog
+                    width="100%"
+                    title=""
+                    :height="500"
+                    :visible.sync="cert_file_visiable"
+                    append-to-body>
+                <el-row>
+                    <iframe :src="cert_file_url" width="100%" height="500px" type="application/pdf" />
+                </el-row>
+            </el-dialog>
             <el-row>
                 <el-col :span="8"> <span>Agency</span></el-col>
                 <el-col :span="8"><span>Diversity Category</span></el-col>
@@ -918,7 +928,7 @@
             <el-divider></el-divider>
             <template v-for="(cert, index) in supplier.suppliercertificates_set" class="margin-bottom10">
                 <el-row :key="index" class="margin-bottom10">
-                    <el-col :span="8">{{cert.certagency }}</el-col>
+                    <el-col :span="8"><span style="color: #3a8ee6" @click="showCertfilePDF(cert)">{{cert.certagency }}</span></el-col>
                     <el-col :span="8">{{cert.divcat}}</el-col>
                     <el-col :span="8">{{cert.certexpdate}}</el-col>
                 </el-row>
@@ -1011,6 +1021,8 @@
         },
         data(){
             return {
+                cert_file_url: null,
+                cert_file_visiable: false,
                 owner_rules: {
                     name: [{required: true, message: 'Please input ownername', trigger: 'blur'}],
                     ethnicity: [{required: true, message: 'Please select ethnicity', trigger: 'blur'}],
@@ -1101,6 +1113,10 @@
             }
         },
         methods: {
+            showCertfilePDF(cert){
+                this.cert_file_visiable = true;
+                this.cert_file_url = process.env.VUE_APP_SERVER + cert.upload_path
+            },
             add_insurance(index){
 
             },
