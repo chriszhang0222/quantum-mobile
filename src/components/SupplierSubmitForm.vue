@@ -604,8 +604,8 @@
         <div class="input-card">
             <el-form>
                 <el-row :gutter="10">
-                    <el-col :span="4">
-                        <label style="margin-top: 20px">2018</label>
+                    <el-col :span="4" style="margin-top: 20px">
+                        <label>2018</label>
                     </el-col>
                     <el-col :span="10">
                         <el-form-item label="Revenue">
@@ -619,8 +619,8 @@
                     </el-col>
                 </el-row>
                 <el-row :gutter="10" class="margin-top10">
-                    <el-col :span="4">
-                        <label style="margin-top: 20px">2019</label>
+                    <el-col :span="4" style="margin-top: 20px">
+                        <label>2019</label>
                     </el-col>
                     <el-col :span="10">
                         <el-form-item label="Revenue">
@@ -634,8 +634,8 @@
                     </el-col>
                 </el-row>
                 <el-row :gutter="10" class="margin-top10">
-                    <el-col :span="4">
-                        <label style="margin-top: 20px">2020</label>
+                    <el-col :span="4" style="margin-top: 20px">
+                        <label>2020</label>
                     </el-col>
                     <el-col :span="10">
                         <el-form-item label="Revenue">
@@ -1238,6 +1238,7 @@
                             SessionStorage.set(SESSION_KEY_LOGIN_USER, user);
                         }
                         this.$router.push('/select');
+                        this.$message.success('You have submitted the supplier profile');
                     }
                 });
             },
