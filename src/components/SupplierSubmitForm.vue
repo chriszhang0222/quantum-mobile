@@ -684,6 +684,79 @@
         </div>
 
         <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span>Insurance Information</span>
+        </div>
+        <div class="input-card">
+            <el-form>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="Type">
+                            <label>Workers Compensation</label>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Carrier">
+                            <el-input v-model="supplier.wccarrier"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="Amount">
+                            <el-input v-model="supplier.wcamount">
+                                <template slot="prepend">$</template>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Expiration Date">
+                            <el-date-picker v-model="supplier.wc_expiration_date"></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <el-button type="primary" size="large" style="width: 100%" @click="additionalFile(index)">Upload</el-button>
+                        <input hidden type="file" ref="insurancefile1" id="insurancefile1" />
+                    </el-col>
+                </el-row>
+                <el-divider></el-divider>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="Type">
+                            <label>General Ability</label>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Carrier">
+                            <el-input v-model="supplier.glcarrier"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <el-form-item label="Amount">
+                            <el-input v-model="supplier.glamount">
+                                <template slot="prepend">$</template>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="Expiration Date">
+                            <el-date-picker v-model="supplier.gl_expiration_date"></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <el-button type="primary" size="large" style="width: 100%" @click="additionalFile(index)">Upload</el-button>
+                        <input hidden type="file" ref="insurancefile2" id="insurancefile2" />
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
+
+        <div class="title-block" style="text-align: center;margin-top: 20px">
             <span>Upload Additional Company Information</span>
         </div>
         <div class="input-card">
@@ -866,9 +939,13 @@
                 return this.supplier_data || {certtypes:[]};
             },
             primarynaics(){
+                if(this.supplier_data.primarynaicscode === undefined)
+                    return '';
                 return this.supplier_data.primarynaicscode + '-' + this.supplier_data.primarynaicsdescription;
             },
             secondarynaics(){
+                if(this.supplier_data.secondarynaicscode === undefined)
+                    return '';
                 return this.supplier_data.secondarynaicscode + '-' + this.supplier_data.secondarynaicsdescription;
             },
             commodity(){
