@@ -91,7 +91,6 @@
             },
 
             value: {
-                type: Array,
                 default: () => {
                     return [];
                 }
@@ -635,8 +634,6 @@
             tagsFromValue() {
                 if (this.value && this.value.length) {
                     if (!Array.isArray(this.value)) {
-                        console.error('Voerro Tags Input: the v-model value must be an array!');
-
                         return;
                     }
 

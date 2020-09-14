@@ -1175,7 +1175,14 @@
                     }
                 }
                 apiXMLHTTPRequest(param, 'supplier/edit_mobile/', this.auth, (res) => {
-                    console.log(res);
+                    if(res.success){
+                        if(res.supplier){
+                            let user = SessionStorage.getJson(SESSION_KEY_LOGIN_USER);
+                            user['supplier'] = res.supplier;
+                            SessionStorage.set(SESSION_KEY_LOGIN_USER, user);
+                        }
+                        this.$router.push('/select');
+                    }
                 });
             },
             formatSupplier(){
