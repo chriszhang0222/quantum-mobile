@@ -582,7 +582,7 @@
                         <el-col :span="8">
                             <el-form-item label="Expiration Date" prop="expdate">
                                 <el-date-picker placeholder="Expiration Date" style="width: 100%"
-                                v-model="cert_upload.expdate"></el-date-picker>
+                                v-model="cert_upload.certexpdate"></el-date-picker>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -716,7 +716,7 @@
                 </el-row>
                 <el-row>
                     <el-col :span="24">
-                        <el-button type="primary" size="large" style="width: 100%" @click="additionalFile(index)">Upload</el-button>
+                        <el-button type="primary" size="large" style="width: 100%" @click="add_insurance(1)">Upload</el-button>
                         <input hidden type="file" ref="insurancefile1" id="insurancefile1" />
                     </el-col>
                 </el-row>
@@ -749,7 +749,7 @@
                 </el-row>
                 <el-row>
                     <el-col :span="24">
-                        <el-button type="primary" size="large" style="width: 100%" @click="additionalFile(index)">Upload</el-button>
+                        <el-button type="primary" size="large" style="width: 100%" @click="add_insurance(2)">Upload</el-button>
                         <input hidden type="file" ref="insurancefile2" id="insurancefile2" />
                     </el-col>
                 </el-row>
@@ -983,8 +983,9 @@
                     type: '',
                     invalid: false,
                     has_file: true,
-                    expdate: null,
+                    certexpdate: null,
                     agency_name: null,
+                    certnumber: null,
                 },
                 sbe_result: '',
                 innerVisible: false,
@@ -1045,6 +1046,9 @@
             }
         },
         methods: {
+            add_insurance(index){
+
+            },
             add_additional(index){
                 let key = index + 1;
                 this.additional_File.push({
@@ -1121,14 +1125,16 @@
             },
             validateForm(){
                 let allFormValid = true;
-                this.$refs.ownerForm.validate(valid => {
-                    if(!valid){
-                        allFormValid = false;
-                        this.$message.error('Ownership is required');
-                        return;
-                    }
-                });
-                if(this.cert_upload.type !== '' || this.cert_upload.expdate !== null || this.cert_upload.agency_name !== null){
+                if(this.supplier.id === undefined || this.supplier.id === null) {
+                    this.$refs.ownerForm.validate(valid => {
+                        if (!valid) {
+                            allFormValid = false;
+                            this.$message.error('Ownership is required');
+                            return;
+                        }
+                    });
+                }
+                if(this.cert_upload.type !== '' || this.cert_upload.certexpdate !== null || this.cert_upload.agency_name !== null){
                     this.cert_upload_rules = cert_upload_rules_agency;
                     this.$refs.certificateForm.validate(valid => {
                        if(!valid){
@@ -1152,19 +1158,25 @@
                 }
                 let param = new FormData();
                 this.formatSupplier();
-                this.$router.push('/select');
-                param.append('cert_file', this.$refs.cert_file.files[0]);
                 param.append('supplier', JSON.stringify(this.supplier));
                 param.append('user_id', this.user_id);
-                param.append('ownership', this.owner_form);
-                for(let i = 0;i<this.additional_File.length;i++){
-                    if(this.additional_File[i].uploaded && this.additional_File[i].name !== ''){
-                        param.append('additionalFile-'+i, this.$refs['additionalFile'+i][0].files[0]);
+                if(Tools.isNotEmpty(this.owner_form)) {
+                    param.append('ownership', this.owner_form);
+                }
+                if(this.cert_upload.has_file) {
+                    param.append('cert_file', this.$refs.cert_file.files[0]);
+                    param.append('certificate', this.cert_upload);
+                }
+                if(this.additional_File.length > 0) {
+                    for (let i = 0; i < this.additional_File.length; i++) {
+                        if (this.additional_File[i].uploaded && this.additional_File[i].name !== '') {
+                            param.append('additionalFile-' + i, this.$refs['additionalFile' + i][0].files[0]);
+                        }
                     }
                 }
-                // apiXMLHTTPRequest(param, 'supplier/edit_mobile/', this.auth, (res) => {
-                //     console.log(res);
-                // });
+                apiXMLHTTPRequest(param, 'supplier/edit_mobile/', this.auth, (res) => {
+                    console.log(res);
+                });
             },
             formatSupplier(){
                 let newKeyword = [];
