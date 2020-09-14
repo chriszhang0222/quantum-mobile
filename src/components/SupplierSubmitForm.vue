@@ -599,6 +599,59 @@
         </div>
 
         <div class="title-block" style="text-align: center;margin-top: 20px">
+            <span>Sales Revenue For The Last 3 Years</span>
+        </div>
+        <div class="input-card">
+            <el-form>
+                <el-row :gutter="10">
+                    <el-col :span="4">
+                        <label style="margin-top: 20px">2018</label>
+                    </el-col>
+                    <el-col :span="10">
+                        <el-form-item label="Revenue">
+                            <el-input v-model="supplier.year1sales">
+                                <template slot="prepend">$</template>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="10">
+                        <el-button style="margin-top: 20px">Upload</el-button>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="10" class="margin-top10">
+                    <el-col :span="4">
+                        <label style="margin-top: 20px">2019</label>
+                    </el-col>
+                    <el-col :span="10">
+                        <el-form-item label="Revenue">
+                            <el-input v-model="supplier.year2sales">
+                                <template slot="prepend">$</template>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="10">
+                        <el-button style="margin-top: 20px">Upload</el-button>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="10" class="margin-top10">
+                    <el-col :span="4">
+                        <label style="margin-top: 20px">2020</label>
+                    </el-col>
+                    <el-col :span="10">
+                        <el-form-item label="Revenue">
+                            <el-input v-model="supplier.year3sales">
+                                <template slot="prepend">$</template>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="10">
+                        <el-button style="margin-top: 20px">Upload</el-button>
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
+
+        <div class="title-block" style="text-align: center;margin-top: 20px">
             <span>Company Classification</span>
         </div>
         <div class="input-card">
