@@ -496,7 +496,7 @@
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="Ethnicity" prop="ethnicity">
-                            <el-select v-model="owner_form.race">
+                            <el-select v-model="owner_form.ethnicity">
                                 <el-option v-for="(item,index) in ethnicity"
                                 :value="item"
                                 :key="index"
@@ -509,7 +509,7 @@
                 </el-row>
                 <el-row :gutter="20">
                     <el-col :span="8">
-                        <el-form-item label="Ownership %" prop="percentage">
+                        <el-form-item label="Ownership %" prop="percentageowner">
                             <el-input v-model="owner_form.percentageowner"></el-input>
                         </el-form-item>
                     </el-col>
@@ -1026,7 +1026,7 @@
                 owner_rules: {
                     name: [{required: true, message: 'Please input ownername', trigger: 'blur'}],
                     ethnicity: [{required: true, message: 'Please select ethnicity', trigger: 'blur'}],
-                    percentage: [{required: true, message: 'Please input percentage', trigger: 'blur'}]
+                    percentageowner: [{required: true, message: 'Please input percentage', trigger: 'blur'}]
                 },
                 cert_upload_rules: {
                 },
