@@ -819,7 +819,7 @@
                     <el-button @click="additional_file_show = true">Show uploaded Files</el-button>
                 </el-col>
             </el-row>
-            <el-form>
+            <el-form class="margin-top10">
                 <el-form-item v-for="(item, index) in additional_File" :key="item.key">
                 <el-row :gutter="10">
                     <el-col :span="20">
@@ -960,9 +960,19 @@
             </template>
         </el-dialog>
         <el-dialog title="Additional Company Information" :visible.sync="additional_file_show" width="100%" :append-to-body="true">
+            <el-dialog
+                    width="100%"
+                    title=""
+                    :height="500"
+                    :visible.sync="additional_file_visiable"
+                    append-to-body>
+                <el-row>
+                    <iframe :src="addition_file_url" width="100%" height="500px" type="application/pdf" />
+                </el-row>
+            </el-dialog>
             <el-row v-for="(item, index) in supplier.supplierfile_set" class="margin-bottom10" :key="index">
                 <el-col :span="20">
-                    {{ item.filename}}
+                    <span @click="show_additional_file(item)" style="color: #3a8ee6">{{ item.filename}}</span>
                 </el-col>
                 <el-divider></el-divider>
             </el-row>
@@ -1021,6 +1031,8 @@
         },
         data(){
             return {
+                addition_file_url: null,
+                additional_file_visiable: false,
                 cert_file_url: null,
                 cert_file_visiable: false,
                 owner_rules: {
@@ -1113,6 +1125,10 @@
             }
         },
         methods: {
+            show_additional_file(item){
+              this.additional_file_visiable = true;
+              this.addition_file_url = process.env.VUE_APP_SERVER + item.upload_path
+            },
             showCertfilePDF(cert){
                 this.cert_file_visiable = true;
                 this.cert_file_url = process.env.VUE_APP_SERVER + cert.upload_path
