@@ -93,9 +93,9 @@
                                         v-on:click="prepareAndSendNewMessage(chatRoom)">
                                     Send
                                 </el-button>
-                                <div class="discussion-add-file" v-on:click="openFileModal(chatRoom)">
-                                    <font-awesome-icon icon="file-word"></font-awesome-icon>
-                                </div>
+<!--                                <div class="discussion-add-file" v-on:click="openFileModal(chatRoom)">-->
+<!--                                    <font-awesome-icon icon="file-word"></font-awesome-icon>-->
+<!--                                </div>-->
                             </div>
                         </form>
                     </div>
