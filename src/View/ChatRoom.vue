@@ -560,6 +560,7 @@
                 this.$set(chatRoom, 'showMembers', true);
             },
             whenScroll(chatRoom){
+                let vm = this;
                 if(!chatRoom || chatRoom.messages.length === 0){
                     return;
                 }
@@ -571,7 +572,7 @@
                             container: this.DISCUSSION_CONTAINER,
                             position: 'element'
                         }, null, (messages) => {
-
+                            vm.readMessages(messages);
                         })
                     }, 500)
                 }
