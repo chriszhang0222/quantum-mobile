@@ -972,7 +972,7 @@
             </el-dialog>
             <el-row v-for="(item, index) in supplier.supplierfile_set" class="margin-bottom10" :key="index">
                 <el-col :span="20">
-                    <span @click="show_additional_file(item)" style="color: #3a8ee6">{{ item.filename}}</span>
+                    <span @click="show_additional_file(item)" style="color: #3a8ee6">{{ item.fileName}}</span>
                 </el-col>
                 <el-divider></el-divider>
             </el-row>
