@@ -24,7 +24,7 @@ const routes = [
     },
     {path: '/select',
         component: () => import('@/View/SelectCompany'),
-        meta: {requiredAuth: true, supplier: true}
+        meta: {requiredAuth: true}
     },
     {
         path: '/home',
@@ -89,7 +89,6 @@ VueRouter.prototype.push = function push(location) {
 }
 
 const router = new VueRouter({
-    mode: 'history',
     base: process.env.BASE_URL,
     routes
 });

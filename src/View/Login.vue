@@ -43,6 +43,7 @@
     import {homePageHistoram} from "@/quantumApi/chart/chartQuantumApi";
     import {Tools} from "@/utils/Tools";
     import axios from 'axios';
+    import {Toast} from "@/utils/Toast";
     export default {
         name: "Login",
         created(){
@@ -95,7 +96,7 @@
             apiTokenCallback(res){
                 console.log(res);
             },
-            async loginCallBack(res){
+            loginCallBack(res){
                 this.logging = false;
                 let resp = res.data;
                 if(resp.success){
