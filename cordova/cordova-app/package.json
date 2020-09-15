@@ -16,7 +16,8 @@
     "cordova-android": "^6.3.0",
     "cordova-ios": "^6.1.1",
     "cordova-osx": "^6.0.0",
-    "cordova-plugin-whitelist": "^1.3.4"
+    "cordova-plugin-whitelist": "^1.3.4",
+    "cordova-windows": "^7.0.1"
   },
   "cordova": {
     "plugins": {
@@ -26,7 +27,8 @@
       "browser",
       "android",
       "ios",
-      "osx"
+      "osx",
+      "windows"
     ]
   },
   "dependencies": {

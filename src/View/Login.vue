@@ -80,7 +80,6 @@
                 this.$refs.ruleForm.validate(
                     valid => {
                         if(valid){
-                            this.logging = true;
                             let params = {
                                 username: this.ruleForm.username,
                                 password: this.ruleForm.password
