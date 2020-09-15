@@ -8,9 +8,6 @@ import {SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
 import ChatRoom from "@/View/ChatRoom";
 import Search from "@/View/Search";
 import Supplier from "@/View/Supplier";
-import SupplierProfile from "@/View/SupplierProfile";
-import SelectCompany from "@/View/SelectCompany";
-import AddSupplier from "@/View/AddSupplier";
 import {SessionStorage} from "@/utils/SessionStorage";
 Vue.use(VueRouter);
 
@@ -75,6 +72,12 @@ const routes = [
                 name: 'Profile',
                 component: () => import('@/View/SupplierProfile'),
                 meta: {requiredAuth: true, supplier:true}
+            },
+            {
+                path: '/report_detail',
+                name: 'ReportDetail',
+                component: () => import('@/View/report/ReportDetail'),
+                meta: {requiredAuth: true, company:true}
             }
         ]
     }

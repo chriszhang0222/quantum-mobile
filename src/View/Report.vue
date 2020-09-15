@@ -12,12 +12,13 @@
             <el-card shadow="hover">
                 <el-form
                          :model="reportForm"
-                         ref="reportForm">
+                         ref="reportForm"
+                :rules="rules">
                     <el-row class="margin-top10">
                             <div class="subtitle">
                                 <span>Report Type</span>
                             </div>
-                            <el-form-item>
+                            <el-form-item prop="report_type">
                                 <el-select v-model="reportForm.report_type" placeholder="Report Type"
                                            @change="reportTypeChange"
                                 style="width: 100%">
@@ -30,7 +31,7 @@
                                 </el-select>
                             </el-form-item>
                     </el-row>
-                    <el-row class="margin-top10">
+                    <el-row class="margin-top10" v-if="showDivision">
                         <div class="subtitle">
                             <span>Division</span>
                         </div>
@@ -51,22 +52,26 @@
                             <div class="subtitle">
                                 <span>Start Date</span>
                             </div>
-                            <el-date-picker style="width: 100%"
-                                    v-model="reportForm.startDate"
-                                    type="date"
-                                    placeholder="Start Date">
-                            </el-date-picker>
+                            <el-form-item prop="startDate">
+                                <el-date-picker style="width: 100%"
+                                        v-model="reportForm.startDate"
+                                        type="date"
+                                        placeholder="Start Date">
+                                </el-date-picker>
+                            </el-form-item>
                         </el-col>
                         <el-col :xs="{span:24}" :lg="{span:12}">
                             <div class="subtitle">
                                 <span>End Date</span>
                             </div>
-                            <el-date-picker
-                                    style="width: 100%"
-                                    v-model="reportForm.endDate"
-                                    type="date"
-                                    placeholder="End Date">
-                            </el-date-picker>
+                            <el-form-item prop="endDate">
+                                <el-date-picker
+                                        style="width: 100%"
+                                        v-model="reportForm.endDate"
+                                        type="date"
+                                        placeholder="End Date">
+                                </el-date-picker>
+                            </el-form-item>
                         </el-col>
 
                     </el-row>
@@ -84,22 +89,34 @@
 </template>
 
 <script>
-    import {reportType} from "@/utils/Constants";
+    import {reportType, reportInputs, reportCategory} from "@/utils/Constants";
+    import {Toast} from "@/utils/Toast";
 
     export default {
         name: "Report",
         mounted(){
             this.report_type = reportType;
         },
+        computed:{
+            showDivision(){
+                return this.reportInputs.division.has(this.reportForm.report_type);
+            }
+        },
         data(){
             return{
+                reportCategory: reportCategory,
+                reportInputs: reportInputs,
                 reportForm: {
-                    report_type: '',
+                    report_type: 'supplier',
                     division: '',
-                    startDate: '',
-                    endDate: ''
+                    startDate: new Date(2020, 0, 1),
+                    endDate: new Date()
                 },
-                rules: [],
+                rules:{
+                    report_type: [{required: true, message: 'Please Select Report Type', trigger: 'blur'}],
+                    startDate: [{required: true, message: 'Please Input StartDate', trigger: 'blur'}],
+                    endDate: [{required: true, message: 'Please Input EndDate', trigger: 'blur'}]
+                },
                 report_type: [],
                 divisions: [],
                 loading: false
@@ -108,7 +125,20 @@
         },
         methods:{
             submit(){
-
+                if(!this.validateForm()){
+                    return;
+                }
+                Toast.success('OK');
+            },
+            validateForm(){
+                let validate = true;
+                this.$refs.reportForm.validate(valid => {
+                    if(!valid){
+                        validate = false;
+                        this.$message.error('Please Check Error')
+                    }
+                });
+                return validate;
             },
             reportTypeChange(val){
             }

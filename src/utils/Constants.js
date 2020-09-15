@@ -142,3 +142,14 @@ export const cert_upload_rules_agency = {
     certexpdate: [{required: true, message: 'Expiration date required', trigger: 'blur'}]
 }
 
+
+export const reportInputs = {
+    'division': new Set(['government', 'supplier', 'spend_by_plant_id',
+        'spend_by_ethnicity', 'spend_by_naics', 'spend_by_structure', 'spend_by_revenue', 'spend_by_commodity',
+        'spend_by_supplier', 'spend_by_congressional_district', 'spend_by_diversity', 'spend_by_material_group',
+        'spend_by_category', 'category_spend_trend', 'spend_by_district'])
+}
+
+export const reportCategory = {
+    table: new Set(['government', 'supplier'])
+}
