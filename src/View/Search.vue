@@ -186,6 +186,7 @@
             </el-card>
 
             <el-dialog title="Certificates" :visible.sync="dialogTableVisible"
+                       :append-to-body="true"
                        width="100%">
                 <el-row v-for="(data,index) in this.cert_data" :key="index" class="margin-bottom10">
                     <div class="alert-info">
