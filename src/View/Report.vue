@@ -89,8 +89,9 @@
 </template>
 
 <script>
-    import {reportType, reportInputs, reportCategory} from "@/utils/Constants";
+    import {reportType, reportInputs, reportCategory, REPORT_FORM} from "@/utils/Constants";
     import {Toast} from "@/utils/Toast";
+    import {SessionStorage} from "@/utils/SessionStorage";
 
     export default {
         name: "Report",
@@ -128,7 +129,8 @@
                 if(!this.validateForm()){
                     return;
                 }
-                Toast.success('OK');
+                SessionStorage.setJSON(REPORT_FORM, this.reportForm);
+                this.$router.push('/report_detail');
             },
             validateForm(){
                 let validate = true;
