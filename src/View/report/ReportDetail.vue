@@ -11,37 +11,47 @@
             <div class="clearfix" >
                 <span style="font-weight: bold; font-size: 18px">{{ report_type_title }}</span>
             </div>
-            <el-table border>
+            <template v-if="show_table">
+                <el-table border>
 
-            </el-table>
+                </el-table>
+            </template>
         </el-card>
     </div>
 </template>
 
 <script>
     import {SessionStorage} from "@/utils/SessionStorage";
-    import {REPORT_FORM, REPORT_TYPE_DICT} from "@/utils/Constants";
+    import {AUTH_TOKEN, REPORT_FORM, REPORT_TYPE_DICT} from "@/utils/Constants";
     import {Tools} from "@/utils/Tools";
+    import {reportSetup} from "@/quantumApi/report/report";
 
     export default {
         name: "ReportDetail",
         data(){
             return{
+                auth: '',
                 reportParam: {
 
                 },
-                report_type_title: ''
+                report_type_title: '',
+                show_table: false,
             }
         },
         created(){
             if(Tools.isEmpty(SessionStorage.getJson(REPORT_FORM))){
                 this.$router.push('/report');
             }
+            this.auth = SessionStorage.get(AUTH_TOKEN);
             this.reportParam = SessionStorage.getJson(REPORT_FORM);
             this.report_type_title = REPORT_TYPE_DICT[this.reportParam.report_type];
+            this.reportSetup();
         },
         methods:{
-
+            async reportSetup(){
+                let data = await reportSetup(JSON.stringify(this.reportParam), this.auth);
+                console.log(data);
+            }
         }
     }
 </script>
