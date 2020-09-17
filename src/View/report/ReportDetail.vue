@@ -12,8 +12,21 @@
                 <span style="font-weight: bold; font-size: 18px">{{ report_type_title }}</span>
             </div>
             <template v-if="show_table">
-                <el-table border>
-
+                <el-table border :data="table_data">
+                    <template v-if="type.line">
+                        <el-table-column
+                        label="Supplier">
+                        </el-table-column>
+                        <el-table-column label="Vendor#">
+                        </el-table-column>
+                        <template v-if="reportParam.report_type === 'supplier'">
+                            <el-table-column label="Primary Naics Code"></el-table-column>
+                            <el-table-column label="Primary Diversity Category"></el-table-column>
+                        </template>
+                        <template v-for="month in this.additional_columns">
+                            <el-table-column :label="month" :key="month"></el-table-column>
+                        </template>
+                    </template>
                 </el-table>
             </template>
         </el-card>
@@ -36,6 +49,14 @@
                 },
                 report_type_title: '',
                 show_table: false,
+                additional_columns: [],
+                type:{
+                    line: false,
+                    pie: false,
+                    spend: false
+                },
+                table_url: null,
+                table_data: [],
             }
         },
         created(){
@@ -50,7 +71,17 @@
         methods:{
             async reportSetup(){
                 let data = await reportSetup(this.reportParam, this.auth);
-                console.log(data);
+                if(data.status === 200){
+                    let res = data.data;
+                    this.type.line = res.line_chart_type;
+                    this.type.pie = res.pie_chart_type;
+                    this.type.spend = res.spend_chart_type;
+                    if(res.months){
+                        this.additional_columns = res.months;
+                    }
+                    this.table_url = res.report_url;
+                    this.show_table = true;
+                }
             }
         }
     }
