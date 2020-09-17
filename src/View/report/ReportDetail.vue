@@ -11,21 +11,45 @@
             <div class="clearfix" >
                 <span style="font-weight: bold; font-size: 18px">{{ report_type_title }}</span>
             </div>
-            <template v-if="show_table">
+            <el-row>
+                <span class="demonstration"><strong>Total Supplier Count: {{ total_data }}</strong></span>
+            </el-row>
+            <el-row>
+                <el-col :span="12" align="left">
+                    <div class="block">
+                        <el-pagination
+                                v-if="!loading"
+                                :current-page.sync="currentPage"
+                                @current-change="handleCurrentPageChange"
+                                small
+                                background
+                                :page-size="20"
+                                :page-count="5"
+                                layout="prev, pager, next"
+                                :total="total_data">
+                        </el-pagination>
+                    </div>
+                </el-col>
+            </el-row>
+            <template v-if="show_table" class="margin-top10">
                 <el-table border :data="table_data" v-loading="loading">
                     <template v-if="type.line">
                         <el-table-column
-                        label="Supplier">
+                        label="Supplier"
+                        prop="vendorname"
+                        sortable
+                        fixed>
                         </el-table-column>
-                        <el-table-column label="Vendor#">
+                        <el-table-column label="Vendor#" prop="vendor">
                         </el-table-column>
                         <template v-if="reportParam.report_type === 'supplier'">
-                            <el-table-column label="Primary Naics Code"></el-table-column>
-                            <el-table-column label="Primary Diversity Category"></el-table-column>
+                            <el-table-column label="Primary Naics Code" prop="naics"></el-table-column>
+                            <el-table-column label="Primary Diversity Category" prop="naics_desc"></el-table-column>
                         </template>
                         <template v-for="month in this.additional_columns">
-                            <el-table-column :label="month" :key="month"></el-table-column>
+                            <el-table-column :label="month" :key="month" :prop="month"></el-table-column>
                         </template>
+                        <el-table-column label="Total" prop="total" sortable fixed="right"></el-table-column>
                     </template>
                 </el-table>
             </template>
@@ -58,7 +82,8 @@
                 },
                 table_url: null,
                 table_data: [],
-                currentPage: 1
+                currentPage: 1,
+                total_data: 0
             }
         },
         created(){
@@ -71,6 +96,23 @@
             this.reportSetup();
         },
         methods:{
+            async handleCurrentPageChange(val){
+                let auth = this.auth;
+                this.loading = true;
+                let start = (val-1) * 20;
+                let length = 20;
+                this.currentPage = val;
+                this.reportParam['start'] = start;
+                this.reportParam['length'] = length;
+                let supplier_data = await getReportData(this.reportParam, this.table_url, auth);
+                if(supplier_data.status === 200){
+                    let resp = supplier_data.data;
+                    this.total_data = resp.recordsTotal;
+                    this.table_data = resp.data;
+                    this.loading = false;
+                }
+
+            },
             async reportSetup(){
                 let auth = this.auth;
                 let data = await reportSetup(this.reportParam, this.auth);
@@ -88,7 +130,13 @@
                     this.reportParam['start'] = this.currentPage - 1;
                     this.reportParam['length'] = 20;
                     let supplier_data = await getReportData(this.reportParam, this.table_url, auth);
-                    console.log(supplier_data);
+                    if(supplier_data.status === 200){
+                        let resp = supplier_data.data;
+                        this.total_data = resp.recordsTotal;
+                        this.table_data = resp.data;
+                        this.loading = false;
+                    }
+
                 }
             }
         }
