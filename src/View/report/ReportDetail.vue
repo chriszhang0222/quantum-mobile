@@ -12,7 +12,7 @@
                 <span style="font-weight: bold; font-size: 18px">{{ report_type_title }}</span>
             </div>
             <template v-if="show_table">
-                <el-table border :data="table_data">
+                <el-table border :data="table_data" v-loading="loading">
                     <template v-if="type.line">
                         <el-table-column
                         label="Supplier">
@@ -37,7 +37,7 @@
     import {SessionStorage} from "@/utils/SessionStorage";
     import {AUTH_TOKEN, REPORT_FORM, REPORT_TYPE_DICT} from "@/utils/Constants";
     import {Tools} from "@/utils/Tools";
-    import {reportSetup} from "@/quantumApi/report/report";
+    import {reportSetup, getReportData} from "@/quantumApi/report/report";
 
     export default {
         name: "ReportDetail",
@@ -47,6 +47,7 @@
                 reportParam: {
 
                 },
+                loading: false,
                 report_type_title: '',
                 show_table: false,
                 additional_columns: [],
@@ -57,6 +58,7 @@
                 },
                 table_url: null,
                 table_data: [],
+                currentPage: 1
             }
         },
         created(){
@@ -70,6 +72,7 @@
         },
         methods:{
             async reportSetup(){
+                let auth = this.auth;
                 let data = await reportSetup(this.reportParam, this.auth);
                 if(data.status === 200){
                     let res = data.data;
@@ -79,8 +82,13 @@
                     if(res.months){
                         this.additional_columns = res.months;
                     }
-                    this.table_url = res.report_url;
+                    this.table_url = res.report_url.substring(1, res.report_url.length);
                     this.show_table = true;
+                    this.loading = true;
+                    this.reportParam['start'] = this.currentPage - 1;
+                    this.reportParam['length'] = 20;
+                    let supplier_data = await getReportData(this.reportParam, this.table_url, auth);
+                    console.log(supplier_data);
                 }
             }
         }
