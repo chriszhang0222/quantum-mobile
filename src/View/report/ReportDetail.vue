@@ -49,7 +49,7 @@
         },
         methods:{
             async reportSetup(){
-                let data = await reportSetup(JSON.stringify(this.reportParam), this.auth);
+                let data = await reportSetup(this.reportParam, this.auth);
                 console.log(data);
             }
         }

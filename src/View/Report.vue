@@ -56,7 +56,8 @@
                                 <el-date-picker style="width: 100%"
                                         v-model="reportForm.startDate"
                                         type="date"
-                                        placeholder="Start Date">
+                                        placeholder="Start Date"
+                                        value-format="yyyy-MM-dd">
                                 </el-date-picker>
                             </el-form-item>
                         </el-col>
@@ -69,7 +70,8 @@
                                         style="width: 100%"
                                         v-model="reportForm.endDate"
                                         type="date"
-                                        placeholder="End Date">
+                                        placeholder="End Date"
+                                        value-format="yyyy-MM-dd">
                                 </el-date-picker>
                             </el-form-item>
                         </el-col>
@@ -92,6 +94,7 @@
     import {reportType, reportInputs, reportCategory, REPORT_FORM} from "@/utils/Constants";
     import {Toast} from "@/utils/Toast";
     import {SessionStorage} from "@/utils/SessionStorage";
+    import {Tools} from "@/utils/Tools";
 
     export default {
         name: "Report",
@@ -110,8 +113,8 @@
                 reportForm: {
                     report_type: 'supplier',
                     division: '',
-                    startDate: new Date(2020, 0, 1),
-                    endDate: new Date()
+                    startDate: Tools.dateFormat('yyyy-MM-dd',new Date(2020, 0, 1)),
+                    endDate: Tools.dateFormat('yyyy-MM-dd', new Date())
                 },
                 rules:{
                     report_type: [{required: true, message: 'Please Select Report Type', trigger: 'blur'}],
