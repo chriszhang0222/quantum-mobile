@@ -12,7 +12,18 @@
 
 <script>
     export default {
-        name: "ReportDetail"
+        name: "ReportDetail",
+        data(){
+            return{
+
+            }
+        },
+        created(){
+
+        },
+        methods:{
+
+        }
     }
 </script>
 
