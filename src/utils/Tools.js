@@ -5,7 +5,10 @@ export const Tools = {
     isEmpty: function (obj) {
         if ((typeof obj == 'string')) {
             return !obj || obj.replace(/\s+/g, "") == ""
-        } else {
+        }else if(obj === undefined){
+            return true;
+        }
+        else {
             return (!obj || JSON.stringify(obj) === "{}" || obj.length === 0);
         }
     },

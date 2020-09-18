@@ -9,7 +9,14 @@
             <el-col :span="8" class="quantum-title" :xs="{offset: 2}">
                    <span @click="backHome"> Quantum</span>
             </el-col>
-            <el-col :span="2" :xs="{offset:5}" :md="{offset:10}" :sm="{offset:8}" :lg="{offset:11}">
+            <el-col :span="2" :lg="{offset: 9}">
+                <div class="message-container" v-if="showChat">
+                    <el-badge>
+                    <font-awesome-icon icon="bell"></font-awesome-icon>
+                    </el-badge>
+                </div>
+            </el-col>
+            <el-col :span="2" :xs="{offset:5}" :md="{offset:10}" :sm="{offset:8}" :lg="{offset:0}">
                 <div class="message-container" v-if="showChat">
                     <template v-if="chatNotification.unreadCount > 0">
                         <el-badge :value="chatNotification.unreadCount">

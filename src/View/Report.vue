@@ -128,6 +128,33 @@
             }
         },
         methods:{
+            validateDate(date1, date2){
+                if(Tools.isEmpty(date1) || Tools.isEmpty(date2)){
+                    this.$message.error('You must submit start date and end date');
+                    return false;
+                }
+                let d1 = new Date(date1);
+                let d2 = new Date(date2);
+                let now = new Date();
+                if(d2 > now){
+                    this.$message.error('End date should be before today.');
+                    return false;
+                }
+                if(d1 > now){
+                    this.$message.error('Start date should be before today.');
+                    return false;
+                }
+                if(d2 < d1){
+                    this.$message.error('End date should be later than start date.');
+                    return false;
+                }
+                if((d2-d1)/(1000 * 60 * 60 * 24) > 365){
+                    this.$message.error('Make sure the time range is less than a year!');
+                    return false;
+
+                }
+                return true;
+            },
             submit(){
                 if(!this.validateForm()){
                     return;
@@ -143,6 +170,9 @@
                         this.$message.error('Please Check Error')
                     }
                 });
+                if(!this.validateDate(this.reportForm.startDate, this.reportForm.endDate)){
+                    return false;
+                }
                 return validate;
             },
             reportTypeChange(val){
