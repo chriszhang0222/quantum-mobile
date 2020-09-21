@@ -132,7 +132,6 @@
                       this.table_data = data.data;
                       this.loading = false;
                       this.total_data = data.count;
-                      console.log(this.table_data);
                   }
               }
             }

@@ -21,7 +21,7 @@
     import {SESSION_KEY_LOGIN_USER, NEW_CHAT_MESSAGE, AUTH_TOKEN} from "@/utils/Constants";
     import {Tools} from "@/utils/Tools";
     import {Toast} from "@/utils/Toast";
-    import {getunreadCount} from "@/quantumApi/chat/chat";
+    import {getunreadCount, alertUnread} from "@/quantumApi/chat/chat";
 
     export default {
         name: "Home",
@@ -61,6 +61,7 @@
                 //     Toast.error('No Company Id or User Id!');
                 // }
                 // this.updateUnreadCount();
+                //this.updateAlertUnread();
 
             }
         },
@@ -78,6 +79,19 @@
             })
         },
         methods:{
+            async updateAlertUnread(){
+              let params = {
+                  'user_id': this.user.id,
+                  'supplier': this.user.supplier.length === 0 ? [] : this.user.supplier.map(s => s.id),
+              }
+              let res = await alertUnread(params, this.auth);
+              if(res.status === 200){
+                  if(res.data.success){
+                      let count = res.data.count;
+                      this.$store.commit('setAlert', count);
+                  }
+              }
+            },
             async updateUnreadCount(){
               let params = {
                   'user_id': this.user.user_id,

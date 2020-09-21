@@ -39,3 +39,7 @@ export const getNotification = (params, auth) => {
 export const readNotification = (params, auth) => {
     return apiSyncAuth('post', '/chat/read_alerts_mobile/', params, auth);
 }
+
+export const alertUnread = (params, auth) => {
+    return apiSyncAuth('post', '/chat/alert_unread_mobile/', params, auth);
+}
