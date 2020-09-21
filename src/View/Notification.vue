@@ -31,7 +31,7 @@
                     </div>
                 </el-col>
                 <el-col :span="12">
-                    <el-input v-model="search_text" placeholder="Search"></el-input>
+                    <el-input v-model="search_text" placeholder="Search" @change="searchNotification"></el-input>
                 </el-col>
                 <el-table border :data="table_data" v-loading="loading">
                     <el-table-column
@@ -94,6 +94,9 @@
             }
         },
         methods: {
+            async searchNotification(){
+                await this.getNotifi(this.search_text);
+            },
             async handleCurrentPageChange(val){
                 this.page = val;
                 await this.getNotifi(val);
@@ -101,11 +104,14 @@
             readNotification(row){
                 console.log(row);
             },
-            async getNotifi(){
+            async getNotifi(search=''){
               let params = {
                   'user_id': this.user.user_id,
-                  'supplier': this.user.supplier.length === 0 ? [] : this.user.supplier.map(s=>s.id),
+                  'supplier': this.user.supplier.length === 0 ? [] : this.user.supplier.map(s => s.id),
                   'start': this.page
+              }
+              if(search !== ''){
+                  params['search'] = search
               }
               let res = await getNotification(params, this.auth);
               if(res.status === 200){
