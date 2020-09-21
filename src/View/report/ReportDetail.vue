@@ -37,7 +37,8 @@
                 </el-col>
             </el-row>
             <template v-if="show_table" class="margin-top10">
-                <el-table border :data="table_data" v-loading="loading">
+                <el-table border :data="table_data" v-loading="loading"
+                          :row-class-name="tableRowClassName">
                     <template v-if="type.line">
                         <el-table-column
                         label="Supplier"
@@ -102,6 +103,11 @@
             this.reportSetup();
         },
         methods:{
+            tableRowClassName({row, rowIndex}){
+                if(rowIndex % 2 === 1){
+                    return 'even-row'
+                }
+            },
             async searchSupplier(){
                 this.reportParam['search'] = this.search_text;
                 let auth = this.auth;
@@ -161,6 +167,9 @@
     }
 </script>
 
-<style scoped>
+<style>
+    .el-table .even-row {
+        background: #EBEEF5;
+    }
 
 </style>
