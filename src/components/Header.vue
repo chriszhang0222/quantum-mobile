@@ -9,11 +9,18 @@
             <el-col :span="8" class="quantum-title" :xs="{offset: 2}">
                    <span @click="backHome"> Quantum</span>
             </el-col>
-            <el-col :span="2" :lg="{offset: 9}" :xs="{offset:4}" :md="{offset:8}" :sm="{offset:7}">
+            <el-col :span="2" :lg="{offset: 9}" :xs="{offset:3}" :md="{offset:8}" :sm="{offset:7}">
                 <div class="message-container" v-if="showChat">
-                    <el-badge>
-                    <font-awesome-icon icon="bell" @click="toNotification"></font-awesome-icon>
-                    </el-badge>
+                    <template v-if="alertNotification.unreadCount > 0">
+                        <el-badge :value="alertNotification.unreadCount">
+                        <font-awesome-icon icon="bell" @click="toNotification"></font-awesome-icon>
+                        </el-badge>
+                    </template>
+                    <template v-else>
+                        <el-badge>
+                            <font-awesome-icon icon="bell" @click="toNotification"></font-awesome-icon>
+                        </el-badge>
+                    </template>
                 </div>
             </el-col>
             <el-col :span="2">
@@ -102,6 +109,9 @@
             },
             chatNotification(){
                 return this.$store.state.chatNotification;
+            },
+            alertNotification(){
+                return this.$store.state.alertNotification;
             }
         },
         data: function(){

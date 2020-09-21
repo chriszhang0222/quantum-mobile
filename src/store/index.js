@@ -21,6 +21,9 @@ export default new Vuex.Store({
         chatNotification: {
             unreadCount: 0
         },
+        alertNotification:{
+          unreadCount: 0
+        },
         websocket: null
     },
     mutations: {
@@ -36,6 +39,13 @@ export default new Vuex.Store({
         },
         setNotificationCount(state, count){
           Vue.set(state.chatNotification, 'unreadCount', count);
+        },
+        updateAlert(state, count){
+          let count_ = state.alertNotification.unreadCount;
+          Vue.set(state.alertNotification, 'unreadCount', count_ + count);
+        },
+        setAlert(state, count){
+            Vue.set(state.alertNotification, 'unreadCount', count)
         },
         concatRoom(state, rooms){
             let allrooms = state.chatRooms.concat(rooms);
