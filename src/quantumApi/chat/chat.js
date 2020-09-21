@@ -31,3 +31,7 @@ export const createRoom = (params, auth) => {
 export const addUserInRoom = (params, auth) => {
     return apiSyncAuth('post', '/chat/add_new_members/', params, auth);
 }
+
+export const getNotification = (params, auth) => {
+    return apiSyncAuth('post', '/chat/alerts_mobile/', params, auth)
+}
