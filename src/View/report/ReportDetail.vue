@@ -169,7 +169,7 @@
 
 <style>
     .el-table .even-row {
-        background: #EBEEF5;
+        background: #f6f6f7;
     }
 
 </style>
