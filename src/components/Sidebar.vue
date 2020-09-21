@@ -26,7 +26,7 @@
                 </template>
                 <template v-else>
                     <el-menu-item :index="item.index" :key="item.index"
-                    v-show="group.indexOf(item.meta) >= 0">
+                    v-show="group.indexOf(item.meta) >= 0 || item.meta === ''">
                         <i :class="item.icon"></i>
                         <span slot="title">{{ item.title }}</span>
                     </el-menu-item>
@@ -66,6 +66,12 @@
                         title: 'Search',
                         meta: 'company'
                     },
+                    {
+                        icon: 'el-icon-document',
+                        index: 'contracts',
+                        title: 'Contracts',
+                        meta: ''
+                    }
                 ]
             };
         },

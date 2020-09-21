@@ -84,6 +84,12 @@ const routes = [
                 name: 'Notification',
                 component: () => import('@/View/Notification'),
                 meta: {requiredAuth: true}
+            },
+            {
+                path: '/contracts',
+                name: 'Contracts',
+                component: () => import('@/View/Contracts'),
+                meta: {requiredAuth: true}
             }
         ]
     }
