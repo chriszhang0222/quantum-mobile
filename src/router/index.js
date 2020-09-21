@@ -78,6 +78,12 @@ const routes = [
                 name: 'ReportDetail',
                 component: () => import('@/View/report/ReportDetail'),
                 meta: {requiredAuth: true, company:true}
+            },
+            {
+                path: '/notification',
+                name: 'Notification',
+                component: () => import('@/View/Notification'),
+                meta: {requiredAuth: true}
             }
         ]
     }
