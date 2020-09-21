@@ -31,6 +31,11 @@
                     </div>
                 </el-col>
             </el-row>
+            <el-row class="margin-bottom10">
+                <el-col :span="12">
+                    <el-input v-model="search_text" placeholder="Search" @change="searchSupplier"></el-input>
+                </el-col>
+            </el-row>
             <template v-if="show_table" class="margin-top10">
                 <el-table border :data="table_data" v-loading="loading">
                     <template v-if="type.line">
@@ -83,7 +88,8 @@
                 table_url: null,
                 table_data: [],
                 currentPage: 1,
-                total_data: 0
+                total_data: 0,
+                search_text: ''
             }
         },
         created(){
@@ -96,6 +102,18 @@
             this.reportSetup();
         },
         methods:{
+            async searchSupplier(){
+                this.reportParam['search'] = this.search_text;
+                let auth = this.auth;
+                this.loading = true;
+                let supplier_data = await getReportData(this.reportParam, this.table_url, auth);
+                if(supplier_data.status === 200){
+                    let resp = supplier_data.data;
+                    this.total_data = resp.recordsTotal;
+                    this.table_data = resp.data;
+                    this.loading = false;
+                }
+            },
             async handleCurrentPageChange(val){
                 let auth = this.auth;
                 this.loading = true;
