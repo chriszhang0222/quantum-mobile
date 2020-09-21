@@ -35,3 +35,7 @@ export const addUserInRoom = (params, auth) => {
 export const getNotification = (params, auth) => {
     return apiSyncAuth('post', '/chat/alerts_mobile/', params, auth)
 }
+
+export const readNotification = (params, auth) => {
+    return apiSyncAuth('post', '/chat/read_alerts_mobile/', params, auth);
+}

@@ -115,6 +115,9 @@
                         this.$store.commit('updateNotification', count);
                         this.$bus.emit(NEW_CHAT_MESSAGE, messages);
                     }
+                    else if(data.type === 'alert'){
+                        this.$store.commit('updateAlert', 1);
+                    }
                 }
                 websocket.onclose = (e)=>{
                     console.log('websocket closed: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)

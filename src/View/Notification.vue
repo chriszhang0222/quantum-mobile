@@ -68,7 +68,7 @@
 </template>
 
 <script>
-    import {getNotification} from "@/quantumApi/chat/chat";
+    import {getNotification, readNotification} from "@/quantumApi/chat/chat";
     import {SessionStorage} from "@/utils/SessionStorage";
     import {AUTH_TOKEN, SESSION_KEY_LOGIN_USER} from "@/utils/Constants";
 
@@ -101,8 +101,20 @@
                 this.page = val;
                 await this.getNotifi();
             },
-            readNotification(row){
-                console.log(row);
+            async readNotification(row){
+                let params = {
+                    'user_id': this.user.user_id,
+                    'supplier':  this.user.supplier.length === 0 ? [] : this.user.supplier.map(s => s.id),
+                    'alert_ids': [row.id]
+                }
+                let resp = await readNotification(params, auth);
+                if(resp.status === 200){
+                    if(resp.data.success){
+                        this.unread_data -= 1;
+                        this.$store.commit('updateAlert', -1);
+                    }
+                }
+
             },
             async getNotifi(search=''){
               let params = {
