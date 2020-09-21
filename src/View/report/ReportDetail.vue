@@ -42,9 +42,11 @@
                     <template v-if="type.line">
                         <el-table-column
                         label="Supplier"
-                        prop="vendorname"
                         sortable
                         fixed>
+                            <template  slot-scope="scope">
+                                <span style="color: #3a8ee6" @click="showDetail(scope.row)">{{ scope.row.vendorname}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column label="Vendor#" prop="vendor">
                         </el-table-column>
@@ -60,6 +62,11 @@
                 </el-table>
             </template>
         </el-card>
+        <el-dialog :title="supplier_detail.vendorname" :visible.sync="show_supplier_detail" width="100%" :append-to-body="true">
+            <SupplierDetailInReport
+            :supplier_detail="supplier_detail"
+            :certificates_detail="certificates_detail"></SupplierDetailInReport>
+        </el-dialog>
     </div>
 </template>
 
@@ -68,11 +75,17 @@
     import {AUTH_TOKEN, REPORT_FORM, REPORT_TYPE_DICT} from "@/utils/Constants";
     import {Tools} from "@/utils/Tools";
     import {reportSetup, getReportData} from "@/quantumApi/report/report";
+    import SupplierDetailInReport from "@/components/SupplierDetailInReport";
+    import {supplierDetail} from "@/quantumApi/supplier/supplier";
 
     export default {
         name: "ReportDetail",
+        components: {SupplierDetailInReport},
         data(){
             return{
+                show_supplier_detail: false,
+                supplier_detail: {},
+                certificates_detail: [],
                 auth: '',
                 reportParam: {
 
@@ -103,6 +116,18 @@
             this.reportSetup();
         },
         methods:{
+            async showDetail(row){
+                let params = {
+                    'supplier_id': row.id
+                }
+                let resp = await supplierDetail(params, this.auth);
+                if(resp.status === 200){
+                    let data = resp.data;
+                    this.supplier_detail = data.data.supplier;
+                    this.certificates_detail = data.data.certificates;
+                    this.show_supplier_detail = true;
+                }
+            },
             tableRowClassName({row, rowIndex}){
                 if(rowIndex % 2 === 1){
                     return 'even-row'
