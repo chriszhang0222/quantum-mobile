@@ -99,7 +99,7 @@
             },
             async handleCurrentPageChange(val){
                 this.page = val;
-                await this.getNotifi(val);
+                await this.getNotifi();
             },
             readNotification(row){
                 console.log(row);
