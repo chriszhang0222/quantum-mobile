@@ -8,9 +8,10 @@
             </el-breadcrumb>
         </div>
         <el-card shadow="hover">
-            <div class="clearfix" >
+            <div class="clearfix margin-bottom10" >
                 <span style="font-weight: bold; font-size: 18px">{{ report_type_title }}</span>
             </div>
+            <div v-if="!type.spend">
             <el-row>
                 <span class="demonstration"><strong>Total Supplier Count: {{ total_data }}</strong></span>
             </el-row>
@@ -32,14 +33,19 @@
                 </el-col>
             </el-row>
             <el-row class="margin-bottom10">
-                <el-col :span="12">
-                    <el-input v-model="search_text" placeholder="Search" @change="searchSupplier"></el-input>
-                </el-col>
-            </el-row>
+                    <el-col :span="12">
+                        <el-input v-model="search_text" placeholder="Search" @change="searchSupplier"></el-input>
+                    </el-col>
+                </el-row>
+            </div>
             <template v-if="show_table" class="margin-top10">
-                <el-table border :data="table_data" v-loading="loading"
+                <el-row v-if="type.spend" v-loading="loading">
+                    <div id="pie_chart"></div>
+                </el-row>
+                <el-row>
+                    <el-table border :data="table_data" v-loading="loading"
                           :row-class-name="tableRowClassName">
-                    <template v-if="type.line">
+                        <template v-if="type.line">
                         <el-table-column
                         label="Supplier"
                         sortable
@@ -59,7 +65,25 @@
                         </template>
                         <el-table-column label="Total" prop="total" sortable fixed="right"></el-table-column>
                     </template>
+                        <template v-if="type.spend">
+                            <el-table-column
+                                    label="Diversity Type"
+                                    sortable
+                                    fixed>
+                                <template  slot-scope="scope">
+                                    <span>{{ scope.row.label}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                            label="Spend"
+                            sortable>
+                                <template  slot-scope="scope">
+                                    <span>${{ scope.row.value | formatNumber}}</span>
+                                </template>
+                            </el-table-column>
+                        </template>
                 </el-table>
+                </el-row>
             </template>
         </el-card>
         <el-dialog :title="supplier_detail.vendorname" :visible.sync="show_supplier_detail" width="100%" :append-to-body="true">
@@ -77,6 +101,7 @@
     import {reportSetup, getReportData} from "@/quantumApi/report/report";
     import SupplierDetailInReport from "@/components/SupplierDetailInReport";
     import {supplierDetail} from "@/quantumApi/supplier/supplier";
+    import {drawPie} from "@/quantumApi/chart/chartApi";
 
     export default {
         name: "ReportDetail",
@@ -183,6 +208,13 @@
                         let resp = supplier_data.data;
                         this.total_data = resp.recordsTotal;
                         this.table_data = resp.data;
+                        if(this.type.spend){
+                            drawPie('pie_chart', this.table_data, '',{
+                                xField: 'label',
+                                yField: 'value',
+                                format: true
+                            })
+                        }
                         this.loading = false;
                     }
 

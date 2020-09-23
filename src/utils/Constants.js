@@ -13,13 +13,18 @@ export const reportType = [
         'value': 'supplier'
     },
     {
+      'label': 'Spend By Diversity Classification',
+        'value': 'spend_by_divcat'
+    },
+    {
         'label': 'Spend by Supplier with Country Code',
         'value': 'supplier_with_country'
     },
     {
         'label': 'Supplier with Missing/Expired Certificates',
         'value': 'supplier_expired_cert'
-    }
+    },
+
 ]
 
 export const CHATROOM = "CHAT_ROOM";
@@ -146,7 +151,7 @@ export const cert_upload_rules_agency = {
 export const reportInputs = {
     'division': new Set(['government', 'supplier', 'spend_by_plant_id',
         'spend_by_ethnicity', 'spend_by_naics', 'spend_by_structure', 'spend_by_revenue', 'spend_by_commodity',
-        'spend_by_supplier', 'spend_by_congressional_district', 'spend_by_diversity', 'spend_by_material_group',
+        'spend_by_supplier', 'spend_by_congressional_district', 'spend_by_divcat', 'spend_by_material_group',
         'spend_by_category', 'category_spend_trend', 'spend_by_district'])
 }
 
@@ -180,7 +185,7 @@ export const REPORT_TYPE_DICT = {
     'spend_by_structure': 'Spend by Structure',
     'spend_by_naics': 'Spend by NAICS code',
     'spend_by_revenue': 'Spend by Revenue Class',
-    'spend_by_diversity': 'Spend by Diversity Classification',
+    'spend_by_divcat': 'Spend by Diversity Classification',
     'spend_by_supplier': 'Spend by Diverse Suppliers',
     'mbe_by_ethnicity': 'MBEs by Ethnicity',
     'mbe_by_structure': 'MBEs by Structure',

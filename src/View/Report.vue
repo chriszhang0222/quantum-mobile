@@ -40,9 +40,9 @@
                                        style="width: 100%">
                                 <el-option
                                         v-for="item in divisions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
+                                        :key="item"
+                                        :label="item"
+                                        :value="item">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -122,7 +122,7 @@
                     endDate: [{required: true, message: 'Please Input EndDate', trigger: 'blur'}]
                 },
                 report_type: [],
-                divisions: [],
+                divisions: ['Pharma', 'Generics'],
                 loading: false
 
             }
