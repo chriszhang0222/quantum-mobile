@@ -105,9 +105,9 @@
                 let params = {
                     'user_id': this.user.user_id,
                     'supplier':  this.user.supplier.length === 0 ? [] : this.user.supplier.map(s => s.id),
-                    'alert_ids': [row.id]
+                    'alert_ids': row.id
                 }
-                let resp = await readNotification(params, auth);
+                let resp = await readNotification(params, this.auth);
                 if(resp.status === 200){
                     if(resp.data.success){
                         this.unread_data -= 1;
@@ -132,6 +132,7 @@
                       this.table_data = data.data;
                       this.loading = false;
                       this.total_data = data.count;
+                      this.unread_data = data.unread;
                   }
               }
             }
