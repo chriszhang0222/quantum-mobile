@@ -17,8 +17,8 @@ export const reportType = [
         'value': 'spend_by_divcat'
     },
     {
-        'label': 'supplier_by_divcat',
-        'value': 'Supplier By Diversity Classfication',
+        'value': 'supplier_by_divcat',
+        'label': 'Supplier By Diversity Classfication',
     },
     {
         'label': 'Spend by Supplier with Country Code',
@@ -98,6 +98,10 @@ export const CERT_TYPES_IN_CERTIFICATE_SUBMIT = [
     'MBE', 'VBE', 'DBE', 'DVBE', 'HUBZone', 'SDB', 'LGBT', 'ANC', 'SBE'
 ]
 
+export const SUPPLIER_STATUS = [
+    'Active', 'Approved', 'Registered', 'Rejected'
+]
+
 export const ETHNICITY = ['Caucasian', 'African American', 'Native American', 'Asian Subcontinent American',
 'Hispanic American', 'Asian Pacific American', 'Undefined']
 
@@ -158,7 +162,11 @@ export const reportInputs = {
         'spend_by_supplier', 'spend_by_congressional_district', 'spend_by_divcat', 'spend_by_material_group',
         'spend_by_category', 'category_spend_trend', 'spend_by_district']),
     'divcat': new Set(['supplier_by_divcat']),
-    'status': new Set(['supplier_by_divcat'])
+    'status': new Set(['supplier_by_divcat']),
+    'date': new Set(['government', 'supplier', 'spend_by_plant_id',
+        'spend_by_ethnicity', 'spend_by_naics', 'spend_by_structure', 'spend_by_revenue', 'spend_by_commodity',
+        'spend_by_supplier', 'spend_by_congressional_district', 'spend_by_divcat', 'spend_by_material_group',
+        'spend_by_category', 'category_spend_trend', 'spend_by_district'])
 }
 
 export const reportCategory = {

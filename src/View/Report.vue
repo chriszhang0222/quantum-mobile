@@ -47,7 +47,39 @@
                             </el-select>
                         </el-form-item>
                     </el-row>
-                    <el-row class="margin-top10" :gutter="40">
+                    <el-row class="margin-top10" v-if="showDivcat">
+                        <div class="subtitle">
+                            <span>Diversity Category</span>
+                        </div>
+                        <el-form-item prop="divcat">
+                            <el-select v-model="reportForm.divcat" placeholder="Diversity Category"
+                                       style="width: 100%">
+                                <el-option
+                                        v-for="item in divcats"
+                                        :key="item"
+                                        :label="item"
+                                        :value="item">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-row>
+                    <el-row class="margin-top10" v-if="showStatus">
+                        <div class="subtitle">
+                            <span>Status</span>
+                        </div>
+                        <el-form-item prop="status">
+                            <el-select v-model="reportForm.status" placeholder="Status"
+                                       style="width: 100%">
+                                <el-option
+                                        v-for="item in status"
+                                        :key="item"
+                                        :label="item"
+                                        :value="item">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-row>
+                    <el-row class="margin-top10" :gutter="40" v-if="showDate">
                         <el-col :xs="{span:24}" :lg="{span:12}">
                             <div class="subtitle">
                                 <span>Start Date</span>
@@ -91,7 +123,7 @@
 </template>
 
 <script>
-    import {reportType, reportInputs, reportCategory, REPORT_FORM} from "@/utils/Constants";
+    import {reportType, reportInputs, reportCategory, REPORT_FORM, CERT_TYPES_IN_CERTIFICATE_SUBMIT, SUPPLIER_STATUS} from "@/utils/Constants";
     import {Toast} from "@/utils/Toast";
     import {SessionStorage} from "@/utils/SessionStorage";
     import {Tools} from "@/utils/Tools";
@@ -107,6 +139,12 @@
             },
             showDivcat(){
                 return this.reportInputs.divcat.has(this.reportForm.report_type);
+            },
+            showStatus(){
+                return this.reportInputs.status.has(this.reportForm.report_type);
+            },
+            showDate(){
+                return this.reportInputs.date.has(this.reportForm.report_type);
             }
         },
         data(){
@@ -126,6 +164,8 @@
                 },
                 report_type: [],
                 divisions: ['Pharma', 'Generics'],
+                divcats: CERT_TYPES_IN_CERTIFICATE_SUBMIT,
+                status: SUPPLIER_STATUS,
                 loading: false
 
             }
@@ -179,7 +219,7 @@
                 return validate;
             },
             reportTypeChange(val){
-            }
+            },
         }
     }
 </script>

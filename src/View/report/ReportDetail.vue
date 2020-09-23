@@ -8,6 +8,11 @@
             </el-breadcrumb>
         </div>
         <el-card shadow="hover">
+            <el-row>
+                <el-col :span="24" align="left">
+                    <el-button @click="backToReport">Back</el-button>
+                </el-col>
+            </el-row>
             <div class="clearfix margin-bottom10" >
                 <span style="font-weight: bold; font-size: 18px">{{ report_type_title }}</span>
             </div>
@@ -141,6 +146,9 @@
             this.reportSetup();
         },
         methods:{
+            backToReport(){
+                this.$router.back();
+            },
             async showDetail(row){
                 let params = {
                     'supplier_id': row.id
