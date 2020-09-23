@@ -207,6 +207,12 @@
             },
             validateForm(){
                 let validate = true;
+                if(this.showDivcat){
+                    if(this.reportForm.divcat === undefined || this.reportForm.divcat === ''){
+                        this.$message.error('You must select diversity category');
+                        validate = false;
+                    }
+                }
                 this.$refs.reportForm.validate(valid => {
                     if(!valid){
                         validate = false;
