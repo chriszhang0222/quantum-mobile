@@ -104,6 +104,9 @@
         computed:{
             showDivision(){
                 return this.reportInputs.division.has(this.reportForm.report_type);
+            },
+            showDivcat(){
+                return this.reportInputs.divcat.has(this.reportForm.report_type);
             }
         },
         data(){
