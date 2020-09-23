@@ -2,6 +2,7 @@
     <div>
         <div class="chatroom-header" v-bind:class="{'new-message-received': chatRoom.newMessageReceived}">
             <el-button type="primary" icon="el-icon-refresh-left" class="pull-left "
+                       style="background-color: #0d62b9"
                        v-bind:class="{'new-message-received': chatRoom.newMessageReceived}"
                        @click="backtochat">Back</el-button>
             <span class="header-name"> {{ chatRoom.name }}</span>
@@ -605,8 +606,8 @@
         font-weight: bold;
         color: #ffffff;
         font-weight: normal;
-        border-bottom: 1px solid #409EFF;
-        background: #409EFF;;
+        border-bottom: 1px solid #0d62b9;
+        background: #0d62b9;
         height: 40px;
         display: block;
     }
