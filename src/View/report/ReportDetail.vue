@@ -87,6 +87,28 @@
                                 </template>
                             </el-table-column>
                         </template>
+                        <template v-if="type.table">
+                            <el-table-column
+                                    label="Supplier"
+                                    sortable
+                                    fixed>
+                                <template  slot-scope="scope">
+                                    <span style="color: #3a8ee6" @click="showDetail(scope.row)">{{ scope.row.vendorname}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="Vendor#" prop="vendor">
+                            </el-table-column>
+                            <el-table-column label="Status" prop="status">
+                            </el-table-column>
+                            <el-table-column label="Diversity Category" prop="divcat">
+                            </el-table-column>
+                            <el-table-column label="Contact" prop="contact">
+                            </el-table-column>
+                            <el-table-column label="Contact Email" prop="email">
+                            </el-table-column>
+                            <el-table-column label="Contact Phone" prop="phone">
+                            </el-table-column>
+                        </template>
                 </el-table>
                 </el-row>
             </template>
@@ -127,7 +149,8 @@
                 type:{
                     line: false,
                     pie: false,
-                    spend: false
+                    spend: false,
+                    table: false,
                 },
                 table_url: null,
                 table_data: [],
@@ -203,6 +226,7 @@
                     this.type.line = res.line_chart_type;
                     this.type.pie = res.pie_chart_type;
                     this.type.spend = res.spend_chart_type;
+                    this.type.table = res.table_chart_type;
                     if(res.months){
                         this.additional_columns = res.months;
                     }
