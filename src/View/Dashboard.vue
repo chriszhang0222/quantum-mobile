@@ -328,7 +328,7 @@
 
 <style scoped>
 .section-content{
-    padding: 10px 10px;
+    padding: 20px 10px;
     border-top: 1px solid #e5e9f2;
     font-weight: bold;
     -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.30);
