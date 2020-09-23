@@ -90,6 +90,12 @@ const routes = [
                 name: 'Contracts',
                 component: () => import('@/View/Contracts'),
                 meta: {requiredAuth: true}
+            },
+            {
+                path: '/profile',
+                name: 'Profile',
+                component: () => import('@/View/PersonalProfile'),
+                meta: {requiredAuth: true}
             }
         ]
     }

@@ -46,6 +46,7 @@
                         </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="logout">Logout</el-dropdown-item>
+                                <el-dropdown-item command="profile">Profile</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -133,6 +134,8 @@
             handleCommand(command){
                 if(command === 'logout'){
                     this.logout();
+                }else if(command == 'profile'){
+                    this.$router.push('/profile')
                 }
             },
             collapseChange(){
