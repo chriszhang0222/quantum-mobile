@@ -47,21 +47,21 @@
                 this.$router.push('/');
             }else{
                 let vm = this;
-                // let url = process.env.VUE_APP_CHATSERVER;
-                // let websocketUrl = ''
-                // if(url.indexOf('https') !== -1){
-                //     websocketUrl = 'wss:' + url.replace('https:', '')
-                // }else{
-                //     websocketUrl = 'ws:' + url.replace('http:', '')
-                // }
-                // if(Tools.isNotEmpty(this.user) && Tools.isNotEmpty(this.user.user_id) && Tools.isNotEmpty(this.user.company_id)
-                // && Tools.isNotEmpty(this.user.sub_domain)){
-                //     this.connectWebSocket(websocketUrl,1, false);
-                // }else{
-                //     Toast.error('No Company Id or User Id!');
-                // }
-                // this.updateUnreadCount();
-                //this.updateAlertUnread();
+                let url = process.env.VUE_APP_CHATSERVER;
+                let websocketUrl = ''
+                if(url.indexOf('https') !== -1){
+                    websocketUrl = 'wss:' + url.replace('https:', '')
+                }else{
+                    websocketUrl = 'ws:' + url.replace('http:', '')
+                }
+                if(Tools.isNotEmpty(this.user) && Tools.isNotEmpty(this.user.user_id) && Tools.isNotEmpty(this.user.company_id)
+                && Tools.isNotEmpty(this.user.sub_domain)){
+                    this.connectWebSocket(websocketUrl,1, false);
+                }else{
+                    Toast.error('No Company Id or User Id!');
+                }
+                this.updateUnreadCount();
+                this.updateAlertUnread();
 
             }
         },
