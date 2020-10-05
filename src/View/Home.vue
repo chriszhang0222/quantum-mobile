@@ -81,7 +81,7 @@
         methods:{
             async updateAlertUnread(){
               let params = {
-                  'user_id': this.user.id,
+                  'user_id': this.user.user_id,
                   'supplier': this.user.supplier.length === 0 ? [] : this.user.supplier.map(s => s.id),
               }
               let res = await alertUnread(params, this.auth);
