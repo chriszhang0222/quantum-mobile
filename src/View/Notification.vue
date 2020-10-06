@@ -14,7 +14,7 @@
             <el-row class="margin-top20">
                 <span class="demonstration"><strong>Unread Notification: {{ unread_data }}</strong></span>
             </el-row>
-            <el-row :gutter="20" class="margin-top20">
+            <el-row :gutter="20" class="margin-bottom10">
                 <el-col :span="12" align="left">
                     <div class="block">
                         <el-pagination
@@ -33,29 +33,31 @@
                 <el-col :span="12">
                     <el-input v-model="search_text" placeholder="Search" @change="searchNotification"></el-input>
                 </el-col>
+            </el-row>
+            <el-row>
                 <el-table border :data="table_data" v-loading="loading">
                     <el-table-column
-                    label="Alert Time"
-                    prop="time"
-                    sortable
-                    fixed>
+                            label="Alert Time"
+                            prop="time"
+                            sortable
+                            fixed>
                     </el-table-column>
                     <el-table-column
-                    label="Alert Description"
-                    prop="desc"
+                            label="Alert Description"
+                            prop="desc"
                     >
                     </el-table-column>
                     <el-table-column
-                    label="From"
-                    prop="from">
+                            label="From"
+                            prop="from">
                     </el-table-column>
                     <el-table-column
-                    label="Read"
-                    fixed="right">
+                            label="Read"
+                            fixed="right">
                         <template slot-scope="scope">
-                           <div v-if="scope.row.read === true || scope.row.read === 'true'">
-                               <el-checkbox :value="true" disabled></el-checkbox>
-                           </div>
+                            <div v-if="scope.row.read === true || scope.row.read === 'true'">
+                                <el-checkbox :value="true" disabled></el-checkbox>
+                            </div>
                             <div v-else>
                                 <el-checkbox v-model="scope.row.read" @change="readNotification(scope.row)"></el-checkbox>
                             </div>
