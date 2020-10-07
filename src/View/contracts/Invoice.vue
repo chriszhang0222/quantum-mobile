@@ -39,6 +39,51 @@
                     <el-tag style="width: 100%">Invoices</el-tag>
                 </el-row>
                 <el-row>
+                    <el-table border :data="invoice_list" v-loading="loading">
+                        <el-table-column
+                                label="Supplier"
+                                sortable
+                                prop="supplier_name"
+                                fixed/>
+                        <el-table-column
+                            label="Purchase Order"
+                            prop="purchase_order"
+                            />
+                        <el-table-column
+                                label="Amount"
+                                sortable
+                                prop="amount"
+                               />
+                        <el-table-column
+                                sortable
+                                label="Balance"
+                                prop="balance"
+                        />
+                        <el-table-column
+                            sortable
+                            label="Invoiced"
+                            prop="invoiced">
+                        </el-table-column>
+                        <el-table-column label="Payment Date">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.status === 'Approved'">{{scope.row.date}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="Action" fixed="right">
+                            <template slot-scope="scope">
+                                <div v-if="scope.row.status === 'Pending Approval'">
+                                    <el-button type="success" size="mini">Approve</el-button>
+                                    <el-button type="warning" size="mini">Reject</el-button>
+                                </div>
+                                <div v-else-if="scope.row.status === 'Approved'">
+                                    <el-button type="success" size="mini" disabled>Approved</el-button>
+                                </div>
+                                <div v-else-if="scope.row.status === 'Rejected'">
+                                    <el-button type="warning" size="mini" disabled>Rejected</el-button>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
 
                 </el-row>
             </el-card>
@@ -47,10 +92,22 @@
 </template>
 
 <script>
+    import {invoiceList} from "@/quantumApi/contract/contract";
+    import {SessionStorage} from "@/utils/SessionStorage";
+    import {AUTH_TOKEN} from "@/utils/Constants";
+
     export default {
         name: "Invoice",
+        created(){
+          this.auth = SessionStorage.get(AUTH_TOKEN);
+        },
+        mounted(){
+            this.getInvoiceList();
+        },
         data(){
             return{
+                auth: '',
+                loading: true,
                 status: [
                     'ALL',
                     'Pending',
@@ -58,10 +115,39 @@
                     'Rejected'
                 ],
                 form: {
-                    status: '',
-                    po: ''
+                    status: null,
+                    po: null
                 },
-                invoice_list: []
+                invoice_list: [],
+                total: 0,
+                currentPage: 1,
+            }
+        },
+        methods: {
+            formatNumber(obj, attr){
+                if(obj === undefined){
+                    return 0;
+                }
+                obj = obj[attr]
+                if (isNaN(obj) || obj === null || obj === undefined || obj === '') {
+                    return 0;
+                }
+                return ("" + obj).replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g, "$1,");
+            },
+            async getInvoiceList(){
+                let params = {
+                    status: this.form.status,
+                    po: this.form.po,
+                    start: (this.currentPage-1)*10,
+                }
+                let resp = await invoiceList(params, this.auth);
+                if(resp.status === 200){
+                    this.loading = false;
+                    let data = resp.data;
+                    this.invoice_list = data.data;
+                    this.total = data.count;
+                    console.log(resp.data);
+                }
             }
         }
     }
