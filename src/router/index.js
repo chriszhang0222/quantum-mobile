@@ -88,7 +88,13 @@ const routes = [
             {
                 path: '/contracts',
                 name: 'Contracts',
-                component: () => import('@/View/Contracts'),
+                component: () => import('@/View/contracts/Contracts'),
+                meta: {requiredAuth: true}
+            },
+            {
+                path: '/invoices',
+                name: 'Invoices',
+                component: () => import('@/View/contracts/Invoice'),
                 meta: {requiredAuth: true}
             },
             {

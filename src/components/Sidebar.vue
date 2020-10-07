@@ -68,9 +68,19 @@
                     },
                     {
                         icon: 'el-icon-document',
-                        index: 'contracts',
+                        index: '3',
                         title: 'Contracts',
-                        meta: ''
+                        meta: '',
+                        subs: [
+                            {
+                              index: 'contracts',
+                              title: 'Contracts'
+                            },
+                            {
+                                index: 'invoices',
+                                title: 'Invoices'
+                            }
+                        ]
                     }
                 ]
             };
@@ -111,6 +121,14 @@
 
 
     .el-menu-item {
+        min-width: 80px;
+        margin-left: -10px;
+
+        span {
+            font-weight: bold;
+        }
+    }
+    .el-submenu{
         min-width: 80px;
         margin-left: -10px;
 
