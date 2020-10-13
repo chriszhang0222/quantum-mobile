@@ -116,7 +116,7 @@
                         </template>
                         <template v-else-if="invoice_detail.status === 'Rejected'">
                             <el-alert
-                                    style="width: 100%" type="alert">Invoice has been rejected</el-alert>
+                                    style="width: 100%" type="error">Invoice has been rejected</el-alert>
                         </template>
                     </el-row>
                     <el-form>
