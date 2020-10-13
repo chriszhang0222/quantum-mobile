@@ -61,7 +61,7 @@
                                 prop="supplier_name"
                                 fixed>
                             <template slot-scope="scope">
-                                <span>{{ scope.row.supplier_name }}</span>
+                                <span @click="showDetail(scope.row)">{{ scope.row.supplier_name }}</span>
                             </template>
                         </el-table-column>
                         <el-table-column
@@ -105,13 +105,87 @@
                     </el-table>
 
                 </el-row>
+                <el-dialog title="Invoice Detail" :visible.sync="showinvoiceDetail"
+                           :append-to-body="true"
+                           width="100%">
+                    <el-row>
+                        <template v-if="invoice_detail.status === 'Approved'">
+                            <el-alert
+                                    style="width: 100%"
+                                    type="success">Invoice has been approved</el-alert>
+                        </template>
+                        <template v-else-if="invoice_detail.status === 'Rejected'">
+                            <el-alert
+                                    style="width: 100%" type="alert">Invoice has been rejected</el-alert>
+                        </template>
+                    </el-row>
+                    <el-form>
+                    <el-row>
+                        <el-col :span="24">
+                             <el-form-item label="Supplier Name">
+                                <span>{{ this.invoice_detail.supplier_name}}</span>
+                             </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="24">
+                            <el-form-item label="Purchase Order">
+                            <span>{{ this.invoice_detail.purchase_order_info.purchase_order_number}}</span>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="24">
+                            <el-form-item label="Purchase Order Balance">
+                                <span>${{ this.invoice_detail.purchase_order_info.balance}}</span>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="Invoice Status">
+                                    <span>{{ this.invoice_detail.status }}</span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="Rate">
+                                    <span>{{ this.invoice_detail.rate}}</span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="Quantity">
+                                    <span>{{ this.invoice_detail.quantity}}</span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="Contract Owner">
+                                    <span>{{ this.invoice_detail.contract_owner}}</span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="Bill To">
+                                    <span>{{ this.invoice_detail.bill_to}}</span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                    </el-form>
+                </el-dialog>
             </el-card>
         </el-main>
     </div>
 </template>
 
 <script>
-    import {invoiceList} from "@/quantumApi/contract/contract";
+    import {invoiceList, invoiceDetail} from "@/quantumApi/contract/contract";
     import {SessionStorage} from "@/utils/SessionStorage";
     import {AUTH_TOKEN} from "@/utils/Constants";
 
@@ -125,6 +199,12 @@
         },
         data(){
             return{
+                showinvoiceDetail: false,
+                invoice_detail: {
+                    purchase_order_info: {
+
+                    }
+                },
                 auth: '',
                 loading: true,
                 status: [
@@ -156,7 +236,6 @@
                     let data = resp.data;
                     this.invoice_list = data.data;
                     this.total = data.count;
-                    console.log(resp.data);
                 }
             },
             formatNumber(obj, attr){
@@ -168,6 +247,20 @@
                     return 0;
                 }
                 return ("" + obj).replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g, "$1,");
+            },
+            showDetail(row){
+              let id = row.id;
+              let params = {id: id}
+              invoiceDetail(params, this.auth)
+                .then((res) => {
+                    if(res.status === 200){
+                        let data = res.data;
+                        if(data.success){
+                            this.invoice_detail = data.data;
+                            this.showinvoiceDetail = true;
+                        }
+                    }
+                })
             },
             async getInvoiceList(){
                 let params = {
@@ -181,7 +274,6 @@
                     let data = resp.data;
                     this.invoice_list = data.data;
                     this.total = data.count;
-                    console.log(resp.data);
                 }
             }
         }
