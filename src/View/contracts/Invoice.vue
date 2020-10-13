@@ -36,7 +36,22 @@
             </el-card>
             <el-card class="margin-top20">
                 <el-row>
-                    <el-tag style="width: 100%">Invoices</el-tag>
+                    <el-tag style="width: 100%;font-size: 20px">Invoices</el-tag>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-pagination
+                                v-if="!loading"
+                                :current-page.sync="currentPage"
+                                @current-change="handleCurrentPageChange"
+                                small
+                                background
+                                :page-size="20"
+                                :page-count="5"
+                                layout="prev, pager, next"
+                                :total="total">
+                        </el-pagination>
+                    </el-col>
                 </el-row>
                 <el-row>
                     <el-table border :data="invoice_list" v-loading="loading">
@@ -44,7 +59,11 @@
                                 label="Supplier"
                                 sortable
                                 prop="supplier_name"
-                                fixed/>
+                                fixed>
+                            <template slot-scope="scope">
+                                <span>{{ scope.row.supplier_name }}</span>
+                            </template>
+                        </el-table-column>
                         <el-table-column
                             label="Purchase Order"
                             prop="purchase_order"
@@ -124,6 +143,22 @@
             }
         },
         methods: {
+            async handleCurrentPageChange(val){
+                this.currentPage = val;
+                let params = {
+                    status: this.form.status,
+                    po: this.form.po,
+                    start: (this.currentPage-1)*10,
+                }
+                let resp = await invoiceList(params, this.auth);
+                if(resp.status === 200){
+                    this.loading = false;
+                    let data = resp.data;
+                    this.invoice_list = data.data;
+                    this.total = data.count;
+                    console.log(resp.data);
+                }
+            },
             formatNumber(obj, attr){
                 if(obj === undefined){
                     return 0;
