@@ -11,7 +11,7 @@ module.exports = {
     },
     publicPath: './',
     assetsDir: "static",
-    outputDir: "cordova/cordova-app/www",
+    //outputDir: "cordova/cordova-app/www",
     productionSourceMap: false,
     configureWebpack: {
         resolve: {
