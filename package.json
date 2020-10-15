@@ -6,7 +6,7 @@
     "node": "12.x"
   },
   "scripts": {
-    "build": "vue-cli-service serve --mode dev",
+    "build": "vue-cli-service build --mode prod",
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve --port 8081",
