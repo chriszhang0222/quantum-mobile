@@ -58,7 +58,6 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(response => {
     return response
 }, error => {
-    console.log('error', error)
     Toast.error(error.message  || 'Error!')
     return Promise.reject(error)
 })
