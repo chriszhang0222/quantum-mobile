@@ -6,14 +6,9 @@
     "node": "12.x"
   },
   "scripts": {
-    "postinstall": "npm install express",
     "start": "npm run serve",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --mode prod",
-    "lint": "vue-cli-service lint",
-    "prod": "vue-cli-service build --mode prod",
-    "serve-dev": "vue-cli-service serve --mode dev --port 8081",
-    "serve-prod": "vue-cli-service serve --mode prod"
+    "build": "vue-cli-service build"
   },
   "main": "background.js",
   "dependencies": {
