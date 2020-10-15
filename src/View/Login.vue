@@ -94,7 +94,6 @@
 
             },
             apiTokenCallback(res){
-                console.log(res);
             },
             loginCallBack(res){
                 this.logging = false;

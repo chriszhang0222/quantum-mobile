@@ -1163,7 +1163,6 @@
                 this.show_self_cert = true;
             },
             showExistCert(){
-              console.log(this.supplier.id);
               this.exist_certs = true;
             },
             sourceChange(val){
